@@ -1,0 +1,23 @@
+node_modules/
+.env*
+.next/
+.vercel/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# Strategy/planning files from parent folder
+*MASTER-PLAN*
+*OPENCODE-BUILD-PROMPT*
+*WINNING*
+*STRATEGY*
+*RESEARCH*
+research/
+
+# Vercel
+vercel.json
+*.local
+
+# OS
+.DS_Store
+Thumbs.db
