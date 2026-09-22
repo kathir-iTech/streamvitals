@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "StreamVitals — OneAquaHealth IEEE Global Hackathon 2026",
-  description: "AI-Supported Assessment of urban stream health. AI may interpret input. AI may not adjudicate.",
+  description: "AI-Supported Assessment of urban stream health. The deterministic evidence engine evaluates confirmed observations against cited rules.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -25,9 +25,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <nav className="bg-white border-b border-slate-200 px-6 py-3">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded">
+          Skip to main content
+        </a>
+        <nav className="bg-white border-b border-slate-200 px-6 py-3" aria-label="Main navigation">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2" aria-label="StreamVitals home">
               <span className="text-xl font-bold text-teal-700">StreamVitals</span>
             </Link>
             <div className="flex items-center gap-4 text-sm">
@@ -40,7 +43,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </nav>
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1" role="main">
+          {children}
+        </main>
       </body>
     </html>
   );
