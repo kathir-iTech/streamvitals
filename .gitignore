@@ -54,6 +54,9 @@ factsheet_text.txt
 zenodo_api_response.json
 resmap.html
 extract_pdf.js
+run-tests.js
+run-fhir-tests.js
+run-benchmark.js
 
 # package files
 package-lock.json
