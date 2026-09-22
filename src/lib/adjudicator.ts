@@ -1,4 +1,4 @@
-import { indicators } from '../../data/indicators.json';
+import { indicators } from '@/data/indicators';
 
 let _now = () => new Date().toISOString();
 export function setNow(fn: () => string) { _now = fn; }
@@ -36,7 +36,7 @@ export interface Verdict {
   timestamp: string;
 }
 
-const INDICATOR_MAP = new Map(indicators.map((ind) => [ind.id, ind]));
+const INDICATOR_MAP = new Map<string, typeof indicators[0]>(indicators.map((ind) => [ind.id, ind]));
 
 export function assess(observations: ObservationField[]): Verdict {
   const drivers: Driver[] = [];
@@ -109,7 +109,7 @@ export function assess(observations: ObservationField[]): Verdict {
   };
 }
 
-function getRuleName(ind: (typeof indicators)[0], state: string): string {
+function getRuleName(ind: typeof indicators[0], state: string): string {
   switch (state) {
     case 'absent_or_dead':
       return `${ind.name}: ABSENT_OR_DEAD → HIGH_CONCERN`;

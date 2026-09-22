@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { CheckCircle2, AlertTriangle, ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { indicators } from '@/data/indicators.json';
+import { indicators } from '@/data/indicators';
 
 export default function ConfirmPage() {
   const [confirmedFields, setConfirmedFields] = useState<Record<string, boolean>>({});

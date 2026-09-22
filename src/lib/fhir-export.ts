@@ -1,4 +1,4 @@
-import { indicators } from '@/data/indicators.json';
+import { indicators } from '@/data/indicators';
 
 const INDICATOR_MAP = new Map(indicators.map((ind) => [ind.id, ind]));
 

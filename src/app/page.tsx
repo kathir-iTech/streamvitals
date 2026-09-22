@@ -1,4 +1,4 @@
-import { Water } from 'lucide-react';
+import { Droplets } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Home() {
@@ -6,7 +6,7 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-teal-900 to-slate-900 text-white flex flex-col items-center justify-center p-6">
       <div className="max-w-lg w-full text-center">
         <div className="flex items-center justify-center gap-3 mb-8">
-          <Water className="w-10 h-10 text-teal-300" />
+          <Droplets className="w-10 h-10 text-teal-300" />
           <h1 className="text-4xl font-bold tracking-tight">StreamVitals</h1>
         </div>
         <p className="text-lg text-teal-200 mb-12">

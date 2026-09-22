@@ -1,7 +1,4 @@
-import fs from 'fs';
-import path from 'path';
-
-const indicators = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'data/indicators.json'), 'utf8'));
+import { indicators } from '@/data/indicators';
 
 export function buildProvenanceManifest() {
   const manifest = {

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { assess, validateObservations } from './adjudicator';
+import { indicators } from '@/data/indicators';
 
 const makeObs = (indicatorId: string, state: string, confirmed = true, confidence: 'high' | 'uncertain' = 'high') => ({
   indicatorId,

@@ -1,8 +1,8 @@
 'use client';
 
-import { Link } from 'next/link';
+import Link from 'next/link';
 import { ArrowLeft, MapPin, AlertCircle } from 'lucide-react';
-import { indicators } from '@/data/indicators.json';
+import { indicators } from '@/data/indicators';
 
 const cities = [
   { name: 'Coimbra', country: 'PT', slug: 'coimbra' },

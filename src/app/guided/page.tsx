@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ArrowLeft, Send } from 'lucide-react';
 import Link from 'next/link';
-import { indicators } from '@/data/indicators.json';
+import { indicators } from '@/data/indicators';
 
 const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
 

@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, Shield, Clock, AlertCircle, ChevronDown, ChevronRight, BookOpen, Search } from 'lucide-react';
+import { ArrowLeft, Shield, Clock, AlertCircle, ChevronDown, ChevronRight, BookOpen, Search, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
-import { indicators } from '@/data/indicators.json';
+import { indicators } from '@/data/indicators';
 
 export default function VerdictPage() {
   const [expandedDriver, setExpandedDriver] = useState<string | null>(null);
