@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Shield, Clock, AlertCircle, ChevronDown, ChevronRight, BookOpen, Search, AlertTriangle } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { indicators } from '@/data/indicators';
 import { assess, ObservationField } from '@/lib/adjudicator';
 
@@ -14,33 +14,41 @@ export default function VerdictPage() {
   const [notApplicable, setNotApplicable] = useState(1);
   const [requireProfessional, setRequireProfessional] = useState(2);
   const [drivers, setDrivers] = useState<ReturnType<typeof assess>['drivers']>([]);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const dataParam = params.get('data');
-    if (dataParam) {
-      try {
-        const parsed = JSON.parse(decodeURIComponent(dataParam));
-        const { confirmedFields, uncertainFields, answers } = parsed;
-        const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
-        const observations: ObservationField[] = citizenIndicators
-          .filter((ind) => answers[ind.id])
-          .map((ind) => ({
-            indicatorId: ind.id,
-            state: answers[ind.id] as 'diverse_sensitive' | 'tolerant_only' | 'absent_or_dead',
-            confirmed: !!confirmedFields[ind.id],
-            confidence: uncertainFields[ind.id] ? 'uncertain' : 'high',
-          }));
-        const result = assess(observations);
-        setTier(result.tier);
-        setDataStatus(result.dataStatus);
-        setAssessed(result.evidenceCoverage.assessed);
-        setNotApplicable(result.evidenceCoverage.notApplicable);
-        setRequireProfessional(result.evidenceCoverage.requireProfessionalMeasurement);
-        setDrivers(result.drivers);
-      } catch {
-        setTier('T3_FURTHER_ASSESSMENT_RECOMMENDED');
+    const confirmData = sessionStorage.getItem('streamvitals_confirm');
+    if (!confirmData) {
+      setError('No assessment data found. Please complete the guided flow from the homepage.');
+      return;
+    }
+    try {
+      const parsed = JSON.parse(confirmData);
+      const { confirmedFields, uncertainFields, answers } = parsed;
+      const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
+      const observations: ObservationField[] = citizenIndicators
+        .filter((ind) => answers[ind.id])
+        .map((ind) => ({
+          indicatorId: ind.id,
+          state: answers[ind.id] as 'diverse_sensitive' | 'tolerant_only' | 'absent_or_dead',
+          confirmed: !!confirmedFields[ind.id],
+          confidence: uncertainFields[ind.id] ? 'uncertain' : 'high',
+        }));
+      if (observations.length === 0) {
+        setError('No confirmed observations found. Please complete the guided flow.');
+        return;
       }
+      const result = assess(observations);
+      setTier(result.tier);
+      setDataStatus(result.dataStatus);
+      setAssessed(result.evidenceCoverage.assessed);
+      setNotApplicable(result.evidenceCoverage.notApplicable);
+      setRequireProfessional(result.evidenceCoverage.requireProfessionalMeasurement);
+      setDrivers(result.drivers);
+      setError(null);
+    } catch {
+      setError('Failed to process your assessment. Please try again.');
     }
   }, []);
 
@@ -58,13 +66,39 @@ export default function VerdictPage() {
 
   const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="max-w-lg w-full bg-white rounded-2xl shadow-lg p-8 text-center" role="main" aria-label="Assessment error">
+          <AlertTriangle className="w-10 h-10 text-orange-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-slate-800 mb-2">Something went wrong</h1>
+          <p className="text-slate-600 mb-6">{error}</p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => router.push('/guided')}
+              className="flex-1 py-3 bg-teal-600 text-white rounded-xl font-semibold hover:bg-teal-700 transition-colors"
+            >
+              Start Over
+            </button>
+            <button
+              onClick={() => router.push('/confirm')}
+              className="flex-1 py-3 bg-white border border-teal-600 text-teal-600 rounded-xl font-semibold hover:bg-teal-50 transition-colors"
+            >
+              Go Back
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
       <div className="max-w-2xl w-full">
         <div className="flex items-center gap-3 mb-6">
-          <Link href="/confirm" className="text-teal-600 hover:text-teal-800">
+          <a href="/confirm" className="text-teal-600 hover:text-teal-800">
             <ArrowLeft className="w-5 h-5" />
-          </Link>
+          </a>
           <h1 className="text-2xl font-bold text-slate-800">Assessment Result</h1>
         </div>
 
@@ -179,18 +213,18 @@ export default function VerdictPage() {
         </div>
 
         <div className="flex gap-3">
-          <Link
-            href="/confirm"
+          <button
+            onClick={() => router.push('/confirm')}
             className="flex-1 py-3 bg-white border border-teal-600 text-teal-600 rounded-xl font-semibold text-center hover:bg-teal-50 transition-colors"
           >
             Retake Assessment
-          </Link>
-          <Link
-            href="/reference-context"
+          </button>
+          <button
+            onClick={() => router.push('/reference-context')}
             className="flex-1 py-3 bg-teal-600 text-white rounded-xl font-semibold text-center hover:bg-teal-700 transition-colors"
           >
             View Reference Context
-          </Link>
+          </button>
         </div>
       </div>
     </div>

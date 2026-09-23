@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { CheckCircle2, ArrowLeft, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { indicators } from '@/data/indicators';
 
 export default function ConfirmPage() {
   const [confirmedFields, setConfirmedFields] = useState<Record<string, boolean>>({});
   const [uncertainFields, setUncertainFields] = useState<Record<string, boolean>>({});
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
 
@@ -17,7 +19,9 @@ export default function ConfirmPage() {
     if (stored) {
       try {
         setAnswers(JSON.parse(stored));
-      } catch {}
+      } catch {
+        setError('Failed to load your answers. Please start over.');
+      }
     }
   }, []);
 
@@ -30,7 +34,7 @@ export default function ConfirmPage() {
       conf[ind.id] = !!answers[ind.id];
       unc[ind.id] = false;
     }
-    setConfirmedFields(defaults);
+    setConfirmedFields(conf);
     setUncertainFields(unc);
   }, [answers, citizenIndicators]);
 
@@ -44,20 +48,35 @@ export default function ConfirmPage() {
 
   const allConfirmed = citizenIndicators.every((ind) => confirmedFields[ind.id]);
 
-  const allConfirmedStr = JSON.stringify({ confirmedFields, uncertainFields, answers });
+  const handleProceed = () => {
+    if (!allConfirmed) return;
+    try {
+      const confirmData = JSON.stringify({ confirmedFields, uncertainFields, answers });
+      sessionStorage.setItem('streamvitals_confirm', confirmData);
+      setError(null);
+      router.push('/verdict');
+    } catch (e) {
+      setError('Something went wrong saving your answers. Please try again.');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
       <div className="max-w-lg w-full bg-white rounded-2xl shadow-lg p-8">
         <div className="flex items-center gap-3 mb-2">
-          <Link href="/guided" className="text-teal-600 hover:text-teal-800">
+          <a href="/guided" className="text-teal-600 hover:text-teal-800">
             <ArrowLeft className="w-5 h-5" />
-          </Link>
+          </a>
           <h1 className="text-2xl font-bold text-slate-800">Confirm Your Observations</h1>
         </div>
         <p className="text-sm text-slate-500 mb-6">
           Review each field before proceeding. You must confirm all fields.
         </p>
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700" role="alert">
+            {error}
+          </div>
+        )}
         <div className="space-y-4 mb-6">
           {citizenIndicators.map((ind) => (
             <div
@@ -109,16 +128,18 @@ export default function ConfirmPage() {
             </div>
           ))}
         </div>
-        <Link
-          href={`/verdict?data=${encodeURIComponent(allConfirmedStr)}`}
+        <button
+          onClick={handleProceed}
+          disabled={!allConfirmed}
           className={`w-full py-3 rounded-xl font-semibold text-center flex items-center justify-center gap-2 transition-colors ${
             allConfirmed
-              ? 'bg-teal-600 text-white hover:bg-teal-700'
+              ? 'bg-teal-600 text-white hover:bg-teal-700 cursor-pointer'
               : 'bg-slate-300 text-slate-500 cursor-not-allowed'
           }`}
+          aria-label="Proceed to assessment"
         >
           Proceed to Assessment <ArrowRight className="w-4 h-4" />
-        </Link>
+        </button>
       </div>
     </div>
   );
