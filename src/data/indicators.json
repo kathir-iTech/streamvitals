@@ -20,7 +20,7 @@
     },
     "framework_basis": {
       "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
-      "citation": "Section II. Benthic Macroinvertebrates (page ~5 of 14)"
+      "citation": null
     },
     "triage_mapping": {
       "type": "StreamVitals_policy",
@@ -32,7 +32,7 @@
       "system": null,
       "code": null
     },
-    "source": "Section II. Benthic Macroinvertebrates (page ~5 of 14)",
+    "source": "Section II. Benthic Macroinvertebrates",
     "citizen_state_labels": {
       "diverse_sensitive": "Many sensitive species present",
       "tolerant_only": "Only tolerant species seen",
@@ -40,7 +40,7 @@
     }
   },
   {
-    "id": "BMI-02",
+    "id": "FSH-02",
     "group": "biological",
     "name": "Fish",
     "citizen_observable": false,
@@ -60,7 +60,7 @@
     },
     "framework_basis": {
       "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
-      "citation": "Section III. Fish (page ~6 of 14)"
+      "citation": null
     },
     "triage_mapping": {
       "type": "StreamVitals_policy",
@@ -72,10 +72,10 @@
       "system": null,
       "code": null
     },
-    "source": "Section III. Fish (page ~6 of 14)"
+    "source": "Section III. Fish"
   },
   {
-    "id": "BMI-03",
+    "id": "AMH-03",
     "group": "biological",
     "name": "Amphibians",
     "citizen_observable": false,
@@ -95,7 +95,7 @@
     },
     "framework_basis": {
       "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
-      "citation": "Section IV. Amphibians (page ~7 of 14)"
+      "citation": null
     },
     "triage_mapping": {
       "type": "StreamVitals_policy",
@@ -107,10 +107,10 @@
       "system": null,
       "code": null
     },
-    "source": "Section IV. Amphibians (page ~7 of 14)"
+    "source": "Section IV. Amphibians"
   },
   {
-    "id": "BMI-04",
+    "id": "BIR-04",
     "group": "biological",
     "name": "Birds",
     "citizen_observable": true,
@@ -130,7 +130,7 @@
     },
     "framework_basis": {
       "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
-      "citation": "Section V. Birds (page ~7 of 14)"
+      "citation": null
     },
     "triage_mapping": {
       "type": "StreamVitals_policy",
@@ -142,7 +142,7 @@
       "system": null,
       "code": null
     },
-    "source": "Section V. Birds (page ~7 of 14)",
+    "source": "Section V. Birds",
     "citizen_state_labels": {
       "diverse_sensitive": "Many species observed",
       "tolerant_only": "Few species observed",
@@ -150,7 +150,7 @@
     }
   },
   {
-    "id": "BMI-05",
+    "id": "MDR-05",
     "group": "biological",
     "name": "Microbial Diversity",
     "citizen_observable": false,
@@ -170,7 +170,7 @@
     },
     "framework_basis": {
       "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
-      "citation": "Section VI. Microbial Diversity (page ~9 of 14)"
+      "citation": null
     },
     "triage_mapping": {
       "type": "StreamVitals_policy",
@@ -182,10 +182,10 @@
       "system": null,
       "code": null
     },
-    "source": "Section VI. Microbial Diversity (page ~9 of 14)"
+    "source": "Section VI. Microbial Diversity"
   },
   {
-    "id": "BMI-06",
+    "id": "FCL-06",
     "group": "physicochemical",
     "name": "Fecal Coliforms",
     "citizen_observable": false,
@@ -205,7 +205,7 @@
     },
     "framework_basis": {
       "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
-      "citation": "Section VII. Fecal Coliforms (page ~10 of 14)"
+      "citation": null
     },
     "triage_mapping": {
       "type": "StreamVitals_policy",
@@ -217,10 +217,10 @@
       "system": null,
       "code": null
     },
-    "source": "Section VII. Fecal Coliforms (page ~10 of 14)"
+    "source": "Section VII. Fecal Coliforms"
   },
   {
-    "id": "BMI-07",
+    "id": "PRT-07",
     "group": "physicochemical",
     "name": "Pathogens",
     "citizen_observable": false,
@@ -240,7 +240,7 @@
     },
     "framework_basis": {
       "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
-      "citation": "Section VIII. Pathogens (page ~11 of 14)"
+      "citation": null
     },
     "triage_mapping": {
       "type": "StreamVitals_policy",
@@ -252,10 +252,10 @@
       "system": null,
       "code": null
     },
-    "source": "Section VIII. Pathogens (page ~11 of 14)"
+    "source": "Section VIII. Pathogens"
   },
   {
-    "id": "BMI-08",
+    "id": "ARB-08",
     "group": "physicochemical",
     "name": "Antibiotic Resistance Genes",
     "citizen_observable": false,
@@ -275,7 +275,7 @@
     },
     "framework_basis": {
       "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
-      "citation": "Section IX. Antibiotic Resistance Genes (page ~12 of 14)"
+      "citation": null
     },
     "triage_mapping": {
       "type": "StreamVitals_policy",
@@ -287,10 +287,10 @@
       "system": null,
       "code": null
     },
-    "source": "Section IX. Antibiotic Resistance Genes (page ~12 of 14)"
+    "source": "Section IX. Antibiotic Resistance Genes"
   },
   {
-    "id": "BMI-09",
+    "id": "DPT-09",
     "group": "biological",
     "name": "Diptera Adults",
     "citizen_observable": false,
@@ -310,7 +310,7 @@
     },
     "framework_basis": {
       "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
-      "citation": "Section X. Diptera Adults (page ~12 of 14)"
+      "citation": null
     },
     "triage_mapping": {
       "type": "StreamVitals_policy",
@@ -322,10 +322,10 @@
       "system": null,
       "code": null
     },
-    "source": "Section X. Diptera Adults (page ~12 of 14)"
+    "source": "Section X. Diptera Adults"
   },
   {
-    "id": "BMI-10",
+    "id": "DIA-10",
     "group": "biological",
     "name": "Diatoms and Diatom Teratology",
     "citizen_observable": false,
@@ -345,7 +345,7 @@
     },
     "framework_basis": {
       "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
-      "citation": "Section I. Diatoms and Diatom Teratology (page ~4 of 14)"
+      "citation": null
     },
     "triage_mapping": {
       "type": "StreamVitals_policy",
@@ -357,10 +357,10 @@
       "system": null,
       "code": null
     },
-    "source": "Section I. Diatoms and Diatom Teratology (page ~4 of 14)"
+    "source": "Section I. Diatoms and Diatom Teratology"
   },
   {
-    "id": "BMI-11",
+    "id": "INV-11",
     "group": "habitat",
     "name": "Invasive Alien Plants of the Riparian Corridor",
     "citizen_observable": true,
@@ -380,7 +380,7 @@
     },
     "framework_basis": {
       "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
-      "citation": "Section XI. Invasive Alien Plants of the Riparian Corridor (page ~13 of 14)"
+      "citation": null
     },
     "triage_mapping": {
       "type": "StreamVitals_policy",
@@ -392,7 +392,7 @@
       "system": null,
       "code": null
     },
-    "source": "Section XI. Invasive Alien Plants of the Riparian Corridor (page ~13 of 14)",
+    "source": "Section XI. Invasive Alien Plants of the Riparian Corridor",
     "citizen_state_labels": {
       "diverse_sensitive": "None or few patches",
       "tolerant_only": "A few patches",

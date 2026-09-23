@@ -7,8 +7,8 @@ import { indicators } from '@/data/indicators';
 
 const indicatorIcons: Record<string, React.ElementType> = {
   'BMI-01': Bug,
-  'BMI-04': Bird,
-  'BMI-11': Leaf,
+  'BIR-04': Bird,
+  'INV-11': Leaf,
 };
 
 const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);

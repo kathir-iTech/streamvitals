@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Shield, Clock, AlertCircle, ChevronDown, ChevronRight, BookOpen, Search, AlertTriangle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { indicators } from '@/data/indicators';
 import { assess, ObservationField } from '@/lib/adjudicator';
 
@@ -15,7 +14,6 @@ export default function VerdictPage() {
   const [requireProfessional, setRequireProfessional] = useState(2);
   const [drivers, setDrivers] = useState<ReturnType<typeof assess>['drivers']>([]);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     const confirmData = sessionStorage.getItem('streamvitals_confirm');
@@ -74,14 +72,14 @@ export default function VerdictPage() {
           <h1 className="text-2xl font-bold text-slate-800 mb-2">Something went wrong</h1>
           <p className="text-slate-600 mb-6">{error}</p>
           <div className="flex gap-3">
-            <button
-              onClick={() => router.push('/guided')}
+<button
+              onClick={() => { window.location.href = '/guided'; }}
               className="flex-1 py-3 bg-teal-600 text-white rounded-xl font-semibold hover:bg-teal-700 transition-colors"
             >
               Start Over
             </button>
             <button
-              onClick={() => router.push('/confirm')}
+              onClick={() => { window.location.href = '/confirm'; }}
               className="flex-1 py-3 bg-white border border-teal-600 text-teal-600 rounded-xl font-semibold hover:bg-teal-50 transition-colors"
             >
               Go Back
@@ -214,13 +212,13 @@ export default function VerdictPage() {
 
         <div className="flex gap-3">
           <button
-            onClick={() => router.push('/confirm')}
+            onClick={() => { window.location.href = '/confirm'; }}
             className="flex-1 py-3 bg-white border border-teal-600 text-teal-600 rounded-xl font-semibold text-center hover:bg-teal-50 transition-colors"
           >
             Retake Assessment
           </button>
           <button
-            onClick={() => router.push('/reference-context')}
+            onClick={() => { window.location.href = '/reference-context'; }}
             className="flex-1 py-3 bg-teal-600 text-white rounded-xl font-semibold text-center hover:bg-teal-700 transition-colors"
           >
             View Reference Context

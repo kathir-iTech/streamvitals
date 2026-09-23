@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { CheckCircle2, ArrowLeft, ArrowRight } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { indicators } from '@/data/indicators';
 
 export default function ConfirmPage() {
@@ -10,7 +9,6 @@ export default function ConfirmPage() {
   const [uncertainFields, setUncertainFields] = useState<Record<string, boolean>>({});
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
 
@@ -54,7 +52,7 @@ export default function ConfirmPage() {
       const confirmData = JSON.stringify({ confirmedFields, uncertainFields, answers });
       sessionStorage.setItem('streamvitals_confirm', confirmData);
       setError(null);
-      router.push('/verdict');
+      window.location.href = '/verdict';
     } catch (e) {
       setError('Something went wrong saving your answers. Please try again.');
     }

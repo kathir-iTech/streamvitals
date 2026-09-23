@@ -47,6 +47,8 @@ function assess(observations) {
     tier = 'T3_FURTHER_ASSESSMENT_RECOMMENDED';
   } else if (maxSeverity >= 2) {
     tier = 'T2_NEEDS_ATTENTION';
+  } else {
+    tier = 'T1_NO_PRIORITY_CONCERN';
   }
 
   let dataStatus;
@@ -58,25 +60,40 @@ function assess(observations) {
     dataStatus = 'INSUFFICIENT';
   }
 
-  return { tier, dataStatus, drivers, evidenceCoverage: { assessed, notApplicable, requireProfessionalMeasurement: requireProfessional }, timestamp: now };
+  return {
+    tier,
+    dataStatus,
+    drivers,
+    evidenceCoverage: {
+      assessed,
+      notApplicable,
+      requireProfessionalMeasurement: requireProfessional,
+    },
+    timestamp: now,
+  };
 }
 
 function getRuleName(ind, state) {
-  switch (state) {
-    case 'absent_or_dead': return `${ind.name}: ABSENT_OR_DEAD → HIGH_CONCERN`;
-    case 'tolerant_only': return `${ind.name}: TOLERANT_ONLY → MODERATE_CONCERN`;
-    case 'diverse_sensitive': return `${ind.name}: DIVERSE_SENSITIVE → NO_PRIORITY_CONCERN`;
-    default: return `${ind.name}: ${state} → ASSESSMENT`;
-  }
+  const labels = ind.citizen_state_labels || {};
+  const label = labels[state] || state.replace(/_/g, ' ');
+  const severity = ind.states[state]?.policy_severity ?? 0;
+  const concernLabel = severity === 0 ? 'No Priority Concern' : severity === 2 ? 'Needs Attention' : 'Further Assessment Recommended';
+  return `${ind.name}: ${label} → ${concernLabel}`;
 }
 
 function validateObservations(observations) {
   const errors = [];
   for (const obs of observations) {
-    if (!INDICATOR_MAP.has(obs.indicatorId)) errors.push(`Unknown indicator ID: ${obs.indicatorId}`);
+    if (!INDICATOR_MAP.has(obs.indicatorId)) {
+      errors.push(`Unknown indicator ID: ${obs.indicatorId}`);
+    }
     const ind = INDICATOR_MAP.get(obs.indicatorId);
-    if (ind && !Object.keys(ind.states).includes(obs.state)) errors.push(`Invalid state "${obs.state}" for indicator ${obs.indicatorId}`);
-    if (!obs.confirmed) errors.push(`Observation for ${obs.indicatorId} is not confirmed`);
+    if (ind && !Object.keys(ind.states).includes(obs.state)) {
+      errors.push(`Invalid state "${obs.state}" for indicator ${obs.indicatorId}`);
+    }
+    if (!obs.confirmed) {
+      errors.push(`Observation for ${obs.indicatorId} is not confirmed`);
+    }
   }
   return { valid: errors.length === 0, errors };
 }

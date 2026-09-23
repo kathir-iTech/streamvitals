@@ -1,1 +1,402 @@
-[{"id": "BMI-01", "group": "biological", "name": "Benthic Macroinvertebrates", "citizen_observable": true, "citizen_question": "What types of small creatures do you see under stones or in the streambed?", "visual_anchor_guide": "Look under 2-3 submerged stones in flowing water.", "plain_term": "Stream insects and small creatures", "states": {"diverse_sensitive": {"policy_severity": 0}, "tolerant_only": {"policy_severity": 2}, "absent_or_dead": {"policy_severity": 3}}, "framework_basis": {"document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)", "citation": "Section II. Benthic Macroinvertebrates (page ~5 of 14)"}, "triage_mapping": {"type": "StreamVitals_policy", "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"}, "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health", "lab_only": false, "coding": {"system": null, "code": null}, "source": "Section II. Benthic Macroinvertebrates (page ~5 of 14)"}, {"id": "BMI-02", "group": "biological", "name": "Fish", "citizen_observable": false, "citizen_question": "Are there any fish visible in the stream, and if so, what types?", "visual_anchor_guide": "Observe the stream from a bridge or bank for moving shapes; proper assessment requires electrofishing.", "plain_term": "Fish species and abundance", "states": {"diverse_sensitive": {"policy_severity": 0}, "tolerant_only": {"policy_severity": 2}, "absent_or_dead": {"policy_severity": 3}}, "framework_basis": {"document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)", "citation": "Section III. Fish (page ~6 of 14)"}, "triage_mapping": {"type": "StreamVitals_policy", "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"}, "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health", "lab_only": true, "coding": {"system": null, "code": null}, "source": "Section III. Fish (page ~6 of 14)"}, {"id": "BMI-03", "group": "biological", "name": "Amphibians", "citizen_observable": false, "citizen_question": "Have you seen any frogs, salamanders, or other amphibians near the stream?", "visual_anchor_guide": "Look for amphibians near water's edge; proper assessment requires permits and specialized sampling.", "plain_term": "Amphibian presence and species", "states": {"diverse_sensitive": {"policy_severity": 0}, "tolerant_only": {"policy_severity": 2}, "absent_or_dead": {"policy_severity": 3}}, "framework_basis": {"document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)", "citation": "Section IV. Amphibians (page ~7 of 14)"}, "triage_mapping": {"type": "StreamVitals_policy", "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"}, "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health", "lab_only": true, "coding": {"system": null, "code": null}, "source": "Section IV. Amphibians (page ~7 of 14)"}, {"id": "BMI-04", "group": "biological", "name": "Birds", "citizen_observable": true, "citizen_question": "What bird species do you hear or see near the stream?", "visual_anchor_guide": "Listen for bird songs and calls, especially insectivorous species, during early morning hours.", "plain_term": "Bird species and insectivorous bird count", "states": {"diverse_sensitive": {"policy_severity": 0}, "tolerant_only": {"policy_severity": 2}, "absent_or_dead": {"policy_severity": 3}}, "framework_basis": {"document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)", "citation": "Section V. Birds (page ~7 of 14)"}, "triage_mapping": {"type": "StreamVitals_policy", "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"}, "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health", "lab_only": false, "coding": {"system": null, "code": null}, "source": "Section V. Birds (page ~7 of 14)"}, {"id": "BMI-05", "group": "biological", "name": "Microbial Diversity", "citizen_observable": false, "citizen_question": "Can you observe any visible biofilm or microbial growth on stream surfaces?", "visual_anchor_guide": "Scrape a small area of submerged substrate and note color/texture changes; proper assessment requires laboratory DNA analysis.", "plain_term": "Microbial community diversity", "states": {"diverse_sensitive": {"policy_severity": 0}, "tolerant_only": {"policy_severity": 2}, "absent_or_dead": {"policy_severity": 3}}, "framework_basis": {"document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)", "citation": "Section VI. Microbial Diversity (page ~9 of 14)"}, "triage_mapping": {"type": "StreamVitals_policy", "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"}, "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health", "lab_only": true, "coding": {"system": null, "code": null}, "source": "Section VI. Microbial Diversity (page ~9 of 14)"}, {"id": "BMI-06", "group": "physicochemical", "name": "Fecal Coliforms", "citizen_observable": false, "citizen_question": "Do you notice any unusual odors, discoloration, or sewage-related signs in the water?", "visual_anchor_guide": "Note water clarity, odor, and visible pollution; laboratory testing is required for confirmation.", "plain_term": "Fecal contamination indicators", "states": {"diverse_sensitive": {"policy_severity": 0}, "tolerant_only": {"policy_severity": 2}, "absent_or_dead": {"policy_severity": 3}}, "framework_basis": {"document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)", "citation": "Section VII. Fecal Coliforms (page ~10 of 14)"}, "triage_mapping": {"type": "StreamVitals_policy", "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"}, "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health", "lab_only": true, "coding": {"system": null, "code": null}, "source": "Section VII. Fecal Coliforms (page ~10 of 14)"}, {"id": "BMI-07", "group": "physicochemical", "name": "Pathogens", "citizen_observable": false, "citizen_question": "Do you notice any visible signs of pollution such as foam, discoloration, or algal blooms?", "visual_anchor_guide": "Note water appearance and odor; pathogen detection requires laboratory molecular methods.", "plain_term": "Disease-causing microorganisms", "states": {"diverse_sensitive": {"policy_severity": 0}, "tolerant_only": {"policy_severity": 2}, "absent_or_dead": {"policy_severity": 3}}, "framework_basis": {"document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)", "citation": "Section VIII. Pathogens (page ~11 of 14)"}, "triage_mapping": {"type": "StreamVitals_policy", "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"}, "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health", "lab_only": true, "coding": {"system": null, "code": null}, "source": "Section VIII. Pathogens (page ~11 of 14)"}, {"id": "BMI-08", "group": "physicochemical", "name": "Antibiotic Resistance Genes", "citizen_observable": false, "citizen_question": "Are you aware of any nearby agricultural or industrial activity that could affect the stream?", "visual_anchor_guide": "Note land use around the stream; ARG detection requires laboratory molecular methods.", "plain_term": "Antibiotic resistance markers in water", "states": {"diverse_sensitive": {"policy_severity": 0}, "tolerant_only": {"policy_severity": 2}, "absent_or_dead": {"policy_severity": 3}}, "framework_basis": {"document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)", "citation": "Section IX. Antibiotic Resistance Genes (page ~12 of 14)"}, "triage_mapping": {"type": "StreamVitals_policy", "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"}, "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health", "lab_only": true, "coding": {"system": null, "code": null}, "source": "Section IX. Antibiotic Resistance Genes (page ~12 of 14)"}, {"id": "BMI-09", "group": "biological", "name": "Diptera Adults", "citizen_observable": false, "citizen_question": "Do you notice an unusual number of flies, mosquitoes, or other flying insects near the stream?", "visual_anchor_guide": "Observe flying insect activity near the water surface; formal assessment requires CO2-baited traps.", "plain_term": "Adult flying insects (Diptera)", "states": {"diverse_sensitive": {"policy_severity": 0}, "tolerant_only": {"policy_severity": 2}, "absent_or_dead": {"policy_severity": 3}}, "framework_basis": {"document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)", "citation": "Section X. Diptera Adults (page ~12 of 14)"}, "triage_mapping": {"type": "StreamVitals_policy", "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"}, "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health", "lab_only": false, "coding": {"system": null, "code": null}, "source": "Section X. Diptera Adults (page ~12 of 14)"}, {"id": "BMI-10", "group": "biological", "name": "Diatoms and Diatom Teratology", "citizen_observable": false, "citizen_question": "Can you observe any algae or slime on submerged stones in the stream?", "visual_anchor_guide": "Scrape a small area of submerged stone and note algae color and texture; proper identification requires laboratory microscopy.", "plain_term": "Diatom algae and deformities", "states": {"diverse_sensitive": {"policy_severity": 0}, "tolerant_only": {"policy_severity": 2}, "absent_or_dead": {"policy_severity": 3}}, "framework_basis": {"document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)", "citation": "Section I. Diatoms and Diatom Teratology (page ~4 of 14)"}, "triage_mapping": {"type": "StreamVitals_policy", "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"}, "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health", "lab_only": true, "coding": {"system": null, "code": null}, "source": "Section I. Diatoms and Diatom Teratology (page ~4 of 14)"}, {"id": "BMI-11", "group": "habitat", "name": "Invasive Alien Plants of the Riparian Corridor", "citizen_observable": true, "citizen_question": "What types of plants do you see along the stream banks, and do any look unusual or non-native?", "visual_anchor_guide": "Walk along both banks of a 100-meter stretch and note plant species, especially non-native or fast-growing ones.", "plain_term": "Non-native plants along stream banks", "states": {"diverse_sensitive": {"policy_severity": 0}, "tolerant_only": {"policy_severity": 2}, "absent_or_dead": {"policy_severity": 3}}, "framework_basis": {"document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)", "citation": "Section XI. Invasive Alien Plants of the Riparian Corridor (page ~13 of 14)"}, "triage_mapping": {"type": "StreamVitals_policy", "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"}, "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health", "lab_only": false, "coding": {"system": null, "code": null}, "source": "Section XI. Invasive Alien Plants of the Riparian Corridor (page ~13 of 14)"}]
+[
+  {
+    "id": "BMI-01",
+    "group": "biological",
+    "name": "Benthic Macroinvertebrates",
+    "citizen_observable": true,
+    "citizen_question": "What types of small creatures do you see under stones or in the streambed?",
+    "visual_anchor_guide": "Look under 2-3 submerged stones in flowing water.",
+    "plain_term": "Stream insects and small creatures",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": false,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section II. Benthic Macroinvertebrates",
+    "citizen_state_labels": {
+      "diverse_sensitive": "Many sensitive species present",
+      "tolerant_only": "Only tolerant species seen",
+      "absent_or_dead": "None seen or dead"
+    }
+  },
+  {
+    "id": "FSH-02",
+    "group": "biological",
+    "name": "Fish",
+    "citizen_observable": false,
+    "citizen_question": "Are there any fish visible in the stream, and if so, what types?",
+    "visual_anchor_guide": "Observe the stream from a bridge or bank for moving shapes; proper assessment requires electrofishing.",
+    "plain_term": "Fish species and abundance",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section III. Fish"
+  },
+  {
+    "id": "AMH-03",
+    "group": "biological",
+    "name": "Amphibians",
+    "citizen_observable": false,
+    "citizen_question": "Have you seen any frogs, salamanders, or other amphibians near the stream?",
+    "visual_anchor_guide": "Look for amphibians near water's edge; proper assessment requires permits and specialized sampling.",
+    "plain_term": "Amphibian presence and species",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section IV. Amphibians"
+  },
+  {
+    "id": "BIR-04",
+    "group": "biological",
+    "name": "Birds",
+    "citizen_observable": true,
+    "citizen_question": "What bird species do you hear or see near the stream?",
+    "visual_anchor_guide": "Listen for bird songs and calls, especially insectivorous species, during early morning hours.",
+    "plain_term": "Bird species and insectivorous bird count",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": false,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section V. Birds",
+    "citizen_state_labels": {
+      "diverse_sensitive": "Many species observed",
+      "tolerant_only": "Few species observed",
+      "absent_or_dead": "None seen"
+    }
+  },
+  {
+    "id": "MDR-05",
+    "group": "biological",
+    "name": "Microbial Diversity",
+    "citizen_observable": false,
+    "citizen_question": "Can you observe any visible biofilm or microbial growth on stream surfaces?",
+    "visual_anchor_guide": "Scrape a small area of submerged substrate and note color/texture changes; proper assessment requires laboratory DNA analysis.",
+    "plain_term": "Microbial community diversity",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section VI. Microbial Diversity"
+  },
+  {
+    "id": "FCL-06",
+    "group": "physicochemical",
+    "name": "Fecal Coliforms",
+    "citizen_observable": false,
+    "citizen_question": "Do you notice any unusual odors, discoloration, or sewage-related signs in the water?",
+    "visual_anchor_guide": "Note water clarity, odor, and visible pollution; laboratory testing is required for confirmation.",
+    "plain_term": "Fecal contamination indicators",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section VII. Fecal Coliforms"
+  },
+  {
+    "id": "PRT-07",
+    "group": "physicochemical",
+    "name": "Pathogens",
+    "citizen_observable": false,
+    "citizen_question": "Do you notice any visible signs of pollution such as foam, discoloration, or algal blooms?",
+    "visual_anchor_guide": "Note water appearance and odor; pathogen detection requires laboratory molecular methods.",
+    "plain_term": "Disease-causing microorganisms",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section VIII. Pathogens"
+  },
+  {
+    "id": "ARB-08",
+    "group": "physicochemical",
+    "name": "Antibiotic Resistance Genes",
+    "citizen_observable": false,
+    "citizen_question": "Are you aware of any nearby agricultural or industrial activity that could affect the stream?",
+    "visual_anchor_guide": "Note land use around the stream; ARG detection requires laboratory molecular methods.",
+    "plain_term": "Antibiotic resistance markers in water",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section IX. Antibiotic Resistance Genes"
+  },
+  {
+    "id": "DPT-09",
+    "group": "biological",
+    "name": "Diptera Adults",
+    "citizen_observable": false,
+    "citizen_question": "Do you notice an unusual number of flies, mosquitoes, or other flying insects near the stream?",
+    "visual_anchor_guide": "Observe flying insect activity near the water surface; formal assessment requires CO2-baited traps.",
+    "plain_term": "Adult flying insects (Diptera)",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": false,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section X. Diptera Adults"
+  },
+  {
+    "id": "DIA-10",
+    "group": "biological",
+    "name": "Diatoms and Diatom Teratology",
+    "citizen_observable": false,
+    "citizen_question": "Can you observe any algae or slime on submerged stones in the stream?",
+    "visual_anchor_guide": "Scrape a small area of submerged stone and note algae color and texture; proper identification requires laboratory microscopy.",
+    "plain_term": "Diatom algae and deformities",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section I. Diatoms and Diatom Teratology"
+  },
+  {
+    "id": "INV-11",
+    "group": "habitat",
+    "name": "Invasive Alien Plants of the Riparian Corridor",
+    "citizen_observable": true,
+    "citizen_question": "What types of plants do you see along the stream banks, and do any look unusual or non-native?",
+    "visual_anchor_guide": "Walk along both banks of a 100-meter stretch and note plant species, especially non-native or fast-growing ones.",
+    "plain_term": "Non-native plants along stream banks",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": false,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section XI. Invasive Alien Plants of the Riparian Corridor",
+    "citizen_state_labels": {
+      "diverse_sensitive": "None or few patches",
+      "tolerant_only": "A few patches",
+      "absent_or_dead": "Widespread coverage"
+    }
+  }
+]
