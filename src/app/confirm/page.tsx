@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { CheckCircle2, ArrowLeft, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 import { indicators } from '@/data/indicators';
 
 export default function ConfirmPage() {
@@ -58,87 +59,106 @@ export default function ConfirmPage() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
-      <div className="max-w-lg w-full bg-white rounded-2xl shadow-lg p-8">
-        <div className="flex items-center gap-3 mb-2">
-          <a href="/guided" className="text-teal-600 hover:text-teal-800">
-            <ArrowLeft className="w-5 h-5" />
-          </a>
-          <h1 className="text-2xl font-bold text-slate-800">Confirm Your Observations</h1>
+  if (error) {
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-slate-900 via-teal-900 to-slate-900 text-white flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-30 pointer-events-none">
+          <div className="absolute top-10 left-20 w-64 h-64 bg-red-400 rounded-full blur-3xl" />
+          <div className="absolute bottom-10 right-20 w-96 h-96 bg-orange-500 rounded-full blur-3xl" />
         </div>
-        <p className="text-sm text-slate-500 mb-6">
-          Review each field before proceeding. You must confirm all fields.
-        </p>
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700" role="alert">
-            {error}
-          </div>
-        )}
-        <div className="space-y-4 mb-6">
+        <div className="max-w-lg w-full bg-white/10 backdrop-blur-xl rounded-3xl p-10 text-center border border-white/20 relative z-10">
+          <p className="text-red-300 text-sm font-medium mb-2">Something went wrong</p>
+          <p className="text-white/70 mb-6">{error}</p>
+          <button onClick={() => window.location.href = '/guided'} className="w-full py-3 bg-white/10 backdrop-blur-lg border border-white/20 text-white rounded-xl font-semibold hover:bg-white/20 transition-all">
+            Start Over
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 text-white flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-30 pointer-events-none">
+        <div className="absolute top-10 left-20 w-64 h-64 bg-teal-400 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-20 w-96 h-96 bg-emerald-500 rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-lg w-full relative z-10">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold tracking-tight mb-2">Confirm Your Observations</h1>
+          <p className="text-white/60 text-sm">Review each field before proceeding.</p>
+        </div>
+
+        <div className="space-y-3 mb-6">
           {citizenIndicators.map((ind) => (
             <div
               key={ind.id}
-              className={`p-4 rounded-xl border-2 ${
-                confirmedFields[ind.id] ? 'border-teal-200 bg-teal-50' : 'border-slate-200'
+              className={`bg-white/10 backdrop-blur-xl rounded-2xl border transition-all duration-300 ${
+                confirmedFields[ind.id]
+                  ? 'border-emerald-400/40 bg-emerald-500/10'
+                  : 'border-white/15 bg-white/5'
               }`}
             >
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h3 className="font-semibold text-slate-800">{ind.name}</h3>
-                  <p className="text-sm text-slate-500">{ind.plain_term}</p>
-                </div>
-                <button
-                  onClick={() => toggleConfirm(ind.id)}
-                  className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                    confirmedFields[ind.id]
-                      ? 'bg-teal-600 border-teal-600 text-white'
-                      : 'border-slate-300'
-                  }`}
-                >
-                  {confirmedFields[ind.id] && <CheckCircle2 className="w-4 h-4" />}
-                </button>
-              </div>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="text-xs text-slate-400">Answer:</span>
-                <span className="text-sm text-slate-700 font-medium">
-                  {ind.citizen_state_labels && answers[ind.id]
-                    ? ind.citizen_state_labels[answers[ind.id]] || answers[ind.id]
-                    : answers[ind.id] || 'Not answered'}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="text-xs text-slate-400">Confidence:</span>
-                {(['high', 'uncertain'] as const).map((level) => (
+              <div className="p-5">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="font-semibold text-white">{ind.name}</h3>
+                    <p className="text-white/50 text-sm">{ind.plain_term}</p>
+                  </div>
                   <button
-                    key={level}
-                    onClick={() => toggleUncertain(ind.id)}
-                    className={`px-2 py-1 rounded text-xs font-medium transition-all ${
-                      uncertainFields[ind.id] === (level === 'uncertain')
-                        ? 'bg-slate-200 text-slate-800'
-                        : 'text-slate-400'
+                    onClick={() => toggleConfirm(ind.id)}
+                    className={`w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${
+                      confirmedFields[ind.id]
+                        ? 'bg-emerald-500 border-emerald-500 text-white'
+                        : 'border-white/30'
                     }`}
                   >
-                    {level === 'high' ? 'High' : 'Uncertain'}
+                    {confirmedFields[ind.id] && <CheckCircle2 className="w-4 h-4" />}
                   </button>
-                ))}
+                </div>
+                <div className="flex items-center gap-2 mt-3">
+                  <span className="text-xs text-white/40">Answer:</span>
+                  <span className="text-sm text-white/80 font-medium">
+                    {ind.citizen_state_labels && answers[ind.id]
+                      ? ind.citizen_state_labels[answers[ind.id]] || answers[ind.id]
+                      : answers[ind.id] || 'Not answered'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-xs text-white/40">Confidence:</span>
+                  {(['high', 'uncertain'] as const).map((level) => (
+                    <button
+                      key={level}
+                      onClick={() => toggleUncertain(ind.id)}
+                      className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
+                        uncertainFields[ind.id] === (level === 'uncertain')
+                          ? 'bg-white/20 text-white'
+                          : 'text-white/30'
+                      }`}
+                    >
+                      {level === 'high' ? 'High' : 'Uncertain'}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
         </div>
+
         <button
           onClick={handleProceed}
           disabled={!allConfirmed}
-          className={`w-full py-3 rounded-xl font-semibold text-center flex items-center justify-center gap-2 transition-colors ${
+          className={`w-full py-4 rounded-2xl font-semibold disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 focus:ring-2 focus:ring-teal-400 focus:outline-none ${
             allConfirmed
-              ? 'bg-teal-600 text-white hover:bg-teal-700 cursor-pointer'
-              : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+              ? 'bg-gradient-to-r from-teal-500 to-emerald-600 text-white shadow-lg shadow-teal-500/20 hover:opacity-90'
+              : 'bg-white/10 border border-white/15 text-white/40'
           }`}
           aria-label="Proceed to assessment"
         >
           Proceed to Assessment <ArrowRight className="w-4 h-4" />
         </button>
       </div>
-    </div>
+    </main>
   );
 }
