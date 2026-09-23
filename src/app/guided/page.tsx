@@ -114,12 +114,11 @@ export default function GuidedPage() {
   const handleAnswer = (state: string) => {
     setAnswers((prev) => ({ ...prev, [currentIndicator.id]: state }));
     setSelectedState(state);
-    setJustAnswered(true);
-    setTimeout(() => {
-      setJustAnswered(false);
-      setStep((prev) => prev + 1);
-      setSelectedState(null);
-    }, 1200);
+  };
+
+  const handleNext = () => {
+    setSelectedState(null);
+    setStep((prev) => prev + 1);
   };
 
   const canProceed = answers[currentIndicator.id];
@@ -161,12 +160,11 @@ export default function GuidedPage() {
                     key={state}
                     type="button"
                     onClick={() => handleAnswer(state)}
-                    disabled={!!answers[currentIndicator.id] && !justAnswered}
                     className={`relative px-4 py-5 rounded-2xl border-2 font-medium text-sm transition-all duration-300 focus:ring-2 focus:ring-teal-400 focus:outline-none ${
                       isSelected
                         ? 'bg-white/20 border-white scale-105 shadow-lg'
                         : 'bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/40 hover:scale-[1.02]'
-                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    }`}
                   >
                     {isSelected && (
                       <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/10 to-white/5 pointer-events-none" />
@@ -177,8 +175,8 @@ export default function GuidedPage() {
               })}
             </fieldset>
 
-            <div className={`transition-all duration-500 overflow-hidden ${
-              justAnswered ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'
+            <div className={`transition-all duration-300 overflow-hidden ${
+              selectedState ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'
             }`}>
               <div className={`p-4 rounded-xl border ${answerColors[selectedState || ''] || ''}`}>
                 <p className={`text-sm font-medium ${answerTextColors[selectedState || ''] || 'text-white'}`}>
@@ -190,11 +188,7 @@ export default function GuidedPage() {
         </div>
 
         <button
-          onClick={() => {
-            if (!canProceed) return;
-            setStep((prev) => prev + 1);
-            setSelectedState(null);
-          }}
+          onClick={handleNext}
           disabled={!canProceed}
           className="w-full py-4 bg-white/10 backdrop-blur-lg border border-white/20 text-white rounded-2xl font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/20 transition-all duration-300 flex items-center justify-center gap-2 mt-4 focus:ring-2 focus:ring-teal-400 focus:outline-none"
           aria-label="Next question"
