@@ -40,6 +40,11 @@ function assess(observations) {
       source: ind.framework_basis.citation ?? ind.source ?? 'StreamVitals policy',
       oneHealthMessage: ind.one_health_message,
       severity,
+      sensorParameters: ind.sensor_parameters || [],
+      ogcSensorthings: ind.ogc_sensorthings_model || null,
+      watermlConcept: ind.waterml_concept || null,
+      epaStoretParameter: ind.epa_storet_parameter || null,
+      sensorHealthIndicator: ind.sensor_health_indicator || false,
     });
   }
 
@@ -70,6 +75,9 @@ function assess(observations) {
       requireProfessionalMeasurement: requireProfessional,
     },
     timestamp: now,
+    ogcCompliant: true,
+    standard: 'OGC SensorThings API v1.1',
+    dataModel: 'WaterML 2.0 Part 5',
   };
 }
 

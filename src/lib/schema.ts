@@ -16,22 +16,30 @@ export const indicatorSchema = z.object({
     absent_or_dead: z.string(),
   }).optional(),
   states: z.object({
-    diverse_sensitive: z.object({ policy_severity: z.number() }),
-    tolerant_only: z.object({ policy_severity: z.number() }),
-    absent_or_dead: z.object({ policy_severity: z.number() }),
+    diverse_sensitive: z.object({ policy_severity: z.number(), sensor_thresholds: z.record(z.string(), z.number()).optional() }),
+    tolerant_only: z.object({ policy_severity: z.number(), sensor_thresholds: z.record(z.string(), z.number()).optional() }),
+    absent_or_dead: z.object({ policy_severity: z.number(), sensor_thresholds: z.record(z.string(), z.number()).optional() }),
   }),
-  framework_basis: z.object({
-    document: z.string(),
-    citation: z.string().nullable(),
-  }),
-  triage_mapping: z.object({
-    type: z.string(),
-    note: z.string(),
-  }),
+  framework_basis: z.object({ document: z.string(), citation: z.string().nullable() }),
+  triage_mapping: z.object({ type: z.string(), note: z.string() }),
   one_health_message: z.string(),
   lab_only: z.boolean(),
   coding: z.object({ system: z.string().nullable(), code: z.string().nullable() }),
   source: z.string().nullable(),
+  sensor_parameters: z.array(z.string()).optional(),
+  ogc_sensorthings_model: z.object({
+    datastreamName: z.string().optional(),
+    observationType: z.string().optional(),
+    phenomenon: z.string().optional(),
+    unitOfMeasurement: z.object({ name: z.string(), definition: z.string(), symbol: z.string() }).optional(),
+  }).optional(),
+  waterml_concept: z.string().optional(),
+  epa_storet_parameter: z.string().optional(),
+  sensor_health_indicator: z.boolean().optional(),
+  real_time_monitoring: z.boolean().optional(),
+  wqp_data_category: z.string().optional(),
+  huc_relevance: z.array(z.number()).optional(),
+  geospatial: z.object({ supports_huc: z.boolean().optional(), watershed_mapping: z.boolean().optional(), leaflet_integration: z.boolean().optional() }).optional(),
 });
 
 export type Indicator = z.infer<typeof indicatorSchema>;

@@ -31,6 +31,18 @@ export default function Home() {
           >
             Describe What You See
           </Link>
+          <Link
+            href="/dashboard"
+            className="px-8 py-4 bg-transparent border-2 border-emerald-400 text-emerald-300 font-semibold rounded-xl hover:bg-emerald-400 hover:text-slate-900 transition-colors text-lg"
+          >
+            Live Dashboard
+          </Link>
+          <Link
+            href="/field-collect"
+            className="px-8 py-4 bg-transparent border-2 border-amber-400 text-amber-300 font-semibold rounded-xl hover:bg-amber-400 hover:text-slate-900 transition-colors text-lg"
+          >
+            Field Collection
+          </Link>
         </div>
         <p className="mt-8 text-sm text-white/40">
           AI may interpret input. AI may not adjudicate.

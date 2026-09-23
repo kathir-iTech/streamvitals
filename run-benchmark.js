@@ -2,8 +2,8 @@ const { assess } = require('./src/lib/adjudicator.cjs');
 
 const observations = [
   { indicatorId: 'BMI-01', state: 'diverse_sensitive', confirmed: true },
-  { indicatorId: 'BMI-04', state: 'tolerant_only', confirmed: true },
-  { indicatorId: 'BMI-11', state: 'absent_or_dead', confirmed: true },
+  { indicatorId: 'BIR-04', state: 'tolerant_only', confirmed: true },
+  { indicatorId: 'INV-11', state: 'absent_or_dead', confirmed: true },
 ];
 
 // Benchmark: execution latency

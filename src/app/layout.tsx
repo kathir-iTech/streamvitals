@@ -37,6 +37,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/about" className="text-slate-600 hover:text-teal-600 transition-colors">
                 How It Works
               </Link>
+              <Link href="/dashboard" className="text-slate-600 hover:text-teal-600 transition-colors">
+                Dashboard
+              </Link>
+              <Link href="/analytics" className="text-slate-600 hover:text-teal-600 transition-colors">
+                Analytics
+              </Link>
+              <Link href="/field-collect" className="text-slate-600 hover:text-teal-600 transition-colors">
+                Field Collection
+              </Link>
+              <Link href="/compliance" className="text-slate-600 hover:text-teal-600 transition-colors">
+                Compliance
+              </Link>
+              <Link href="/citizen" className="text-slate-600 hover:text-teal-600 transition-colors">
+                Citizen Science
+              </Link>
+              <Link href="/manage" className="text-slate-600 hover:text-teal-600 transition-colors">
+                Data Management
+              </Link>
+              <Link href="/tech-showcase" className="text-slate-600 hover:text-teal-600 transition-colors">
+                Tech Showcase
+              </Link>
               <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">
                 AI may interpret input. AI may not adjudicate.
               </span>
