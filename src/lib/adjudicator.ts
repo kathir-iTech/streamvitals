@@ -110,16 +110,12 @@ export function assess(observations: ObservationField[]): Verdict {
 }
 
 function getRuleName(ind: typeof indicators[0], state: string): string {
-  switch (state) {
-    case 'absent_or_dead':
-      return `${ind.name}: ABSENT_OR_DEAD → HIGH_CONCERN`;
-    case 'tolerant_only':
-      return `${ind.name}: TOLERANT_ONLY → MODERATE_CONCERN`;
-    case 'diverse_sensitive':
-      return `${ind.name}: DIVERSE_SENSITIVE → NO_PRIORITY_CONCERN`;
-    default:
-      return `${ind.name}: ${state} → ASSESSMENT`;
-  }
+  const labels = ind.citizen_state_labels || {};
+  const label = labels[state as keyof typeof labels] || state.replace(/_/g, ' ');
+  const stateName = state.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  const severity = ind.states[state]?.policy_severity ?? 0;
+  const concernLabel = severity === 0 ? 'No Priority Concern' : severity === 2 ? 'Needs Attention' : 'Further Assessment Recommended';
+  return `${ind.name}: ${label} → ${concernLabel}`;
 }
 
 export function validateObservations(observations: ObservationField[]): {

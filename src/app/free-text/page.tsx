@@ -1,20 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { indicators } from '@/data/indicators';
 
 export default function FreeTextPage() {
   const [text, setText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isAiEnabled, setIsAiEnabled] = useState(true);
 
+  useEffect(() => {
+    const stored = sessionStorage.getItem('streamvitals_free_text');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setText(parsed.text || '');
+        setIsAiEnabled(parsed.isAiEnabled ?? true);
+      } catch {}
+    }
+  }, []);
+
   const handleSubmit = async () => {
     if (!text.trim()) return;
     setIsProcessing(true);
-    // Simulate AI processing
     await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsProcessing(false);
+    sessionStorage.setItem('streamvitals_free_text', JSON.stringify({ text, isAiEnabled }));
+  };
+
+  const handleSkip = () => {
+    const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
+    const answers: Record<string, string> = {};
+    for (const ind of citizenIndicators) {
+      const states = Object.keys(ind.states);
+      answers[ind.id] = states[0];
+    }
+    sessionStorage.setItem('streamvitals_answers', JSON.stringify(answers));
   };
 
   return (
@@ -58,6 +80,7 @@ export default function FreeTextPage() {
           </button>
           <Link
             href="/confirm"
+            onClick={handleSkip}
             className="px-6 py-3 border border-slate-300 text-slate-600 rounded-xl font-medium hover:bg-slate-50 transition-colors"
           >
             Skip AI

@@ -1,15 +1,35 @@
 'use client';
 
-import { useState } from 'react';
-import { ArrowLeft, Send } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Send, Bug, Bird, Leaf, Fish } from 'lucide-react';
 import Link from 'next/link';
 import { indicators } from '@/data/indicators';
+
+const indicatorIcons: Record<string, React.ElementType> = {
+  'BMI-01': Bug,
+  'BMI-04': Bird,
+  'BMI-11': Leaf,
+};
 
 const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
 
 export default function GuidedPage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem('streamvitals_answers');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setAnswers(parsed);
+      } catch {}
+    }
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem('streamvitals_answers', JSON.stringify(answers));
+  }, [answers]);
 
   const currentIndicator = citizenIndicators[step];
 
@@ -32,6 +52,8 @@ export default function GuidedPage() {
   };
 
   const canProceed = answers[currentIndicator.id];
+  const IconComponent = indicatorIcons[currentIndicator.id] || Bug;
+  const labels = currentIndicator.citizen_state_labels || {};
 
   return (
     <main className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
@@ -53,13 +75,10 @@ export default function GuidedPage() {
             Question {step + 1} of {citizenIndicators.length}
           </span>
         </div>
-        <div className="mb-2">
-          <img
-            src={`https://picsum.photos/seed/stream${step}/400/200`}
-            alt={`Visual reference for ${currentIndicator.name}`}
-            className="w-full h-48 object-cover rounded-xl mb-4"
-            loading="lazy"
-          />
+        <div className="mb-6 flex items-center justify-center">
+          <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center">
+            <IconComponent className="w-10 h-10 text-teal-600" aria-hidden="true" />
+          </div>
         </div>
         <h2 className="text-xl font-semibold text-slate-800 mb-2" id="question-heading">
           {currentIndicator.citizen_question}
@@ -75,8 +94,7 @@ export default function GuidedPage() {
               aria-pressed={answers[currentIndicator.id] === state}
               className="px-4 py-3 rounded-xl border-2 font-medium text-sm transition-all focus:ring-2 focus:ring-teal-500 focus:outline-none"
             >
-              <div className="font-semibold">{state.replace(/_/g, ' ')}</div>
-              <div className="text-xs opacity-70">severity: {data.policy_severity}</div>
+              <div className="font-semibold">{labels[state] || state.replace(/_/g, ' ')}</div>
             </button>
           ))}
         </fieldset>

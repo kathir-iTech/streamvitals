@@ -20,6 +20,7 @@ export interface Indicator {
   citizen_question: string;
   visual_anchor_guide: string;
   plain_term: string;
+  citizen_state_labels?: Record<string, string>;
   states: Record<string, IndicatorState>;
   framework_basis: FrameworkBasis;
   triage_mapping: { type: string; note: string };

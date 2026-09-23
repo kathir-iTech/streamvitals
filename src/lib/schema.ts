@@ -10,6 +10,11 @@ export const indicatorSchema = z.object({
   citizen_question: z.string(),
   visual_anchor_guide: z.string(),
   plain_term: z.string(),
+  citizen_state_labels: z.object({
+    diverse_sensitive: z.string(),
+    tolerant_only: z.string(),
+    absent_or_dead: z.string(),
+  }).optional(),
   states: z.object({
     diverse_sensitive: z.object({ policy_severity: z.number() }),
     tolerant_only: z.object({ policy_severity: z.number() }),

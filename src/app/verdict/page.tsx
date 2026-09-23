@@ -1,20 +1,48 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Shield, Clock, AlertCircle, ChevronDown, ChevronRight, BookOpen, Search, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { indicators } from '@/data/indicators';
+import { assess, ObservationField } from '@/lib/adjudicator';
 
 export default function VerdictPage() {
   const [expandedDriver, setExpandedDriver] = useState<string | null>(null);
+  const [tier, setTier] = useState<ReturnType<typeof assess>['tier']>('T3_FURTHER_ASSESSMENT_RECOMMENDED');
+  const [dataStatus, setDataStatus] = useState('PARTIAL');
+  const [assessed, setAssessed] = useState(3);
+  const [notApplicable, setNotApplicable] = useState(1);
+  const [requireProfessional, setRequireProfessional] = useState(2);
+  const [drivers, setDrivers] = useState<ReturnType<typeof assess>['drivers']>([]);
 
-  const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
-
-  const tier = 'T3_FURTHER_ASSESSMENT_RECOMMENDED';
-  const dataStatus = 'PARTIAL';
-  const assessed = 3;
-  const notApplicable = 1;
-  const requireProfessional = 2;
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const dataParam = params.get('data');
+    if (dataParam) {
+      try {
+        const parsed = JSON.parse(decodeURIComponent(dataParam));
+        const { confirmedFields, uncertainFields, answers } = parsed;
+        const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
+        const observations: ObservationField[] = citizenIndicators
+          .filter((ind) => answers[ind.id])
+          .map((ind) => ({
+            indicatorId: ind.id,
+            state: answers[ind.id] as 'diverse_sensitive' | 'tolerant_only' | 'absent_or_dead',
+            confirmed: !!confirmedFields[ind.id],
+            confidence: uncertainFields[ind.id] ? 'uncertain' : 'high',
+          }));
+        const result = assess(observations);
+        setTier(result.tier);
+        setDataStatus(result.dataStatus);
+        setAssessed(result.evidenceCoverage.assessed);
+        setNotApplicable(result.evidenceCoverage.notApplicable);
+        setRequireProfessional(result.evidenceCoverage.requireProfessionalMeasurement);
+        setDrivers(result.drivers);
+      } catch {
+        setTier('T3_FURTHER_ASSESSMENT_RECOMMENDED');
+      }
+    }
+  }, []);
 
   const tierColors = {
     T1_NO_PRIORITY_CONCERN: 'bg-green-100 text-green-800 border-green-200',
@@ -28,16 +56,7 @@ export default function VerdictPage() {
     T3_FURTHER_ASSESSMENT_RECOMMENDED: 'Further Assessment Recommended',
   };
 
-  const drivers = citizenIndicators.map((ind, i) => ({
-    ruleId: `RULE-${ind.id}-diverse_sensitive`,
-    ruleName: `${ind.name}: DIVERSE_SENSITIVE → NO_PRIORITY_CONCERN`,
-    indicatorId: ind.id,
-    indicatorName: ind.name,
-    observationState: 'diverse_sensitive',
-    source: ind.framework_basis.citation ?? ind.source ?? 'StreamVitals policy',
-    oneHealthMessage: ind.one_health_message,
-    severity: ind.states.diverse_sensitive.policy_severity,
-  }));
+  const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
@@ -90,7 +109,7 @@ export default function VerdictPage() {
             Click each rule to see the full chain: observation → indicator → rule → source citation → One Health text.
           </p>
           <div className="space-y-3">
-            {drivers.map((driver, i) => (
+            {drivers.map((driver) => (
               <div key={driver.ruleId} className="border border-slate-200 rounded-xl overflow-hidden">
                 <button
                   onClick={() => setExpandedDriver(expandedDriver === driver.ruleId ? null : driver.ruleId)}
@@ -106,15 +125,6 @@ export default function VerdictPage() {
                       <div className="font-medium text-slate-800 text-sm">{driver.ruleName}</div>
                       <div className="text-xs text-slate-400">{driver.indicatorName}</div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      driver.severity === 0 ? 'bg-green-100 text-green-700' :
-                      driver.severity === 2 ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-red-100 text-red-700'
-                    }`}>
-                      Severity: {driver.severity}
-                    </span>
                   </div>
                 </button>
                 {expandedDriver === driver.ruleId && (

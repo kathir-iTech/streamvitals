@@ -1,15 +1,38 @@
 'use client';
 
-import { useState } from 'react';
-import { CheckCircle2, AlertTriangle, ArrowLeft, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { CheckCircle2, ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { indicators } from '@/data/indicators';
 
 export default function ConfirmPage() {
   const [confirmedFields, setConfirmedFields] = useState<Record<string, boolean>>({});
   const [uncertainFields, setUncertainFields] = useState<Record<string, boolean>>({});
+  const [answers, setAnswers] = useState<Record<string, string>>({});
 
   const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem('streamvitals_answers');
+    if (stored) {
+      try {
+        setAnswers(JSON.parse(stored));
+      } catch {}
+    }
+  }, []);
+
+  useEffect(() => {
+    const defaults: Record<string, boolean> = {};
+    const conf: Record<string, boolean> = {};
+    const unc: Record<string, boolean> = {};
+    for (const ind of citizenIndicators) {
+      defaults[ind.id] = !!answers[ind.id];
+      conf[ind.id] = !!answers[ind.id];
+      unc[ind.id] = false;
+    }
+    setConfirmedFields(defaults);
+    setUncertainFields(unc);
+  }, [answers, citizenIndicators]);
 
   const toggleConfirm = (id: string) => {
     setConfirmedFields((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -20,6 +43,8 @@ export default function ConfirmPage() {
   };
 
   const allConfirmed = citizenIndicators.every((ind) => confirmedFields[ind.id]);
+
+  const allConfirmedStr = JSON.stringify({ confirmedFields, uncertainFields, answers });
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
@@ -58,6 +83,14 @@ export default function ConfirmPage() {
                 </button>
               </div>
               <div className="flex items-center gap-2 mt-2">
+                <span className="text-xs text-slate-400">Answer:</span>
+                <span className="text-sm text-slate-700 font-medium">
+                  {ind.citizen_state_labels && answers[ind.id]
+                    ? ind.citizen_state_labels[answers[ind.id]] || answers[ind.id]
+                    : answers[ind.id] || 'Not answered'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mt-2">
                 <span className="text-xs text-slate-400">Confidence:</span>
                 {(['high', 'uncertain'] as const).map((level) => (
                   <button
@@ -77,7 +110,7 @@ export default function ConfirmPage() {
           ))}
         </div>
         <Link
-          href="/verdict"
+          href={`/verdict?data=${encodeURIComponent(allConfirmedStr)}`}
           className={`w-full py-3 rounded-xl font-semibold text-center flex items-center justify-center gap-2 transition-colors ${
             allConfirmed
               ? 'bg-teal-600 text-white hover:bg-teal-700'
