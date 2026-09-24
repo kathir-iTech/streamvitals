@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Bot, User, Sparkles, Loader2, ChevronDown, X, Volume2, Mic, MicOff, Download, Copy, Check, Globe, FlaskConical, Shield, TrendingUp, AlertTriangle } from 'lucide-react';
+import { Send, Bot, User, Sparkles, Loader2, ChevronDown, X, Mic, MicOff, Download, Copy, Check, Globe, FlaskConical, Shield, TrendingUp, AlertTriangle } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';

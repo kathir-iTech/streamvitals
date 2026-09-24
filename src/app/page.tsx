@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Droplets, ArrowRight, MapPin, Bot, TrendingUp, FileText, Users, Search, Activity, Shield } from 'lucide-react';
 import WaterCanvas from '@/components/water-canvas';
 import FloatingOrb from '@/components/floating-orb';
@@ -10,7 +10,6 @@ import { useScrollObserver } from '@/components/scroll-animations';
 import Link from 'next/link';
 
 export default function HomePage() {
-  const heroRef = useRef<HTMLDivElement>(null);
   const { ref: featuresRef, isVisible: featuresVisible } = useScrollObserver();
   const { ref: statsRef, isVisible: statsVisible } = useScrollObserver();
   const { ref: ctaRef, isVisible: ctaVisible } = useScrollObserver();
@@ -32,7 +31,7 @@ export default function HomePage() {
   ];
 
   return (
-    <main ref={heroRef} className="min-h-screen relative overflow-hidden">
+    <main className="min-h-screen relative overflow-hidden">
       <WaterCanvas particleCount={100} speed={1} />
       <AmbientWave speed={0.5} amplitude={60} />
       <FloatingOrb size={400} color="rgba(45, 212, 191, 0.08)" speed={0.5} />
