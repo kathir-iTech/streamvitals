@@ -48,7 +48,7 @@ export default function CitizenSciencePage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold tracking-tight mb-2">Citizen Science Hub</h1>
-            <p className="text-white/60 text-sm">Community-powered stream monitoring — Your observations matter</p>
+            <p className="text-white/80 text-sm">Community-powered stream monitoring — Your observations matter</p>
           </div>
           <button onClick={() => setShowForm(!showForm)} className="px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-xl font-semibold hover:opacity-90 transition-all flex items-center gap-2">
             <MapPin className="w-4 h-4" /> {showForm ? 'Cancel' : 'Drop a Pin'}
@@ -56,13 +56,13 @@ export default function CitizenSciencePage() {
         </div>
 
         {showForm && (
-          <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/15 p-6 mb-6 animate-scaleIn">
+          <div className="bg-[#111d35] backdrop-blur-xl rounded-2xl border border-emerald-500/15 p-6 mb-6 animate-scaleIn">
             <h2 className="text-lg font-bold mb-4">Report an Observation</h2>
             <div className="space-y-4">
-              <input type="text" placeholder="Stream Location (e.g., HUC-10 Stream Alpha)" className="w-full p-3 bg-white/5 border border-white/20 rounded-xl text-white text-sm focus:ring-2 focus:ring-teal-400 focus:outline-none" value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })} />
-              <textarea placeholder="Describe what you observe..." className="w-full h-24 p-3 bg-white/5 border border-white/20 rounded-xl text-white text-sm focus:ring-2 focus:ring-teal-400 focus:outline-none resize-none" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+              <input type="text" placeholder="Stream Location (e.g., HUC-10 Stream Alpha)" className="w-full p-3 bg-[#111d35] border border-emerald-500/20 rounded-xl text-white text-sm focus:ring-2 focus:ring-teal-400 focus:outline-none" value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })} />
+              <textarea placeholder="Describe what you observe..." className="w-full h-24 p-3 bg-[#111d35] border border-emerald-500/20 rounded-xl text-white text-sm focus:ring-2 focus:ring-teal-400 focus:outline-none resize-none" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
               <div className="flex gap-3">
-                <button className="flex-1 py-3 bg-white/10 border border-white/15 text-white rounded-xl font-semibold hover:bg-white/20 transition-all flex items-center justify-center gap-2">
+                <button className="flex-1 py-3 bg-[#111d35] border border-emerald-500/15 text-white rounded-xl font-semibold hover:bg-white/20 transition-all flex items-center justify-center gap-2">
                   <Camera className="w-4 h-4" /> Photo
                 </button>
                 <button onClick={submitReport} className="flex-1 py-3 bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-xl font-semibold hover:opacity-90 transition-all flex items-center justify-center gap-2">
@@ -75,29 +75,29 @@ export default function CitizenSciencePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           {[
-            { label: 'Active Contributors', value: '247', icon: Heart, color: 'text-teal-300' },
+            { label: 'Active Contributors', value: '247', icon: Heart, color: 'text-emerald-300' },
             { label: 'Verified Reports', value: '1,203', icon: CheckCircle, color: 'text-emerald-300' },
             { label: 'Streams Monitored', value: '38', icon: MapPin, color: 'text-amber-300' },
           ].map((stat, i) => (
-            <div key={i} className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/15 p-6">
+            <div key={i} className="bg-[#111d35] backdrop-blur-xl rounded-2xl border border-emerald-500/15 p-6">
               <stat.icon className={`w-6 h-6 ${stat.color} mb-2`} />
               <p className={`text-2xl font-black ${stat.color}`}>{stat.value}</p>
-              <p className="text-xs text-white/50">{stat.label}</p>
+              <p className="text-xs text-white/80">{stat.label}</p>
             </div>
           ))}
         </div>
 
         <div className="space-y-3">
           {reports.map((report) => (
-            <div key={report.id} className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-5 hover:border-white/20 transition-all">
+            <div key={report.id} className="bg-[#111d35] backdrop-blur-xl rounded-2xl border border-emerald-500/15 p-5 hover:border-emerald-500/20 transition-all">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-teal-500/20 flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-teal-400" />
+                    <MapPin className="w-5 h-5 text-emerald-400" />
                   </div>
                   <div>
                     <p className="font-semibold text-sm">{report.user}</p>
-                    <p className="text-xs text-white/40">{report.location} • {report.time}</p>
+                    <p className="text-xs text-white/80">{report.location} • {report.time}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -110,29 +110,29 @@ export default function CitizenSciencePage() {
                       <Clock className="w-3 h-3" /> Pending
                     </span>
                   )}
-                  <button className="flex items-center gap-1 text-xs text-white/40 hover:text-white/70 transition-all">
+                  <button className="flex items-center gap-1 text-xs text-white/80 hover:text-white/80 transition-all">
                     <Heart className="w-3 h-3" /> {report.upvotes}
                   </button>
                 </div>
               </div>
-              <p className="text-sm text-white/70 mb-2">{report.report}</p>
+              <p className="text-sm text-white/80 mb-2">{report.report}</p>
               {report.photos > 0 && (
                 <div className="flex gap-2 mb-2">
                   {Array.from({ length: report.photos }).map((_, i) => (
-                    <div key={i} className="w-16 h-16 bg-white/10 rounded-lg border border-white/10 flex items-center justify-center">
-                      <Camera className="w-4 h-4 text-white/30" />
+                    <div key={i} className="w-16 h-16 bg-[#111d35] rounded-lg border border-emerald-500/15 flex items-center justify-center">
+                      <Camera className="w-4 h-4 text-white/40" />
                     </div>
                   ))}
                 </div>
               )}
               <div className="flex items-center gap-3 mt-2">
-                <button className="text-xs text-white/40 hover:text-white/70 transition-all flex items-center gap-1">
+                <button className="text-xs text-white/80 hover:text-white/80 transition-all flex items-center gap-1">
                   <Heart className="w-3 h-3" /> Upvote
                 </button>
-                <button className="text-xs text-white/40 hover:text-white/70 transition-all flex items-center gap-1">
+                <button className="text-xs text-white/80 hover:text-white/80 transition-all flex items-center gap-1">
                   <Share2 className="w-3 h-3" /> Share
                 </button>
-                <button className="text-xs text-white/40 hover:text-white/70 transition-all flex items-center gap-1">
+                <button className="text-xs text-white/80 hover:text-white/80 transition-all flex items-center gap-1">
                   <Star className="w-3 h-3" /> Flag
                 </button>
               </div>

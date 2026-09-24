@@ -24,37 +24,43 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-900">
+      <body className="min-h-full flex flex-col bg-[#070d1a]">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded">
           Skip to main content
         </a>
-        <nav className="bg-black/80 backdrop-blur-xl border-b border-white/10 px-6 py-3" aria-label="Main navigation">
+        <nav className="bg-[#0a1628]/90 backdrop-blur-xl border-b border-emerald-500/10 px-6 py-3" aria-label="Main navigation">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2" aria-label="StreamVitals home">
-              <span className="text-xl font-bold text-teal-300">StreamVitals</span>
-              <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded-full">IEEE 2026</span>
+            <Link href="/" className="flex items-center gap-3" aria-label="StreamVitals home">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <span className="text-lg font-black text-white">S</span>
+              </div>
+              <div>
+                <span className="text-xl font-bold text-white tracking-tight">StreamVitals</span>
+                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full ml-2 font-medium">IEEE 2026</span>
+              </div>
             </Link>
-            <div className="flex items-center gap-4 text-sm">
-              <Link href="/about" className="text-white/40 hover:text-teal-300 transition-colors">
-                How It Works
+            <div className="flex items-center gap-1 text-sm">
+              <Link href="/guided" className="px-3 py-2 text-emerald-300 hover:text-white hover:bg-emerald-500/10 rounded-lg transition-all font-medium">
+                Assessment
               </Link>
-              <Link href="/map" className="text-white/40 hover:text-teal-300 transition-colors">
-                Live Map
+              <Link href="/map" className="px-3 py-2 text-white/50 hover:text-white hover:bg-white/5 rounded-lg transition-all font-medium">
+                Map
               </Link>
-              <Link href="/ai-copilot" className="text-white/40 hover:text-teal-300 transition-colors">
+              <Link href="/ai-copilot" className="px-3 py-2 text-white/50 hover:text-emerald-300 hover:bg-emerald-500/10 rounded-lg transition-all font-medium">
                 AI Copilot
               </Link>
-              <Link href="/predict" className="text-white/40 hover:text-teal-300 transition-colors">
+              <Link href="/predict" className="px-3 py-2 text-white/50 hover:text-white hover:bg-white/5 rounded-lg transition-all font-medium">
                 Predictions
               </Link>
-              <Link href="/report" className="text-white/40 hover:text-teal-300 transition-colors">
+              <Link href="/report" className="px-3 py-2 text-white/50 hover:text-emerald-300 hover:bg-emerald-500/10 rounded-lg transition-all font-medium">
                 Report
               </Link>
-              <Link href="/citizen" className="text-white/40 hover:text-teal-300 transition-colors">
-                Citizen Science
+              <Link href="/citizen" className="px-3 py-2 text-white/50 hover:text-white hover:bg-white/5 rounded-lg transition-all font-medium">
+                Citizen
               </Link>
-              <span className="text-xs text-white/20 bg-white/5 px-2 py-1 rounded">
-                AI may interpret input. AI may not adjudicate.
+              <span className="ml-3 flex items-center gap-2 text-xs text-white/30 bg-white/5 px-3 py-1.5 rounded-full">
+                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                AI-Powered
               </span>
             </div>
           </div>

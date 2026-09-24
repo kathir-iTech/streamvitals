@@ -51,9 +51,9 @@ const indicatorIcons: Record<string, React.ElementType> = {
 const citizenIndicators = indicators.filter((ind) => ind.citizen_observable);
 
 const answerColors: Record<string, string> = {
-  diverse_sensitive: 'bg-emerald-500/20 border-emerald-400/30',
-  tolerant_only: 'bg-amber-500/20 border-amber-400/30',
-  absent_or_dead: 'bg-red-500/20 border-red-400/30',
+  diverse_sensitive: 'bg-emerald-500/15 border-emerald-400/40',
+  tolerant_only: 'bg-amber-500/15 border-amber-400/40',
+  absent_or_dead: 'bg-red-500/15 border-red-400/40',
 };
 
 const answerTextColors: Record<string, string> = {
@@ -66,6 +66,18 @@ const answerMessages: Record<string, string> = {
   diverse_sensitive: "Good sign — sensitive species can't survive in polluted water. This matches the OneAquaHealth factsheet evidence.",
   tolerant_only: 'Moderate signal — tolerant species tolerate stress, but sensitive ones are absent. Further investigation recommended.',
   absent_or_dead: 'Concerning — no life detected or organisms dead. This indicates significant ecological stress.',
+};
+
+const stateLabels: Record<string, string> = {
+  diverse_sensitive: 'THRIVING',
+  tolerant_only: 'STRESSED',
+  absent_or_dead: 'CRITICAL',
+};
+
+const stateColors: Record<string, string> = {
+  diverse_sensitive: 'text-emerald-300 bg-emerald-500/20',
+  tolerant_only: 'text-amber-300 bg-amber-500/20',
+  absent_or_dead: 'text-red-300 bg-red-500/20',
 };
 
 export default function GuidedPage() {
@@ -88,18 +100,21 @@ export default function GuidedPage() {
 
   if (!currentIndicator) {
     return (
-      <main className="min-h-screen relative overflow-hidden">
+      <main className="min-h-screen bg-[#070d1a] relative overflow-hidden">
         <WaterCanvas particleCount={100} speed={1} />
         <AmbientWave speed={0.3} amplitude={50} />
-        <FloatingOrb size={400} color="rgba(45, 212, 191, 0.08)" speed={0.5} />
+        <FloatingOrb size={400} color="rgba(0, 229, 160, 0.08)" speed={0.5} />
         <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-          <div className="max-w-lg w-full bg-white/10 backdrop-blur-xl rounded-3xl p-10 text-center border border-white/20 relative z-10">
-            <div className="text-6xl mb-4 animate-bounce">✓</div>
-            <h1 className="text-3xl font-bold mb-3">All questions answered</h1>
-            <p className="text-white/70 mb-8">Your observations are ready for assessment.</p>
-            <Link href="/confirm" className="inline-block px-8 py-4 bg-white text-slate-900 font-bold rounded-xl hover:bg-teal-50 transition-colors text-lg shadow-xl">
-              Review Answers →
-            </Link>
+          <div className="max-w-lg w-full bg-[#111d35] border border-emerald-500/20 rounded-2xl p-10 text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent pointer-events-none" />
+            <div className="relative">
+              <div className="text-6xl mb-4 animate-bounce-in">✓</div>
+              <h1 className="text-3xl font-black mb-3 text-white">All Questions Answered</h1>
+              <p className="text-white/60 mb-8">Your observations are ready for assessment.</p>
+              <Link href="/confirm" className="btn-primary inline-block">
+                Review Answers →
+              </Link>
+            </div>
           </div>
         </div>
       </main>
@@ -122,39 +137,41 @@ export default function GuidedPage() {
   const progressWidth = Math.min(100, ((step + 1) / citizenIndicators.length) * 100);
 
   return (
-    <main className="min-h-screen relative overflow-hidden">
+    <main className="min-h-screen bg-[#070d1a] relative overflow-hidden">
       <WaterCanvas particleCount={80} speed={0.8} />
       <AmbientWave speed={0.4} amplitude={50} />
-      <FloatingOrb size={300} color="rgba(45, 212, 191, 0.06)" speed={0.6} />
-      <FloatingOrb size={200} color="rgba(59, 130, 246, 0.04)" speed={0.8} mouseReact={false} />
+      <FloatingOrb size={300} color="rgba(0, 229, 160, 0.06)" speed={0.6} />
+      <FloatingOrb size={200} color="rgba(0, 180, 216, 0.04)" speed={0.8} mouseReact={false} />
 
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
+        {/* Progress Bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-white/5">
-          <div className="h-full bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full transition-all duration-700 ease-out" style={{ width: `${progressWidth}%` }} />
-          <div className="h-full w-8 bg-white/20 rounded-full blur-sm -mt-0.5" style={{ left: `${progressWidth}%`, marginLeft: '-16px' }} />
+          <div className="h-full bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400 rounded-full transition-all duration-700 ease-out relative" style={{ width: `${progressWidth}%` }}>
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-emerald-400 rounded-full shadow-lg shadow-emerald-400/50" />
+          </div>
         </div>
 
         <div className="max-w-lg w-full relative z-10">
-          <div className="mb-6 text-center">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <span className="text-xs text-white/30">Step {step + 1} of {citizenIndicators.length}</span>
-              <span className="w-1 h-1 bg-teal-400 rounded-full animate-pulse" />
+          <div className="mb-8 text-center">
+            <div className="inline-flex items-center gap-2 mb-4 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-full">
+              <span className="text-sm text-emerald-300 font-medium">Step {step + 1} of {citizenIndicators.length}</span>
+              <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
             </div>
-            <div className="inline-block w-24 h-24 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 flex items-center justify-center mb-4">
-              <IconComponent className="w-12 h-12 text-teal-300" />
+            <div className="inline-block w-24 h-24 rounded-2xl bg-[#111d35] border border-emerald-500/20 flex items-center justify-center mb-5 animate-float">
+              <IconComponent className="w-12 h-12 text-emerald-300" />
             </div>
-            <h1 className="text-5xl font-black tracking-tight mb-2 bg-gradient-to-r from-white via-teal-200 to-white bg-clip-text text-transparent">StreamVitals</h1>
-            <p className="text-white/60 text-lg">Take the stream's vitals</p>
+            <h1 className="text-5xl font-black tracking-tighter mb-2 bg-gradient-to-r from-white via-emerald-200 to-white bg-clip-text text-transparent">StreamVitals</h1>
+            <p className="text-white/50 text-lg">Take the stream's vitals</p>
           </div>
 
           <div className="relative">
-            <div className="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/15 p-8">
-              <div className="text-center mb-6">
-                <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white/70 text-sm font-medium mb-4">
+            <div className="bg-[#111d35] border border-emerald-500/15 rounded-2xl p-8 animate-fadeInScale">
+              <div className="text-center mb-8">
+                <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm font-bold mb-4 uppercase tracking-wider">
                   {currentIndicator.name}
                 </span>
-                <h2 className="text-2xl font-bold mb-2 leading-relaxed">{currentIndicator.citizen_question}</h2>
-                <p className="text-white/50 text-sm">{currentIndicator.visual_anchor_guide}</p>
+                <h2 className="text-2xl font-bold mb-3 leading-relaxed text-white">{currentIndicator.citizen_question}</h2>
+                <p className="text-white/40 text-sm">{currentIndicator.visual_anchor_guide}</p>
               </div>
 
               <fieldset className="grid grid-cols-3 gap-3 mb-6" aria-label="Select a state">
@@ -165,21 +182,28 @@ export default function GuidedPage() {
                       key={state}
                       type="button"
                       onClick={() => handleAnswer(state)}
-                      className={`relative px-4 py-6 rounded-2xl border-2 font-medium text-sm transition-all duration-300 focus:ring-2 focus:ring-teal-400 focus:outline-none ${
+                      className={`relative px-4 py-6 rounded-xl border-2 font-bold text-sm transition-all duration-300 focus:ring-2 focus:ring-emerald-400 focus:outline-none cursor-pointer ${
                         isSelected
-                          ? 'bg-white/20 border-white scale-105 shadow-lg'
-                          : 'bg-white/5 border-white/20 hover:bg-white/10 hover:border-white/40 hover:scale-[1.02]'
+                          ? 'bg-emerald-500/10 border-emerald-400 scale-105 shadow-lg shadow-emerald-500/20'
+                          : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/25 hover:scale-[1.02]'
                       }`}
                       style={{ animationDelay: `${i * 100}ms` }}
                     >
-                      {isSelected && <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/10 to-white/5 pointer-events-none" />}
-                      <div className="relative font-bold text-lg">{labels[state] || state.replace(/_/g, ' ')}</div>
+                      {isSelected && (
+                        <div className="absolute inset-0 rounded-xl bg-gradient-to-b from-emerald-500/10 to-transparent pointer-events-none" />
+                      )}
+                      <div className={`text-xs font-black mb-1 ${isSelected ? 'text-emerald-300' : 'text-white/30'} uppercase tracking-wider`}>
+                        {stateLabels[state] || state.replace(/_/g, ' ')}
+                      </div>
+                      <div className={`relative font-medium ${isSelected ? 'text-white' : 'text-white/60'}`}>
+                        {labels[state] || state.replace(/_/g, ' ')}
+                      </div>
                     </button>
                   );
                 })}
               </fieldset>
 
-              <div className={`transition-all duration-300 overflow-hidden ${selectedState ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
+              <div className={`transition-all duration-300 overflow-hidden ${selectedState ? 'max-h-32 opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
                 <div className={`p-4 rounded-xl border ${answerColors[selectedState || ''] || ''}`}>
                   <p className={`text-sm font-medium ${answerTextColors[selectedState || ''] || 'text-white'}`}>
                     {answerMessages[selectedState || ''] || ''}
@@ -192,16 +216,16 @@ export default function GuidedPage() {
           <button
             onClick={handleNext}
             disabled={!canProceed}
-            className="w-full py-5 bg-white/10 backdrop-blur-lg border border-white/20 text-white rounded-2xl font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/20 transition-all duration-300 flex items-center justify-center gap-2 mt-4 text-lg focus:ring-2 focus:ring-teal-400 focus:outline-none shadow-lg"
+            className="w-full py-4 bg-[#111d35] border border-emerald-500/20 text-white rounded-xl font-bold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-emerald-500/10 hover:border-emerald-400/40 hover:text-emerald-300 transition-all duration-300 flex items-center justify-center gap-3 mt-4 text-lg focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-lg"
             aria-label="Next question"
           >
-            {step < citizenIndicators.length - 1 ? 'Next' : 'Review Answers'}
+            {step < citizenIndicators.length - 1 ? 'Next Question' : 'Review Answers'}
             <Send className="w-5 h-5" />
           </button>
         </div>
 
-        <Link href="/ai-copilot" className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-xl font-bold shadow-lg shadow-teal-500/30 hover:opacity-90 transition-all" aria-label="Open AI Copilot">
-          <Bot className="w-5 h-5" /> Ask AI Copilot
+        <Link href="/ai-copilot" className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white rounded-xl font-bold shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:opacity-90 transition-all" aria-label="Open AI Copilot">
+          <Bot className="w-5 h-5" /> AI Copilot
         </Link>
       </div>
     </main>

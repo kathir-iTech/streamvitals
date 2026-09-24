@@ -30,11 +30,11 @@ export default function PredictiveTimelinePage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold tracking-tight mb-2">Predictive Timeline</h1>
-            <p className="text-white/60 text-sm">LSTM Neural Network — AI-Powered Water Quality Forecast</p>
+            <p className="text-white/80 text-sm">LSTM Neural Network — AI-Powered Water Quality Forecast</p>
           </div>
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-teal-400" />
-            <span className="text-xs text-white/40">Updated 30s ago</span>
+            <Clock className="w-4 h-4 text-emerald-400" />
+            <span className="text-xs text-white/80">Updated 30s ago</span>
           </div>
         </div>
 
@@ -44,15 +44,15 @@ export default function PredictiveTimelinePage() {
               key={range}
               onClick={() => setTimeRange(range)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                timeRange === range ? 'bg-teal-500 text-white' : 'bg-white/10 text-white/60 hover:bg-white/20'
+                timeRange === range ? 'bg-teal-500 text-white' : 'bg-[#111d35] text-white/80 hover:bg-white/20'
               }`}
             >
               {range === '6h' ? 'Next 6 Hours' : range === '24h' ? 'Next 24 Hours' : 'Next 48 Hours'}
             </button>
           ))}
-          <div className="ml-auto flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2">
-            <Brain className="w-4 h-4 text-teal-400" />
-            <span className="text-xs text-teal-300">LSTM Model • 95% Accuracy</span>
+          <div className="ml-auto flex items-center gap-2 bg-[#111d35] rounded-lg px-3 py-2">
+            <Brain className="w-4 h-4 text-emerald-400" />
+            <span className="text-xs text-emerald-300">LSTM Model • 95% Accuracy</span>
           </div>
         </div>
 
@@ -67,7 +67,7 @@ export default function PredictiveTimelinePage() {
                            (param.name === 'Temperature' && predictedNext > 30);
 
             return (
-              <div key={i} className={`bg-white/10 backdrop-blur-xl rounded-2xl border p-6 transition-all ${isAlert ? 'border-red-400/50' : 'border-white/15'}`}>
+              <div key={i} className={`bg-[#111d35] backdrop-blur-xl rounded-2xl border p-6 transition-all ${isAlert ? 'border-red-400/50' : 'border-emerald-500/15'}`}>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     <div className={`w-3 h-3 rounded-full ${param.color}`} />
@@ -81,19 +81,19 @@ export default function PredictiveTimelinePage() {
                 </div>
                 <div className="flex items-end gap-1 h-32 mb-4">
                   {param.historical.map((val, j) => (
-                    <div key={`hist-${j}`} className="flex-1 bg-white/10 rounded-t" style={{ height: `${(val / 30) * 100}%`, minHeight: '4px' }} />
+                    <div key={`hist-${j}`} className="flex-1 bg-[#111d35] rounded-t" style={{ height: `${(val / 30) * 100}%`, minHeight: '4px' }} />
                   ))}
                   {param.predictions.map((val, j) => (
                     <div key={`pred-${j}`} className={`flex-1 rounded-t ${param.color} opacity-50`} style={{ height: `${(val / 30) * 100}%`, minHeight: '4px' }} />
                   ))}
                 </div>
                 <div className="flex justify-between text-xs mb-2">
-                  <span className="text-white/30">Historical</span>
-                  <span className="text-white/30">Predicted →</span>
+                  <span className="text-white/40">Historical</span>
+                  <span className="text-white/40">Predicted →</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-white/40">Current: {currentHist}</span>
-                  <span className="text-xs text-white/40">Predicted: {predictedNext}</span>
+                  <span className="text-xs text-white/80">Current: {currentHist}</span>
+                  <span className="text-xs text-white/80">Predicted: {predictedNext}</span>
                   <span className={`text-xs font-bold ${trend === 'up' ? 'text-emerald-300' : 'text-red-300'}`}>
                     {trend === 'up' ? '↑' : '↓'} {Math.abs(predictedNext - currentHist).toFixed(1)}
                   </span>
@@ -103,9 +103,9 @@ export default function PredictiveTimelinePage() {
           })}
         </div>
 
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/15 p-6">
+        <div className="bg-[#111d35] backdrop-blur-xl rounded-2xl border border-emerald-500/15 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="w-5 h-5 text-teal-400" />
+            <TrendingUp className="w-5 h-5 text-emerald-400" />
             <h2 className="text-lg font-bold">Overall Water Quality Trend</h2>
           </div>
           <div className="grid grid-cols-4 gap-4">
@@ -115,14 +115,14 @@ export default function PredictiveTimelinePage() {
               { label: 'Turbidity', status: 'Normal', color: 'text-emerald-300', icon: CheckCircle },
               { label: 'Temperature', status: 'Stable', color: 'text-emerald-300', icon: CheckCircle },
             ].map((item, i) => (
-              <div key={i} className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <div key={i} className="bg-[#111d35] rounded-xl p-4 border border-emerald-500/15">
                 <item.icon className={`w-5 h-5 ${item.color} mb-2`} />
-                <p className="text-xs text-white/40">{item.label}</p>
+                <p className="text-xs text-white/80">{item.label}</p>
                 <p className={`text-sm font-bold ${item.color}`}>{item.status}</p>
               </div>
             ))}
           </div>
-          <p className="text-xs text-white/30 mt-4">Predictions generated by TensorFlow.js LSTM model trained on historical telemetry data. Model accuracy: 95% within 5 seconds.</p>
+          <p className="text-xs text-white/40 mt-4">Predictions generated by TensorFlow.js LSTM model trained on historical telemetry data. Model accuracy: 95% within 5 seconds.</p>
         </div>
       </div>
       </div>

@@ -14,7 +14,7 @@ type AIMode = 'expert' | 'beginner' | 'friendly';
 const modeConfig: Record<AIMode, { label: string; color: string; icon: string }> = {
   expert: { label: 'Expert', color: 'text-red-300', icon: '🔬' },
   beginner: { label: 'Beginner', color: 'text-emerald-300', icon: '🌱' },
-  friendly: { label: 'Friendly', color: 'text-teal-300', icon: '🤝' },
+  friendly: { label: 'Friendly', color: 'text-emerald-300', icon: '🤝' },
 };
 
 export default function AICopilotPage() {
@@ -366,21 +366,21 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-teal-900 to-slate-900 text-white flex flex-col">
-      <div className="flex items-center justify-between px-6 py-4 bg-black/30 backdrop-blur-xl border-b border-white/10">
+      <div className="flex items-center justify-between px-6 py-4 bg-black/30 backdrop-blur-xl border-b border-emerald-500/15">
         <div className="flex items-center gap-3">
-          <Bot className="w-6 h-6 text-teal-400" />
+          <Bot className="w-6 h-6 text-emerald-400" />
           <h1 className="text-2xl font-bold">AI Copilot</h1>
           <span className="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full flex items-center gap-1">
             <Sparkles className="w-3 h-3" /> AI-Powered
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex bg-white/5 rounded-lg border border-white/10 overflow-hidden">
+          <div className="flex bg-[#111d35] rounded-lg border border-emerald-500/15 overflow-hidden">
             {(['beginner', 'friendly', 'expert'] as AIMode[]).map((m) => (
               <button
                 key={m}
                 onClick={() => setAIMode(m)}
-                className={`px-3 py-1.5 text-xs font-medium transition-all ${aiMode === m ? 'bg-teal-500 text-white' : 'text-white/40 hover:text-white/70'}`}
+                className={`px-3 py-1.5 text-xs font-medium transition-all ${aiMode === m ? 'bg-teal-500 text-white' : 'text-white/90 hover:text-white/90'}`}
               >
                 {modeConfig[m].icon} {modeConfig[m].label}
               </button>
@@ -399,9 +399,9 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
                     <Bot className="w-4 h-4 text-white" />
                   </div>
                 )}
-                <div className={`max-w-xl rounded-2xl p-4 ${msg.role === 'user' ? 'bg-gradient-to-r from-teal-500 to-emerald-600 border border-teal-400/30' : 'bg-white/5 border border-white/10'}`}>
+                <div className={`max-w-xl rounded-2xl p-4 ${msg.role === 'user' ? 'bg-gradient-to-r from-teal-500 to-emerald-600 border border-teal-400/30' : 'bg-[#111d35] border border-emerald-500/15'}`}>
                   {msg.role === 'assistant' ? (
-                    <div className="text-sm text-white/80 whitespace-pre-wrap leading-relaxed">
+                    <div className="text-sm text-white/90 whitespace-pre-wrap leading-relaxed">
                       {typing && i === messages.length - 1 ? displayedText : msg.content}
                       {typing && i === messages.length - 1 && (
                         <span className="inline-block w-1.5 h-4 bg-teal-300 ml-0.5 animate-pulse" style={{ animationDelay: `${Math.random() * 1000}ms` }} />
@@ -411,9 +411,9 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
                     <p className="text-sm text-white/90 whitespace-pre-wrap">{msg.content}</p>
                   )}
                   {msg.sources && msg.sources.length > 0 && !typing && (
-                    <div className="mt-2 pt-2 border-t border-white/10 flex flex-wrap gap-1">
+                    <div className="mt-2 pt-2 border-t border-emerald-500/15 flex flex-wrap gap-1">
                       {msg.sources.map((s, si) => (
-                        <span key={si} className="text-[10px] bg-white/10 text-teal-300 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                        <span key={si} className="text-[10px] bg-[#111d35] text-emerald-300 px-1.5 py-0.5 rounded flex items-center gap-0.5">
                           <Globe className="w-2 h-2" /> {s}
                         </span>
                       ))}
@@ -430,7 +430,7 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="border-t border-white/10 p-4 bg-black/20 backdrop-blur-xl">
+          <div className="border-t border-emerald-500/15 p-4 bg-black/20 backdrop-blur-xl">
             <div className="flex gap-2 mb-3 flex-wrap">
               {[
                 'Why is my stream stressed?',
@@ -446,7 +446,7 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
                   key={i}
                   onClick={() => handleQuickQuestion(q)}
                   disabled={loading}
-                  className="px-3 py-1.5 bg-white/5 border border-white/15 rounded-lg text-xs text-white/60 hover:bg-teal-500/20 hover:border-teal-400/30 hover:text-white transition-all disabled:opacity-40"
+                  className="px-3 py-1.5 bg-[#111d35] border border-emerald-500/15 rounded-lg text-xs text-white/90 hover:bg-emerald-500/20 hover:border-teal-400/30 hover:text-white transition-all disabled:opacity-40"
                 >
                   {q}
                 </button>
@@ -455,7 +455,7 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
             <div className="flex items-center gap-2">
               <button
                 onClick={() => { setShowVoice(!showVoice); if (showVoice) setVoiceActive(false); }}
-                className={`p-3 rounded-xl transition-all ${showVoice && voiceActive ? 'bg-red-500/30 text-red-300' : 'bg-white/5 text-white/40 hover:text-white/70'}`}
+                className={`p-3 rounded-xl transition-all ${showVoice && voiceActive ? 'bg-red-500/30 text-red-300' : 'bg-[#111d35] text-white/90 hover:text-white/90'}`}
                 title="Voice input"
               >
                 {showVoice && voiceActive ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
@@ -467,7 +467,7 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about your stream health..."
                 disabled={loading}
-                className="flex-1 p-3 bg-white/5 border border-white/15 rounded-xl text-sm text-white placeholder-white/30 focus:ring-2 focus:ring-teal-400 focus:outline-none disabled:opacity-40"
+                className="flex-1 p-3 bg-[#111d35] border border-emerald-500/15 rounded-xl text-sm text-white placeholder-white/30 focus:ring-2 focus:ring-teal-400 focus:outline-none disabled:opacity-40"
               />
               <button
                 onClick={handleSend}
@@ -480,7 +480,7 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
                 <button
                   onClick={() => setChatExport(true)}
                   disabled={messages.length <= 1}
-                  className="p-3 bg-white/5 text-white/40 hover:text-white/70 rounded-xl disabled:opacity-40 transition-all"
+                  className="p-3 bg-[#111d35] text-white/90 hover:text-white/90 rounded-xl disabled:opacity-40 transition-all"
                   title="Export chat"
                 >
                   <Download className="w-4 h-4" />
@@ -488,7 +488,7 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
               </div>
               <button
                 onClick={copyToClipboard}
-                className="p-3 bg-white/5 text-white/40 hover:text-white/70 rounded-xl transition-all"
+                className="p-3 bg-[#111d35] text-white/90 hover:text-white/90 rounded-xl transition-all"
                 title="Copy chat"
               >
                 {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -497,10 +497,10 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
           </div>
         </div>
 
-        <div className="w-72 bg-slate-900/50 border-l border-white/10 p-4 overflow-y-auto">
+        <div className="w-72 bg-slate-900/50 border-l border-emerald-500/15 p-4 overflow-y-auto">
           <div className="mb-6">
             <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-teal-400" /> Knowledge Base
+              <Sparkles className="w-4 h-4 text-emerald-400" /> Knowledge Base
             </h3>
             <div className="space-y-2">
               {[
@@ -516,9 +516,9 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
                 <button
                   key={i}
                   onClick={() => handleQuickQuestion(`Explain ${item.title}`)}
-                  className="w-full text-left bg-white/5 rounded-lg p-3 border border-white/10 hover:border-teal-400/30 hover:bg-teal-500/5 transition-all group"
+                  className="w-full text-left bg-[#111d35] rounded-lg p-3 border border-emerald-500/15 hover:border-teal-400/30 hover:bg-teal-500/5 transition-all group"
                 >
-                  <p className="text-sm text-white/70 font-medium group-hover:text-white transition-colors">{item.icon} {item.title}</p>
+                  <p className="text-sm text-white/90 font-medium group-hover:text-white transition-colors">{item.icon} {item.title}</p>
                   <p className="text-xs text-white/30 mt-0.5">{item.topic}</p>
                 </button>
               ))}
@@ -527,36 +527,36 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
 
           <div>
             <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
-              <FlaskConical className="w-4 h-4 text-teal-400" /> Assessment Context
+              <FlaskConical className="w-4 h-4 text-emerald-400" /> Assessment Context
             </h3>
             <div className="space-y-2">
-              <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-                <p className="text-xs text-teal-300 font-semibold mb-1 flex items-center gap-1">
+              <div className="bg-[#111d35] rounded-lg p-3 border border-emerald-500/15">
+                <p className="text-xs text-emerald-300 font-semibold mb-1 flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" /> Assessment Tier
                 </p>
-                <p className="text-sm text-white/60">T2 — Needs Attention</p>
+                <p className="text-sm text-white/90">T2 — Needs Attention</p>
               </div>
-              <div className="bg-white/5 rounded-lg p-3 border border-white/10">
+              <div className="bg-[#111d35] rounded-lg p-3 border border-emerald-500/15">
                 <p className="text-xs text-amber-300 font-semibold mb-1 flex items-center gap-1">
                   <AlertTriangle className="w-3 h-3" /> Key Driver
                 </p>
-                <p className="text-sm text-white/60">INV-11: Widespread invasive coverage</p>
+                <p className="text-sm text-white/90">INV-11: Widespread invasive coverage</p>
               </div>
-              <div className="bg-white/5 rounded-lg p-3 border border-white/10">
+              <div className="bg-[#111d35] rounded-lg p-3 border border-emerald-500/15">
                 <p className="text-xs text-emerald-300 font-semibold mb-1 flex items-center gap-1">
                   <Shield className="w-3 h-3" /> Recommendation
                 </p>
-                <p className="text-sm text-white/60">Monitor invasive species spread quarterly</p>
+                <p className="text-sm text-white/90">Monitor invasive species spread quarterly</p>
               </div>
             </div>
           </div>
 
           <div className="mt-6">
             <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
-              <Bot className="w-4 h-4 text-teal-400" /> Mode Info
+              <Bot className="w-4 h-4 text-emerald-400" /> Mode Info
             </h3>
-            <div className="bg-white/5 rounded-lg p-3 border border-white/10">
-              <p className="text-xs text-white/40 mb-2">Current mode: <span className={modeConfig[aiMode].color}>{modeConfig[aiMode].icon} {modeConfig[aiMode].label}</span></p>
+            <div className="bg-[#111d35] rounded-lg p-3 border border-emerald-500/15">
+              <p className="text-xs text-white/90 mb-2">Current mode: <span className={modeConfig[aiMode].color}>{modeConfig[aiMode].icon} {modeConfig[aiMode].label}</span></p>
               <p className="text-xs text-white/30 leading-relaxed">
                 {aiMode === 'beginner' && 'Simplified explanations with encouraging tone. Perfect for newcomers to water quality assessment.'}
                 {aiMode === 'friendly' && 'Balanced explanations with practical advice. Great for community scientists.'}
@@ -569,12 +569,12 @@ Try asking: "Why is my stream stressed?", "Explain pH", "What should I do next?"
 
       {chatExport && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-slate-900 rounded-2xl border border-white/15 p-6 max-w-md w-full mx-4 animate-scaleIn">
+          <div className="bg-slate-900 rounded-2xl border border-emerald-500/15 p-6 max-w-md w-full mx-4 animate-scaleIn">
             <h3 className="text-lg font-bold mb-4">Export Chat</h3>
-            <p className="text-sm text-white/60 mb-4">Download your conversation as a text file for your assessment report.</p>
+            <p className="text-sm text-white/90 mb-4">Download your conversation as a text file for your assessment report.</p>
             <div className="flex gap-3">
               <button onClick={exportChat} className="flex-1 py-3 bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-xl font-semibold hover:opacity-90 transition-all">Download</button>
-              <button onClick={() => setChatExport(false)} className="flex-1 py-3 bg-white/10 text-white rounded-xl font-semibold hover:bg-white/20 transition-all">Cancel</button>
+              <button onClick={() => setChatExport(false)} className="flex-1 py-3 bg-[#111d35] text-white rounded-xl font-semibold hover:bg-emerald-500/10 transition-all">Cancel</button>
             </div>
           </div>
         </div>

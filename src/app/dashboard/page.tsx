@@ -56,12 +56,12 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Sensor Dashboard</h1>
-            <p className="text-white/50 text-sm">OGC SensorThings API v1.1 &middot; WaterML 2.0 &middot; Real-time monitoring</p>
+            <p className="text-white/80 text-sm">OGC SensorThings API v1.1 &middot; WaterML 2.0 &middot; Real-time monitoring</p>
           </div>
           <div className="flex items-center gap-3">
             {connected ? <Wifi className="w-5 h-5 text-emerald-400" /> : <WifiOff className="w-5 h-5 text-red-400" />}
-            <Clock className="w-4 h-4 text-white/40" />
-            <span className="text-xs text-white/40">Updated {lastUpdate.toLocaleTimeString()}</span>
+            <Clock className="w-4 h-4 text-white/80" />
+            <span className="text-xs text-white/80">Updated {lastUpdate.toLocaleTimeString()}</span>
           </div>
         </div>
 
@@ -71,7 +71,7 @@ export default function DashboardPage() {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                activeTab === tab ? 'bg-teal-500 text-white' : 'bg-white/10 text-white/60 hover:bg-white/20'
+                activeTab === tab ? 'bg-teal-500 text-white' : 'bg-[#111d35] text-white/80 hover:bg-white/20'
               }`}
             >
               {tab === 'map' ? 'Map View' : tab === 'kpi' ? 'KPI Tiles' : 'Timeline'}
@@ -86,17 +86,17 @@ export default function DashboardPage() {
               const value = data ? parseFloat(data[sensor.param]) : 0;
               const isAlert = value > sensor.threshold;
               return (
-                <div key={sensor.id} className={`bg-white/10 backdrop-blur-xl rounded-2xl border p-5 transition-all duration-500 ${isAlert ? 'border-red-400/50 shadow-red-500/20' : 'border-emerald-400/30'}`}>
+                <div key={sensor.id} className={`bg-[#111d35] backdrop-blur-xl rounded-2xl border p-5 transition-all duration-500 ${isAlert ? 'border-red-400/50 shadow-red-500/20' : 'border-emerald-400/30'}`}>
                   <div className="flex items-center gap-2 mb-3">
                     <Gauge className={`w-4 h-4 ${isAlert ? 'text-red-400' : 'text-emerald-400'}`} />
-                    <span className="text-xs text-white/50">{sensor.id}</span>
+                    <span className="text-xs text-white/80">{sensor.id}</span>
                   </div>
                   <p className="text-white/80 text-xs mb-1">{sensor.name}</p>
                   <p className={`text-2xl font-black ${isAlert ? 'text-red-300' : 'text-emerald-200'}`}>
                     {value.toFixed(1)}
-                    <span className="text-xs font-normal text-white/40 ml-1">{sensor.unit}</span>
+                    <span className="text-xs font-normal text-white/80 ml-1">{sensor.unit}</span>
                   </p>
-                  <p className="text-xs text-white/30 mt-1">Threshold: {sensor.threshold} {sensor.unit}</p>
+                  <p className="text-xs text-white/40 mt-1">Threshold: {sensor.threshold} {sensor.unit}</p>
                   {isAlert && <AlertTriangle className="w-4 h-4 text-red-400 mt-2" />}
                 </div>
               );
@@ -105,9 +105,9 @@ export default function DashboardPage() {
         )}
 
         {activeTab === 'map' && (
-          <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/15 p-6 mb-6" style={{ minHeight: 400 }}>
+          <div className="bg-[#111d35] backdrop-blur-xl rounded-3xl border border-emerald-500/15 p-6 mb-6" style={{ minHeight: 400 }}>
             <div className="flex items-center gap-2 mb-4">
-              <MapPin className="w-5 h-5 text-teal-400" />
+              <MapPin className="w-5 h-5 text-emerald-400" />
               <h2 className="text-lg font-bold">Sensor Locations — HUC Watershed Map</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -120,8 +120,8 @@ export default function DashboardPage() {
                       <div className={`w-3 h-3 rounded-full ${isAlert ? 'bg-red-500 animate-pulse' : 'bg-emerald-500'}`} />
                       <span className="font-semibold text-sm">{sensor.name}</span>
                     </div>
-                    <p className="text-xs text-white/50">HUC-{sensor.id.slice(-2)} Watershed</p>
-                    <p className="text-xs text-white/40 mt-1">{sensor.param}: {data ? parseFloat(data[sensor.param]).toFixed(1) + ' ' + sensor.unit : 'Loading...'}</p>
+                    <p className="text-xs text-white/80">HUC-{sensor.id.slice(-2)} Watershed</p>
+                    <p className="text-xs text-white/80 mt-1">{sensor.param}: {data ? parseFloat(data[sensor.param]).toFixed(1) + ' ' + sensor.unit : 'Loading...'}</p>
                     {isAlert && <span className="text-xs text-red-300 font-medium">⚠ Threshold exceeded</span>}
                   </div>
                 );
@@ -131,9 +131,9 @@ export default function DashboardPage() {
         )}
 
         {activeTab === 'timeline' && (
-          <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/15 p-6 mb-6">
+          <div className="bg-[#111d35] backdrop-blur-xl rounded-3xl border border-emerald-500/15 p-6 mb-6">
             <div className="flex items-center gap-2 mb-4">
-              <Activity className="w-5 h-5 text-teal-400" />
+              <Activity className="w-5 h-5 text-emerald-400" />
               <h2 className="text-lg font-bold">Historical Trend Analysis</h2>
             </div>
             <div className="space-y-4">
@@ -141,17 +141,17 @@ export default function DashboardPage() {
                 const data = sensorData[sensor.id];
                 const isAlert = data && parseFloat(data[sensor.param]) > sensor.threshold;
                 return (
-                  <div key={sensor.id} className="bg-white/5 rounded-xl p-4 border border-white/10">
+                  <div key={sensor.id} className="bg-[#111d35] rounded-xl p-4 border border-emerald-500/15">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm font-medium">{sensor.id} — {sensor.name}</span>
                       <span className={`text-xs px-2 py-1 rounded ${isAlert ? 'bg-red-500/20 text-red-300' : 'bg-emerald-500/20 text-emerald-300'}`}>
                         {isAlert ? 'Alert' : 'Normal'}
                       </span>
                     </div>
-                    <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-2 bg-[#111d35] rounded-full overflow-hidden">
                       <div className={`h-full rounded-full transition-all duration-1000 ${isAlert ? 'bg-red-500' : 'bg-gradient-to-r from-emerald-500 to-teal-500'}`} style={{ width: `${Math.min(100, (parseFloat(data?.[sensor.param] || 0) / (sensor.threshold * 1.5)) * 100)}%` }} />
                     </div>
-                    <p className="text-xs text-white/30 mt-1">OGC SensorThings API &middot; WaterML 2.0 &middot; FROST Server compliant</p>
+                    <p className="text-xs text-white/40 mt-1">OGC SensorThings API &middot; WaterML 2.0 &middot; FROST Server compliant</p>
                   </div>
                 );
               })}
@@ -161,10 +161,10 @@ export default function DashboardPage() {
 
         <div className="bg-teal-500/10 border border-teal-400/20 rounded-2xl p-5 mb-6 backdrop-blur-xl">
           <div className="flex items-start gap-2">
-            <Activity className="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" />
+            <Activity className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
             <div>
               <h3 className="font-semibold text-teal-200 text-sm">OGC SensorThings API Integration</h3>
-              <p className="text-teal-300/80 text-sm mt-1">All sensor endpoints conform to OGC SensorThings API v1.1, WaterML 2.0, and ISO 19156 Observations and Measurements. Data is queryable via RESTful JSON endpoints. FROST Server compatible.</p>
+              <p className="text-emerald-300/80 text-sm mt-1">All sensor endpoints conform to OGC SensorThings API v1.1, WaterML 2.0, and ISO 19156 Observations and Measurements. Data is queryable via RESTful JSON endpoints. FROST Server compatible.</p>
             </div>
           </div>
         </div>

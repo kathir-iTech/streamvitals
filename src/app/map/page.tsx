@@ -43,9 +43,9 @@ export default function LiveMapPage() {
       <AmbientWave speed={0.3} amplitude={50} />
       <FloatingOrb size={300} color="rgba(45, 212, 191, 0.06)" speed={0.5} />
       <div className="relative z-10 min-h-screen flex flex-col">
-        <div className="flex items-center justify-between px-6 py-4 bg-black/30 backdrop-blur-xl border-b border-white/10">
+        <div className="flex items-center justify-between px-6 py-4 bg-black/30 backdrop-blur-xl border-b border-emerald-500/15">
         <div className="flex items-center gap-3">
-          <MapPin className="w-6 h-6 text-teal-400" />
+          <MapPin className="w-6 h-6 text-emerald-400" />
           <h1 className="text-2xl font-bold">Live Stream Monitor</h1>
           <span className="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full flex items-center gap-1">
             <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" /> Live
@@ -53,19 +53,19 @@ export default function LiveMapPage() {
         </div>
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Search className="w-4 h-4 text-white/40 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-white/80 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search streams..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-white/10 border border-white/15 rounded-lg text-sm text-white placeholder-white/30 focus:ring-2 focus:ring-teal-400 focus:outline-none w-64"
+              className="pl-9 pr-4 py-2 bg-[#111d35] border border-emerald-500/15 rounded-lg text-sm text-white placeholder-white/30 focus:ring-2 focus:ring-teal-400 focus:outline-none w-64"
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 bg-white/10 border border-white/15 rounded-lg text-sm text-white focus:ring-2 focus:ring-teal-400 focus:outline-none"
+            className="px-3 py-2 bg-[#111d35] border border-emerald-500/15 rounded-lg text-sm text-white focus:ring-2 focus:ring-teal-400 focus:outline-none"
           >
             <option value="all">All Status</option>
             <option value="healthy">Healthy</option>
@@ -90,13 +90,13 @@ export default function LiveMapPage() {
                     onClick={() => setSelectedSensor(sensor)}
                     className={`rounded-xl border-2 flex flex-col items-center justify-center cursor-pointer transition-all hover:scale-105 ${
                       selectedSensor?.id === sensor.id ? 'ring-2 ring-teal-400 ring-offset-2 ring-offset-slate-900' : ''
-                    } border-white/20 bg-white/5 hover:bg-white/10`}
+                    } border-emerald-500/20 bg-[#111d35] hover:bg-[#111d35]`}
                     style={{
                       borderColor: sensor ? (sensor.status === 'healthy' ? 'rgba(52,211,153,0.5)' : sensor.status === 'warning' ? 'rgba(251,191,36,0.5)' : 'rgba(248,113,113,0.5)') : 'rgba(255,255,255,0.1)',
                     }}
                   >
                     <div className={`w-6 h-6 rounded-full ${statusColors[sensor?.status || 'healthy']} mb-1`} />
-                    <span className="text-xs text-white/60 text-center leading-tight px-1">{sensor?.name?.split(' ')[0] || 'Stream'}</span>
+                    <span className="text-xs text-white/80 text-center leading-tight px-1">{sensor?.name?.split(' ')[0] || 'Stream'}</span>
                     <span className={`text-xs font-bold ${sensor?.status === 'healthy' ? 'text-emerald-300' : sensor?.status === 'warning' ? 'text-amber-300' : 'text-red-300'}`}>
                       {sensor ? statusLabels[sensor.status] : ''}
                     </span>
@@ -108,29 +108,29 @@ export default function LiveMapPage() {
 
           {/* Sensor detail panel */}
           {selectedSensor && (
-            <div className="absolute top-4 right-4 w-80 bg-slate-900/95 backdrop-blur-xl rounded-2xl border border-white/15 p-6 animate-scaleIn">
+            <div className="absolute top-4 right-4 w-80 bg-slate-900/95 backdrop-blur-xl rounded-2xl border border-emerald-500/15 p-6 animate-scaleIn">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <div className={`w-4 h-4 rounded-full ${statusColors[selectedSensor.status]}`} />
                   <h3 className="font-bold">{selectedSensor.name}</h3>
                 </div>
-                <button onClick={() => setSelectedSensor(null)} className="text-white/40 hover:text-white">✕</button>
+                <button onClick={() => setSelectedSensor(null)} className="text-white/80 hover:text-white">✕</button>
               </div>
               <div className="space-y-3">
-                <div className="flex justify-between bg-white/5 rounded-lg p-3">
-                  <span className="text-xs text-white/40">pH Level</span>
+                <div className="flex justify-between bg-[#111d35] rounded-lg p-3">
+                  <span className="text-xs text-white/80">pH Level</span>
                   <span className={`text-sm font-bold ${selectedSensor.ph >= 6.5 ? 'text-emerald-300' : 'text-red-300'}`}>{selectedSensor.ph}</span>
                 </div>
-                <div className="flex justify-between bg-white/5 rounded-lg p-3">
-                  <span className="text-xs text-white/40">Dissolved Oxygen</span>
+                <div className="flex justify-between bg-[#111d35] rounded-lg p-3">
+                  <span className="text-xs text-white/80">Dissolved Oxygen</span>
                   <span className={`text-sm font-bold ${selectedSensor.do >= 5 ? 'text-emerald-300' : 'text-red-300'}`}>{selectedSensor.do} mg/L</span>
                 </div>
-                <div className="flex justify-between bg-white/5 rounded-lg p-3">
-                  <span className="text-xs text-white/40">Turbidity</span>
+                <div className="flex justify-between bg-[#111d35] rounded-lg p-3">
+                  <span className="text-xs text-white/80">Turbidity</span>
                   <span className={`text-sm font-bold ${selectedSensor.turbidity <= 25 ? 'text-emerald-300' : 'text-red-300'}`}>{selectedSensor.turbidity} NTU</span>
                 </div>
-                <div className="flex justify-between bg-white/5 rounded-lg p-3">
-                  <span className="text-xs text-white/40">Status</span>
+                <div className="flex justify-between bg-[#111d35] rounded-lg p-3">
+                  <span className="text-xs text-white/80">Status</span>
                   <span className={`text-sm font-bold ${selectedSensor.status === 'healthy' ? 'text-emerald-300' : selectedSensor.status === 'warning' ? 'text-amber-300' : 'text-red-300'}`}>
                     {statusLabels[selectedSensor.status]}
                   </span>
@@ -144,18 +144,18 @@ export default function LiveMapPage() {
         </div>
 
         {/* Side panel: sensor list */}
-        <div className="w-80 bg-slate-900/50 backdrop-blur-xl border-l border-white/10 p-4 overflow-y-auto">
+        <div className="w-80 bg-slate-900/50 backdrop-blur-xl border-l border-emerald-500/15 p-4 overflow-y-auto">
           <div className="flex items-center gap-2 mb-4">
-            <Layers className="w-5 h-5 text-teal-400" />
+            <Layers className="w-5 h-5 text-emerald-400" />
             <h3 className="font-bold">All Sensors</h3>
-            <span className="text-xs text-white/40">({filteredSensors.length})</span>
+            <span className="text-xs text-white/80">({filteredSensors.length})</span>
           </div>
           <div className="space-y-2">
             {filteredSensors.map((sensor, i) => (
               <div
                 key={i}
                 onClick={() => setSelectedSensor(sensor)}
-                className={`bg-white/5 rounded-xl p-3 border border-white/10 cursor-pointer hover:border-white/20 transition-all ${
+                className={`bg-[#111d35] rounded-xl p-3 border border-emerald-500/15 cursor-pointer hover:border-emerald-500/20 transition-all ${
                   selectedSensor?.id === sensor.id ? 'border-teal-400/50 bg-teal-500/10' : ''
                 }`}
               >
@@ -168,7 +168,7 @@ export default function LiveMapPage() {
                     {statusLabels[sensor.status]}
                   </span>
                 </div>
-                <div className="flex items-center gap-4 text-xs text-white/40">
+                <div className="flex items-center gap-4 text-xs text-white/80">
                   <span>pH: {sensor.ph}</span>
                   <span>DO: {sensor.do}</span>
                   <span>Turb: {sensor.turbidity}</span>
@@ -177,9 +177,9 @@ export default function LiveMapPage() {
             ))}
           </div>
 
-          <div className="mt-6 bg-white/5 rounded-xl p-4 border border-white/10">
+          <div className="mt-6 bg-[#111d35] rounded-xl p-4 border border-emerald-500/15">
             <div className="flex items-center gap-2 mb-2">
-              <Activity className="w-5 h-5 text-teal-400" />
+              <Activity className="w-5 h-5 text-emerald-400" />
               <h4 className="text-sm font-bold">Quick Stats</h4>
             </div>
             <div className="grid grid-cols-2 gap-2 mt-2">
@@ -187,23 +187,23 @@ export default function LiveMapPage() {
                 <p className="text-lg font-black text-emerald-300">
                   {filteredSensors.filter((s) => s.status === 'healthy').length}
                 </p>
-                <p className="text-xs text-white/40">Healthy</p>
+                <p className="text-xs text-white/80">Healthy</p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-black text-amber-300">
                   {filteredSensors.filter((s) => s.status === 'warning').length}
                 </p>
-                <p className="text-xs text-white/40">Warning</p>
+                <p className="text-xs text-white/80">Warning</p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-black text-red-300">
                   {filteredSensors.filter((s) => s.status === 'critical').length}
                 </p>
-                <p className="text-xs text-white/40">Critical</p>
+                <p className="text-xs text-white/80">Critical</p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-black text-white">{filteredSensors.length}</p>
-                <p className="text-xs text-white/40">Total</p>
+                <p className="text-xs text-white/80">Total</p>
               </div>
             </div>
           </div>

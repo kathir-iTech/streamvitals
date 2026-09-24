@@ -86,46 +86,46 @@ NOTE: This assessment tier indicates the level of further assessment recommended
       <FloatingOrb size={250} color="rgba(45, 212, 191, 0.05)" speed={0.4} />
       <div className="relative z-10 max-w-3xl mx-auto p-4">
         <div className="mb-8 text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 mb-6">
-            <FileText className="w-10 h-10 text-teal-300" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-[#111d35] backdrop-blur-lg border border-emerald-500/20 mb-6">
+            <FileText className="w-10 h-10 text-emerald-300" />
           </div>
           <h1 className="text-3xl font-bold tracking-tight mb-2">Generate Report</h1>
-          <p className="text-white/60 text-sm">Professional assessment report — Ready for EPA/regulatory submission</p>
+          <p className="text-white/80 text-sm">Professional assessment report — Ready for EPA/regulatory submission</p>
         </div>
 
-        <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/15 p-6 mb-6">
+        <div className="bg-[#111d35] backdrop-blur-xl rounded-2xl border border-emerald-500/15 p-6 mb-6">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-teal-400" /> Assessment Summary
+            <Activity className="w-5 h-5 text-emerald-400" /> Assessment Summary
           </h2>
           <div className="grid grid-cols-2 gap-3 mb-4">
             {[
               { label: 'Assessment Tier', value: 'T2 — Needs Attention', color: 'text-amber-300' },
               { label: 'Data Status', value: 'Sufficient', color: 'text-emerald-300' },
-              { label: 'Evidence Assessed', value: '3 of 3', color: 'text-teal-300' },
+              { label: 'Evidence Assessed', value: '3 of 3', color: 'text-emerald-300' },
               { label: 'Professional Required', value: '1', color: 'text-amber-300' },
             ].map((item, i) => (
-              <div key={i} className="bg-white/5 rounded-xl p-4 border border-white/10">
-                <p className="text-xs text-white/40">{item.label}</p>
+              <div key={i} className="bg-[#111d35] rounded-xl p-4 border border-emerald-500/15">
+                <p className="text-xs text-white/80">{item.label}</p>
                 <p className={`text-xl font-black ${item.color}`}>{item.value}</p>
               </div>
             ))}
           </div>
           <div className="space-y-2">
             {reportData.assessment.drivers.map((d, i) => (
-              <div key={i} className="flex items-start gap-2 bg-white/5 rounded-lg p-3 border border-white/10">
-                <Shield className="w-4 h-4 text-teal-400 flex-shrink-0 mt-0.5" />
+              <div key={i} className="flex items-start gap-2 bg-[#111d35] rounded-lg p-3 border border-emerald-500/15">
+                <Shield className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm text-white/80">{d.ruleName}</p>
-                  <p className="text-xs text-white/40">Rule ID: {d.ruleId} • Severity: {d.severity}</p>
+                  <p className="text-xs text-white/80">Rule ID: {d.ruleId} • Severity: {d.severity}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/15 p-6 mb-6">
+        <div className="bg-[#111d35] backdrop-blur-xl rounded-2xl border border-emerald-500/15 p-6 mb-6">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-teal-400" /> Report Options
+            <FileText className="w-5 h-5 text-emerald-400" /> Report Options
           </h2>
           <div className="space-y-3">
             {[
@@ -133,9 +133,9 @@ NOTE: This assessment tier indicates the level of further assessment recommended
               { label: 'Include Recommendations', checked: includeRecommendations, onChange: setIncludeRecommendations },
               { label: 'Include Source Citations', checked: includeCitations, onChange: setIncludeCitations },
             ].map((item, i) => (
-              <label key={i} className="flex items-center gap-3 cursor-pointer bg-white/5 rounded-lg p-3 border border-white/10">
+              <label key={i} className="flex items-center gap-3 cursor-pointer bg-[#111d35] rounded-lg p-3 border border-emerald-500/15">
                 <input type="checkbox" checked={item.checked} onChange={(e) => item.onChange(e.target.checked)} className="w-4 h-4 accent-teal-500" />
-                <span className="text-sm text-white/70">{item.label}</span>
+                <span className="text-sm text-white/80">{item.label}</span>
               </label>
             ))}
           </div>
@@ -164,13 +164,13 @@ NOTE: This assessment tier indicates the level of further assessment recommended
               <Download className="w-6 h-6" /> Download Report
               <ArrowRight className="w-5 h-5" />
             </button>
-            <p className="text-xs text-white/30 text-center">Format: EPA STORET/WQX compatible • OGC SensorThings API v1.1 • WaterML 2.0</p>
+            <p className="text-xs text-white/40 text-center">Format: EPA STORET/WQX compatible • OGC SensorThings API v1.1 • WaterML 2.0</p>
           </div>
         )}
 
-        <div className="mt-8 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4">
+        <div className="mt-8 bg-[#111d35] backdrop-blur-xl rounded-2xl border border-emerald-500/15 p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Shield className="w-5 h-5 text-teal-400" />
+            <Shield className="w-5 h-5 text-emerald-400" />
             <h3 className="text-sm font-bold">Data Standards Compliance</h3>
           </div>
           <div className="flex flex-wrap gap-2">
