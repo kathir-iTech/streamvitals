@@ -30,13 +30,14 @@ export default function ColorAdaptation() {
     }
   }, [mode]);
 
-  const hue = Math.round(174 + (ambientLight - 50) * 0.5);
-  const sat = Math.round(80 + (ambientLight - 50) * 0.2);
-  const light = Math.round(50 + (ambientLight - 50) * 0.1);
-
-  document.documentElement.style.setProperty('--theme-hue', `${hue}`);
-  document.documentElement.style.setProperty('--theme-saturation', `${sat}%`);
-  document.documentElement.style.setProperty('--theme-lightness', `${light}%`);
+  useEffect(() => {
+    const hue = Math.round(174 + (ambientLight - 50) * 0.5);
+    const sat = Math.round(80 + (ambientLight - 50) * 0.2);
+    const light = Math.round(50 + (ambientLight - 50) * 0.1);
+    document.documentElement.style.setProperty('--theme-hue', `${hue}`);
+    document.documentElement.style.setProperty('--theme-saturation', `${sat}%`);
+    document.documentElement.style.setProperty('--theme-lightness', `${light}%`);
+  }, [ambientLight]);
 
   return (
     <div className="fixed top-2 left-2 z-50 flex gap-2">
