@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Activity, MapPin, Gauge, AlertTriangle, Layers, Wifi, WifiOff, Clock } from 'lucide-react';
+import WaterCanvas from '@/components/water-canvas';
+import AmbientWave from '@/components/ambient-wave';
+import FloatingOrb from '@/components/floating-orb';
 
 export default function DashboardPage() {
   const [sensorData, setSensorData] = useState<Record<string, any>>({});
@@ -39,8 +42,12 @@ export default function DashboardPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-teal-900 to-slate-900 text-white p-4 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
+    <main className="min-h-screen relative overflow-hidden">
+      <WaterCanvas particleCount={50} speed={0.5} />
+      <AmbientWave speed={0.3} amplitude={40} />
+      <FloatingOrb size={250} color="rgba(45, 212, 191, 0.05)" speed={0.4} />
+      <div className="relative z-10 p-4">
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="absolute top-10 left-10 w-64 h-64 bg-teal-400 rounded-full blur-3xl" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-emerald-500 rounded-full blur-3xl" />
       </div>
@@ -161,6 +168,7 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </main>
   );

@@ -24,41 +24,36 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-slate-900">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded">
           Skip to main content
         </a>
-        <nav className="bg-white border-b border-slate-200 px-6 py-3" aria-label="Main navigation">
+        <nav className="bg-black/80 backdrop-blur-xl border-b border-white/10 px-6 py-3" aria-label="Main navigation">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2" aria-label="StreamVitals home">
-              <span className="text-xl font-bold text-teal-700">StreamVitals</span>
+              <span className="text-xl font-bold text-teal-300">StreamVitals</span>
+              <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded-full">IEEE 2026</span>
             </Link>
             <div className="flex items-center gap-4 text-sm">
-              <Link href="/about" className="text-slate-600 hover:text-teal-600 transition-colors">
+              <Link href="/about" className="text-white/40 hover:text-teal-300 transition-colors">
                 How It Works
               </Link>
-              <Link href="/dashboard" className="text-slate-600 hover:text-teal-600 transition-colors">
-                Dashboard
+              <Link href="/map" className="text-white/40 hover:text-teal-300 transition-colors">
+                Live Map
               </Link>
-              <Link href="/analytics" className="text-slate-600 hover:text-teal-600 transition-colors">
-                Analytics
+              <Link href="/ai-copilot" className="text-white/40 hover:text-teal-300 transition-colors">
+                AI Copilot
               </Link>
-              <Link href="/field-collect" className="text-slate-600 hover:text-teal-600 transition-colors">
-                Field Collection
+              <Link href="/predict" className="text-white/40 hover:text-teal-300 transition-colors">
+                Predictions
               </Link>
-              <Link href="/compliance" className="text-slate-600 hover:text-teal-600 transition-colors">
-                Compliance
+              <Link href="/report" className="text-white/40 hover:text-teal-300 transition-colors">
+                Report
               </Link>
-              <Link href="/citizen" className="text-slate-600 hover:text-teal-600 transition-colors">
+              <Link href="/citizen" className="text-white/40 hover:text-teal-300 transition-colors">
                 Citizen Science
               </Link>
-              <Link href="/manage" className="text-slate-600 hover:text-teal-600 transition-colors">
-                Data Management
-              </Link>
-              <Link href="/tech-showcase" className="text-slate-600 hover:text-teal-600 transition-colors">
-                Tech Showcase
-              </Link>
-              <span className="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">
+              <span className="text-xs text-white/20 bg-white/5 px-2 py-1 rounded">
                 AI may interpret input. AI may not adjudicate.
               </span>
             </div>
