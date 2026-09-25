@@ -7,7 +7,8 @@ import PhotoCapture from '@/components/PhotoCapture';
 const FIELD_INDICATORS = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
 
 export default async function IndicatorPage({ params }: { params: Promise<{ indicator: string }> }) {
-  const { indicator: indicatorId } = await params;
+  const { indicator: rawIndicatorId } = await params;
+  const indicatorId = FIELD_INDICATORS.find((id) => id.toLowerCase() === rawIndicatorId.toLowerCase()) || rawIndicatorId;
   const indicator = indicators.find((i) => i.id === indicatorId);
   const currentIndex = FIELD_INDICATORS.indexOf(indicatorId);
   const isLabOnly = indicator?.lab_only || false;
