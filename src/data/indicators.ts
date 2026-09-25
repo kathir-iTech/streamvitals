@@ -53,4 +53,6 @@ export interface Indicator {
   geospatial?: SensorGeospatial;
 }
 
-export const indicators: Indicator[] = [];
+import indicatorsData from '@/data/indicators.json';
+
+export const indicators: Indicator[] = indicatorsData as unknown as Indicator[];
