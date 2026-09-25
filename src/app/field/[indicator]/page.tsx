@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, use } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { ArrowLeft, ArrowRight, Check, Shield } from 'lucide-react';
 import { indicators } from '@/data/indicators';
 import { getSession, updateSession } from '@/lib/field-session';
@@ -10,8 +10,14 @@ import PhotoCapture from '@/components/PhotoCapture';
 
 const FIELD_INDICATORS = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
 
-export default function IndicatorPage({ params }: { params: Promise<{ indicator: string }> }) {
-  const { indicator: indicatorId } = use(params);
+function getIndicatorIdFromPath(): string {
+  if (typeof window === 'undefined') return '';
+  const parts = window.location.pathname.split('/');
+  return parts[parts.length - 1];
+}
+
+export default function IndicatorPage() {
+  const [indicatorId, setIndicatorId] = useState<string>(() => getIndicatorIdFromPath());
   const indicator = indicators.find((i) => i.id === indicatorId);
   const currentIndex = FIELD_INDICATORS.indexOf(indicatorId);
   const isLabOnly = indicator?.lab_only || false;
@@ -22,7 +28,10 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
   const [photos, setPhotos] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
-  const [showAssistant, setShowAssistant] = useState(false);
+
+  useEffect(() => {
+    setIndicatorId(getIndicatorIdFromPath());
+  }, []);
 
   useEffect(() => {
     const sessionId = sessionStorage.getItem('current_session_id');
@@ -48,10 +57,7 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
     const updatedIndicators = session.indicators.map((i: any) =>
       i.indicatorId === indicatorId ? { ...i, state, timestamp: new Date().toISOString() } : i
     );
-    const result = await updateSession(session.sessionId, { indicators: updatedIndicators });
-    if (result.success) {
-      setSession((prev) => prev ? { ...prev, indicators: updatedIndicators } : prev);
-    }
+    await updateSession(session.sessionId, { indicators: updatedIndicators });
     setSaving(false);
   }, [session, indicatorId]);
 
@@ -116,7 +122,6 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
         completedIds={session?.indicators.filter((i: any) => i.state).map((i: any) => i.indicatorId) || []}
         labOnlyIds={FIELD_INDICATORS.filter((id) => indicators.find((ind) => ind.id === id)?.lab_only) || []}
       />
-
       <div className="relative z-10 min-h-screen flex flex-col lg:flex-row">
         <div className="flex-1 flex flex-col items-center justify-start p-4 lg:p-8">
           <div className="max-w-xl w-full">
@@ -130,10 +135,8 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
                 </span>
               )}
             </div>
-
             <h1 className="text-3xl font-black tracking-tighter mb-2 text-white">{indicator.name}</h1>
             <p className="text-white/50 text-lg mb-6">{indicator.citizen_question}</p>
-
             <div className="bg-[#111d35] border border-emerald-500/15 rounded-2xl p-6 mb-6">
               <div className="flex items-start gap-3 mb-4">
                 <Shield className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
@@ -142,7 +145,6 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
                   <p className="text-sm text-white/60 mt-1">{indicator.visual_anchor_guide}</p>
                 </div>
               </div>
-
               {isLabOnly && (
                 <div className="mt-4 bg-amber-500/5 border border-amber-400/15 rounded-xl p-4">
                   <p className="text-amber-300 text-sm font-medium mb-2">Laboratory Protocol Required</p>
@@ -150,7 +152,6 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
                   <p className="text-amber-300/60 text-sm mt-3">This requires laboratory analysis. You cannot determine the result in the field.</p>
                 </div>
               )}
-
               {isCitizen && stateKeys.length > 0 && (
                 <fieldset className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label="Select your observation">
                   {stateKeys.map((state, i) => {
@@ -180,7 +181,6 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
                   })}
                 </fieldset>
               )}
-
               {isCitizen && (
                 <div className="mt-6 space-y-4">
                   <PhotoCapture sessionId={session?.sessionId || ''} indicatorId={indicatorId} />
@@ -198,7 +198,6 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
                 </div>
               )}
             </div>
-
             <div className="flex gap-3">
               <button
                 onClick={handlePrev}
@@ -206,7 +205,7 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
                 className="flex items-center gap-2 px-6 py-3 bg-[#111d35] border border-emerald-500/20 text-white rounded-xl font-medium disabled:opacity-30 disabled:cursor-not-allowed hover:bg-emerald-500/10 hover:border-emerald-400/40 transition-all focus:ring-2 focus:ring-emerald-400 focus:outline-none"
                 aria-label="Previous indicator"
               >
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft className="w-4 h-4" /> Previous
               </button>
               <button
                 onClick={handleNext}
@@ -219,7 +218,6 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
             </div>
           </div>
         </div>
-
         <div className="lg:w-72 border-l border-emerald-500/10 lg:block hidden">
           <BoundedAssistant indicatorId={indicatorId} />
         </div>
