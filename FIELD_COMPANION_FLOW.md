@@ -344,6 +344,6 @@ const INDICATOR_STATES = {
 
 ## Source Reference
 
-All indicator content traces to: Schmeller, D., et al. (2026). *OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection*. Zenodo. https://doi.org/10.5281/zenodo.20345207
+All indicator content traces to: Schmeller, D., Calapez, A. R., Silva, J. P., Norte, A. C., Serra, S. R. Q., Dias, M., Silva, G. T., Bouchali, R., Loyau, A., Almeida, S. F. P., Schmitt, R., Chen, A., Ramos, J. A., & Feio, M. J. (2026). *OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection*. Zenodo. https://doi.org/10.5281/zenodo.20345207
 
 Extracted text saved to `extracted.txt` in the project root for reference.

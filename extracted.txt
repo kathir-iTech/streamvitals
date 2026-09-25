@@ -1,0 +1,59 @@
+=== PAGE 4 - SECTION I: DIATOMS AND DIATOM TERATOLOGY ===
+
+Rational: How is the indicator measured? Importance of indicator
+Diatoms are ubiquitous in aquatic environments and a key component of river ecosystems, contributing to primary productivity, nutrient cycling and oxygenation. Pollutants such as heavy metals, pharmaceuticals and others may cause deformities in the frustules (valves – external silicate walls) – teratologies, which reflect diatom health.
+Certain diatom species can form harmful algal blooms (HABs) in freshwater environments. These blooms can produce toxins and/or deplete oxygen levels in the water, harm aquatic organisms, leading to fish kills and posing risks to human health through contaminated water or food consumption.
+They are widely used as bioindicators of water quality, presenting high sensitivity to environmental changes, organic pollution, and eutrophication. They are among the biological quality elements used in the assessment of the ecological quality status of rivers, according to the European Water Framework Directive (2000).
+
+How is the indicator measured?
+Periphytic diatoms are scraped from the surface of submerged stones/substrate. They can also be collected from the sediment or from the surface of aquatic plants. Samples are cleaned in the laboratory using nitric acid and potassium dichromate at room temperature for 24h (European Committee for Standardisation, 2003) to remove organic content. Permanent slides are prepared using Naphrax®. About 400 diatom valves are identified and counted per sample, following the European standard (European Committee for Standardisation, 2004). The identification is performed under a microscope to species level based in their morphology. Deformities in the morphology of the valves should also be registered and counted. Samples can also be identified through metagenomics.
+
+=== PAGE 8 - SECTION V: BIRDS ===
+
+Rational: How is the indicator measured? Importance of indicator
+A healthy ecosystem harbours a diverse and balanced community of birds, including more sensitive bird species like insectivorous birds. These birds are benefitted by the presence of orchards, small woody features, scrubs and shrubs, hedgerows and other boundaries that provide resources and constitute connectivity network in the landscape. Provides data about the presence and number of insectivorous bird species.
+The number of insectivorous bird species between areas differing in degree of urbanisation, and across habitat changes evaluated in long-term monitoring, will elucidate about the resilience of the ecosystem regarding pest control (disease vector mosquitoes, plant pests, etc), and the quality of cultural services that contribute to human well-being.
+For example, an increase in population density per km2 from 500 to 3000, or an increase of impervious area by 35%, may lead to a loss of one insectivorous bird species in that area.
+A breeding pair of one such species, like the blue tit Cyanistes caeruleus, can feed their nestlings with about 700 aphids during the breeding season (Cowie and Hinsley 1988).
+Estimating a population of 7800 breeding pairs of blue tits in a 150km2 city, this means less 5460k aphids consumed each spring.
+Cowie, R. J., & Hinsley, S. A. (1988). Journal of Animal Ecology, 57, 611-626. doi: 10.2307/4928
+
+How is the indicator measured?
+This indicator is based on bird censuses (point counts) through the detection of their sounds (songs and calls). Bird censuses should be performed at the early hours of the day (up to three hours after sunrise), during 10 minutes, at each location under evaluation, using the mobile app Merlin (Cornell Lab Lab of Ornithology, Cornell University) or similar, for those with no experience in ornithology. The bird species detected are classified according to its feeding guild following Wilman et al. (2014), and the number of insectivorous bird species are counted.
+Wilman, H., Belmaker, J., Simpson, J., de la Rosa, C., Rivadeneira, M. M., & Jetz, W. (2014). Ecology, 95, 2027. doi: https://doi.org/10.1890/13-1917.1
+
+Blue tit Cyanistes caeruleus, an insectivorous bird species, feeding one of its newly fledged chicks (photo from pixabay.com)
+
+=== PAGE 10 - SECTION VII: FECAL COLIFORM ===
+
+Rational: How is the indicator measured? Importance of indicator
+Fecal coliforms living naturally in the intestine tract of warmed-animal, including humans. They are used as indicator of recent animal and human fecal contamination in water. Their presence suggests inputs from human or animal waste and therefore a potential exposure to enteric pathogens including pathogenic bacteria, and parasites. Monitoring of fecal coliforms provide a simple way to assess the sanitary quality of surface water, recreational water, and drinking-water sources, by estimating potential infectious health risks.
+
+How is the indicator measured?
+Water samples are collected and analyzed using several complementary methods. The most common approach is culture-based testing, where a known volume of water is filtered and the filter is placed on a selective growth medium (i.e. allowing the growth of fecal coliforms only). When incubated at warm temperatures fecal coliforms will grow, forming visible colonies. These colonies are then counted and the result is expressed as colony-forming units per 100 mL (CFU/100 mL). Enzyme-substrate tests work in a similar way but use color changes or fluorescence to detect these bacteria more quickly. In addition to culture methods, molecular tools such as qPCR can be used. qPCR detects and counts specific DNA sequences from fecal coliforms, offering rapid and sensitive results, even when bacteria are present at low levels or are no longer alive. Environmental DNA metabarcoding can provide a broader picture of microbial communities in water. Although not used to quantify fecal coliforms directly, metabarcoding can confirm the presence of related indicator bacteria and identify other microorganisms associated with fecal contamination.
+
+=== PAGE 13 - SECTION X: DIPTERA ADULTS ===
+
+Rational: How is the indicator measured? Importance of indicator
+By tracking how different Diptera adults respond to urban pressures and restoration, this indicator highlights when ecological imbalances may translate into increased vector presence and health risks for humans and other animals. Diptera include some of the most medically relevant taxa worldwide, such as mosquitoes (Culicidae), biting midges (Ceratopogonidae), sand flies (Phlebotominae), and blackflies (Simuliidae). Some taxa may transmit viruses, parasites and bacteria through blood-feeding. Changes in their abundance or distribution can therefore signal shifts in the risk of vector-borne diseases within urban environments.
+
+How is the indicator measured?
+Riverine Diptera adult assemblages are assessed using standardized CO2-baited traps (e.g., Biogents BG-Pro, with CO2 generated by dry-ice sublimation powered by a powerbank). At least two traps are placed per site along the urban stream, ideally 25 m apart (minimum 5 m), avoiding direct exposure to sunlight. Traps operate overnight, from a few hours before sunset to a few hours after sunrise. After collection, samples are transported in a cooler and stored at -80 °C upon arrival in the laboratory. Specimens are then morphologically identified under a stereomicroscope, and community metrics (richness, abundance, taxonomic composition) are quantified. These metrics are then related to environmental and climatic variables to assess ecological patterns and responses. Additionally, pathogen screening can be performed by extracting DNA and RNA from pools of previously identified frozen specimens (grouped by species, site and date), or by preserving individuals in RNAlater.
+
+=== PAGE 14 - SECTION XI: INVASIVE ALIEN PLANTS ===
+
+Rational: How is the indicator measured? Importance of indicator
+Invasive Alien Plants (IAP) are plant species introduced – intentionally or accidentally – outside their natural geographic range that spread rapidly and cause ecological, economic, and/or social harm. IAPs are a typical feature of biological communities in urban, peri-urban and human-disturbed ecosystems. In terms of health impacts, AIPs, particularly angiosperms, are frequently associated with the production of allergenic pollen and toxic compounds, which can cause wounds, skin irritation, allergic reactions and poisoning. Additionally, IAPs may act as mediators of disease vectors (e.g., dipteran vectors, ticks) and allow the occurrence and proliferation of vector-borne diseases.
+
+How is the indicator measured?
+The non-native community in the riparian corridor is visually surveyed along a 100-meter stretch of the stream on both banks. Ten checkpoints are established at 10-meter intervals. At each checkpoint, the assessment is conducted from the water's edge toward the riverside, covering a linear distance of 5 meters and a width of 2 meters. Whenever possible, species are identified in situ. The relative coverage (%) of each species is visually estimated, and each species is classified as cosmopolitan, alien, naturalized, potentially invasive, or invasive, in accordance with national legislation.
+
+Invasive Alien Plants examples: A. donax, T. fluminensis, A. altissima
+
+=== PAGE 5 - SECTION II: BENTHIC MACROINVERTEBRATES ===
+
+Rational: How is the indicator measured? Importance of indicator
+Macroinvertebrates are ubiquitous in rivers and include small aquatic organisms such as insect larvae, crustaceans, worms and molluscs. They are key biological quality elements under the Water Framework Directive, widely used as sensitive indicators of freshwater ecosystem health. Because they have limited mobility, relatively long life cycles, and variable tolerance to pollution, changes in their communities reflect cumulative environmental conditions. They also play a key role as links between primary producers (e.g. algae) and higher trophic levels (e.g. fish, birds), directly influencing the functioning and stability of ecosystem food chains.
+
+How is the indicator measured?
+Macroinvertebrates assemblages are collected in streams with a hand-net (500 μm mesh size, 0.25 × 0.25 m opening) by kick sampling covering six sub-samples (× 1 m length) allocated across habitat types (organic and inorganic) according to their relative availability within the reach. Collected organisms are preserved in ethanol and later processed in the laboratory, where they are sorted, identified under a stereomicroscope and counted. From these data, metrics such as taxa richness, diversity and biotic scores (e.g. BMWP) are calculated to reflect the community's sensitivity or tolerance to pollution.
