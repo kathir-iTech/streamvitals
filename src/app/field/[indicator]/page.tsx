@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, use } from 'react';
 import { ArrowLeft, ArrowRight, Check, Shield } from 'lucide-react';
 import { indicators } from '@/data/indicators';
 import { getSession, updateSession } from '@/lib/field-session';
@@ -10,8 +10,8 @@ import PhotoCapture from '@/components/PhotoCapture';
 
 const FIELD_INDICATORS = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
 
-export default function IndicatorPage({ params }: { params: { indicator: string } }) {
-  const indicatorId = params.indicator;
+export default function IndicatorPage({ params }: { params: Promise<{ indicator: string }> }) {
+  const { indicator: indicatorId } = use(params);
   const indicator = indicators.find((i) => i.id === indicatorId);
   const currentIndex = FIELD_INDICATORS.indexOf(indicatorId);
   const isLabOnly = indicator?.lab_only || false;
