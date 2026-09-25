@@ -152,7 +152,7 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
 
     const lines: string[] = [];
     lines.push('<!DOCTYPE html><html><head><title>Field Session Summary</title>');
-    lines.push('<style>body{font-family:system-ui,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;color:#1a1a2e;line-height:1.6}h1{color:#00e5a0;border-bottom:2px solid #00e5a0;padding-bottom:8px}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #ddd;padding:8px 12px;text-align:left}th{background:#00e5a0;color:#fff}tr:nth-child(even){background:#f8f9fa}.lab{background:#fffbeb}.section{margin:20px 0}h2{color:#0a1628}</style></head><body>');
+    lines.push('<style>body{font-family:system-ui,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;color:#1a1a2e;line-height:1.6}h1{color:#0d9b6e;border-bottom:2px solid #0d9b6e;padding-bottom:8px}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #ddd;padding:8px 12px;text-align:left}th{background:#0d9b6e;color:#fff}tr:nth-child(even){background:#f8f9fa}.lab{background:#fffbeb}.section{margin:20px 0}h2{color:#1a1a2e}</style></head><body>');
     lines.push('<h1>Field Monitoring Session Summary</h1>');
     lines.push(`<p><strong>Stream / Location:</strong> ${session.streamName}</p>`);
     lines.push(`<p><strong>Volunteer:</strong> ${session.volunteer || 'Not provided'}</p>`);
@@ -183,20 +183,20 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
-        <button onClick={generateJSON} disabled={exporting} className="btn-primary text-sm flex items-center gap-2">
+        <button onClick={generateJSON} disabled={exporting} className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl px-4 py-2.5 font-semibold text-sm flex items-center gap-2 shadow-sm shadow-emerald-200 transition-all disabled:opacity-40">
           <Download className="w-4 h-4" /> Export JSON
         </button>
-        <button onClick={generateCSV} disabled={exporting} className="btn-secondary text-sm flex items-center gap-2">
+        <button onClick={generateCSV} disabled={exporting} className="bg-white hover:bg-gray-50 text-emerald-700 border border-gray-200 rounded-xl px-4 py-2.5 font-semibold text-sm flex items-center gap-2 shadow-sm transition-all disabled:opacity-40">
           <Download className="w-4 h-4" /> Export CSV
         </button>
-        <button onClick={generateHumanReadable} disabled={exporting} className="btn-secondary text-sm flex items-center gap-2">
+        <button onClick={generateHumanReadable} disabled={exporting} className="bg-white hover:bg-gray-50 text-emerald-700 border border-gray-200 rounded-xl px-4 py-2.5 font-semibold text-sm flex items-center gap-2 shadow-sm transition-all disabled:opacity-40">
           <FileText className="w-4 h-4" /> Print Summary
         </button>
-        <button onClick={handlePrint} disabled={exporting} className="btn-secondary text-sm flex items-center gap-2">
+        <button onClick={handlePrint} disabled={exporting} className="bg-white hover:bg-gray-50 text-emerald-700 border border-gray-200 rounded-xl px-4 py-2.5 font-semibold text-sm flex items-center gap-2 shadow-sm transition-all disabled:opacity-40">
           <Printer className="w-4 h-4" /> Print Page
         </button>
       </div>
-      <p className="text-xs text-white/30">Export structured data aligned with the OneAquaHealth indicator framework.</p>
+      <p className="text-xs text-[#1a1a2e]/30">Export structured data aligned with the OneAquaHealth indicator framework.</p>
     </div>
   );
 }

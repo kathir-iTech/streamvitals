@@ -109,30 +109,30 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
   };
 
   return (
-    <aside className="w-72 bg-[#111d35] border-l border-emerald-500/15 flex flex-col h-full">
-      <div className="p-4 border-b border-emerald-500/15">
+    <aside className="w-72 bg-white border-l border-gray-200 flex flex-col h-full shadow-sm">
+      <div className="p-4 border-b border-gray-100">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold flex items-center gap-2">
-            <Bot className="w-4 h-4 text-emerald-400" /> Field Assistant
+          <h3 className="text-sm font-bold flex items-center gap-2 text-[#1a1a2e]">
+            <Bot className="w-4 h-4 text-emerald-600" /> Field Assistant
           </h3>
           <div className="flex items-center gap-2">
             {!isOnline && (
-              <span className="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded flex items-center gap-1" title="Offline mode">
+              <span className="text-[10px] bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded flex items-center gap-1" title="Offline mode">
                 <WifiOff className="w-2 h-2" /> Offline
               </span>
             )}
-            <button onClick={handleClear} className="text-white/30 hover:text-white/60 transition-colors" title="Clear history">
+            <button onClick={handleClear} className="text-[#1a1a2e]/30 hover:text-[#1a1a2e]/60 transition-colors" title="Clear history">
               <X className="w-3 h-3" />
             </button>
           </div>
         </div>
 
-        <div className="bg-[#070d1a] rounded-lg p-2.5 border border-emerald-500/10">
+        <div className="bg-gray-50 rounded-lg p-2.5 border border-gray-200">
           <div className="flex items-start gap-2">
-            <Shield className="w-3 h-3 text-emerald-400 flex-shrink-0 mt-0.5" />
+            <Shield className="w-3 h-3 text-emerald-600 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-[10px] text-emerald-300 font-semibold">Bounded Scope</p>
-              <p className="text-[10px] text-white/40 leading-tight">Answers from OneAquaHealth factsheets only. Cannot identify species, assess water quality, or provide health opinions.</p>
+              <p className="text-[10px] text-emerald-700 font-semibold">Bounded Scope</p>
+              <p className="text-[10px] text-[#1a1a2e]/40 leading-tight">Answers from OneAquaHealth factsheets only. Cannot identify species, assess water quality, or provide health opinions.</p>
             </div>
           </div>
         </div>
@@ -140,16 +140,16 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
 
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
         {messages.length === 0 && (
-          <div className="bg-[#070d1a] rounded-lg p-3 border border-emerald-500/10">
-            <p className="text-xs text-white/50 mb-2">Click a question below or type your own:</p>
+          <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+            <p className="text-xs text-[#1a1a2e]/50 mb-2">Click a question below or type your own:</p>
             <div className="space-y-1.5">
-              <button onClick={() => handleQuickQuestion(content ? content.citizen_question : 'Explain this indicator')} className="w-full text-left bg-[#111d35] rounded p-2 border border-emerald-500/10 hover:border-emerald-400/30 text-[11px] text-white/60 hover:text-white/80 transition-all">
+              <button onClick={() => handleQuickQuestion(content ? content.citizen_question : 'Explain this indicator')} className="w-full text-left bg-white rounded p-2.5 border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50/50 text-[11px] text-[#1a1a2e]/60 hover:text-[#1a1a2e]/80 transition-all">
                 What does this indicator measure?
               </button>
-              <button onClick={() => handleQuickQuestion('What should I do during sampling?')} className="w-full text-left bg-[#111d35] rounded p-2 border border-emerald-500/10 hover:border-emerald-400/30 text-[11px] text-white/60 hover:text-white/80 transition-all">
+              <button onClick={() => handleQuickQuestion('What should I do during sampling?')} className="w-full text-left bg-white rounded p-2.5 border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50/50 text-[11px] text-[#1a1a2e]/60 hover:text-[#1a1a2e]/80 transition-all">
                 Sampling procedure guidance
               </button>
-              <button onClick={() => handleQuickQuestion('What equipment do I need?')} className="w-full text-left bg-[#111d35] rounded p-2 border border-emerald-500/10 hover:border-emerald-400/30 text-[11px] text-white/60 hover:text-white/80 transition-all">
+              <button onClick={() => handleQuickQuestion('What equipment do I need?')} className="w-full text-left bg-white rounded p-2.5 border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50/50 text-[11px] text-[#1a1a2e]/60 hover:text-[#1a1a2e]/80 transition-all">
                 Required equipment
               </button>
             </div>
@@ -159,13 +159,13 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
         {messages.map((msg, i) => (
           <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : ''}`}>
             {msg.role === 'assistant' && (
-              <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-1">
-                <Bot className="w-3 h-3 text-emerald-400" />
+              <div className="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0 mt-1">
+                <Bot className="w-3 h-3 text-emerald-600" />
               </div>
             )}
-            <div className={`max-w-[220px] rounded-lg p-2.5 text-xs ${msg.role === 'user' ? 'bg-emerald-500/20 text-white/90 ml-auto' : 'bg-[#070d1a] text-white/70 border border-emerald-500/10'}`}>
+            <div className={`max-w-[220px] rounded-lg p-2.5 text-xs ${msg.role === 'user' ? 'bg-emerald-50 text-[#1a1a2e] ml-auto' : 'bg-gray-50 text-[#1a1a2e]/70 border border-gray-200'}`}>
               <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
-              <span className="text-[9px] text-white/20 mt-1 inline-block">
+              <span className="text-[9px] text-[#1a1a2e]/20 mt-1 inline-block">
                 {msg.source === 'offline' ? '📡 Offline' : msg.source === 'groq' ? '🤖 Groq' : '📄 Factsheet'}
               </span>
             </div>
@@ -175,7 +175,7 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
       </div>
 
       {isOnline && (
-        <div className="border-t border-emerald-500/15 p-3">
+        <div className="border-t border-gray-100 p-3">
           <div className="flex items-center gap-2 mb-1">
             <input
               type="text"
@@ -184,23 +184,23 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
               onKeyDown={handleKeyDown}
               placeholder="Ask about this indicator..."
               disabled={loading}
-              className="flex-1 p-2.5 bg-[#070d1a] border border-emerald-500/15 rounded-lg text-xs text-white placeholder-white/30 focus:ring-2 focus:ring-emerald-400 focus:outline-none disabled:opacity-40"
+              className="flex-1 p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-xs text-[#1a1a2e] placeholder-[#1a1a2e]/30 focus:ring-2 focus:ring-emerald-500 focus:outline-none disabled:opacity-40"
             />
-            <button onClick={handleSend} disabled={loading || !input.trim()} className="p-2.5 bg-emerald-500/20 text-emerald-300 rounded-lg hover:bg-emerald-500/30 disabled:opacity-40 transition-all">
+            <button onClick={handleSend} disabled={loading || !input.trim()} className="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 disabled:opacity-40 transition-all">
               {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
             </button>
           </div>
-          <p className="text-[9px] text-white/20 mt-1">Requires network. Offline: static factsheet reference.</p>
+          <p className="text-[9px] text-[#1a1a2e]/20 mt-1">Requires network. Offline: static factsheet reference.</p>
         </div>
       )}
 
       {!isOnline && (
-        <div className="border-t border-emerald-500/15 p-3">
+        <div className="border-t border-gray-100 p-3">
           <div className="flex items-center gap-2 mb-2">
-            <WifiOff className="w-3 h-3 text-amber-400" />
-            <span className="text-[10px] text-amber-300">Offline — showing factsheet reference</span>
+            <WifiOff className="w-3 h-3 text-amber-600" />
+            <span className="text-[10px] text-amber-700">Offline — showing factsheet reference</span>
           </div>
-          <button onClick={handleClear} className="w-full py-1.5 bg-[#070d1a] border border-emerald-500/15 rounded-lg text-[10px] text-white/50 hover:text-white/70 transition-all">
+          <button onClick={handleClear} className="w-full py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-[10px] text-[#1a1a2e]/50 hover:text-[#1a1a2e]/70 transition-all">
             Clear history
           </button>
         </div>

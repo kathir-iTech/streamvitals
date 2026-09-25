@@ -70,14 +70,14 @@ export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3 }: 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-white/70">Photos</label>
-        <span className="text-xs text-white/30">{photos.length}/{maxPhotos}</span>
+        <label className="text-sm font-medium text-[#1a1a2e]/70">Photos</label>
+        <span className="text-xs text-[#1a1a2e]/30">{photos.length}/{maxPhotos}</span>
       </div>
       <div className="flex gap-3 flex-wrap">
         {photos.map((p) => (
           <div key={p.photoId} className="relative">
-            <img src={p.url} alt="Capture" className="w-24 h-24 object-cover rounded-xl border border-emerald-500/20" />
-            <button onClick={() => handleRemove(p.photoId)} className="absolute -top-1 -right-1 w-5 h-5 bg-red-500/80 rounded-full flex items-center justify-center text-white text-xs hover:bg-red-500 transition-colors">
+            <img src={p.url} alt="Capture" className="w-24 h-24 object-cover rounded-xl border border-gray-200" />
+            <button onClick={() => handleRemove(p.photoId)} className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs hover:bg-red-600 transition-colors">
               <X className="w-3 h-3" />
             </button>
           </div>
@@ -86,20 +86,20 @@ export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3 }: 
           <>
             <button
               onClick={handleCapture}
-              className="w-24 h-24 rounded-xl border-2 border-dashed border-emerald-500/30 flex flex-col items-center justify-center gap-1 hover:border-emerald-400/50 hover:bg-emerald-500/5 transition-all"
+              className="w-24 h-24 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center gap-1 hover:border-emerald-500 hover:bg-emerald-50 transition-all"
               aria-label="Capture photo"
             >
-              <Camera className="w-6 h-6 text-emerald-400/60" />
-              <span className="text-[10px] text-emerald-400/40">Capture</span>
+              <Camera className="w-6 h-6 text-emerald-600/40" />
+              <span className="text-[10px] text-emerald-600/40">Capture</span>
             </button>
             <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileUpload} className="hidden" />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="w-24 h-24 rounded-xl border-2 border-dashed border-emerald-500/30 flex flex-col items-center justify-center gap-1 hover:border-emerald-400/50 hover:bg-emerald-500/5 transition-all"
+              className="w-24 h-24 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center gap-1 hover:border-emerald-500 hover:bg-emerald-50 transition-all"
               aria-label="Upload photo"
             >
-              <ImageIcon className="w-6 h-6 text-emerald-400/60" />
-              <span className="text-[10px] text-emerald-400/40">Upload</span>
+              <ImageIcon className="w-6 h-6 text-emerald-600/40" />
+              <span className="text-[10px] text-emerald-600/40">Upload</span>
             </button>
           </>
         )}
