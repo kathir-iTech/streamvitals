@@ -1,2 +1,775 @@
-[{"id":"BMI-01","group":"biological","name":"Benthic Macroinvertebrates","citizen_observable":true,"citizen_question":"What types of small creatures do you see under stones or in the streambed?","visual_anchor_guide":"Look under 2-3 submerged stones in flowing water.","plain_term":"Stream insects and small creatures","sensor_parameters":["pH","dissolved_oxygen","turbidity","temperature","conductivity"],"ogc_sensorthings_model":{"datastreamName":"BMI-01-Benthic-Macroinvertebrates","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","phenomenon":"http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"name":"index","definition":"Benthic index score","symbol":"idx"}},"waterml_concept":"BenthicMacroInvertebratesIndex","epa_storet_parameter":"BMIPP","states":{"diverse_sensitive":{"policy_severity":0,"sensor_thresholds":{"dissolved_oxygen_min":7.0,"turbidity_max":25,"ph_range":[6.5,8.5]}},"tolerant_only":{"policy_severity":2,"sensor_thresholds":{"dissolved_oxygen_min":5.0,"turbidity_max":50,"ph_range":[5.5,9.0]}},"absent_or_dead":{"policy_severity":3,"sensor_thresholds":{"dissolved_oxygen_min":3.0,"turbidity_max":100,"ph_range":[4.5,10.0]}}},
-"framework_basis":{"document":"OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)","citation":null},"triage_mapping":{"type":"StreamVitals_policy","note":"policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"},"one_health_message":"consistent with ecological stress; associated with environmental conditions relevant to human and animal health","lab_only":false,"coding":{"system":null,"code":null},"source":"Section II. Benthic Macroinvertebrates","citizen_state_labels":{"diverse_sensitive":"Many sensitive species present","tolerant_only":"Only tolerant species seen","absent_or_dead":"None seen or dead"},"sensor_health_indicator":true,"real_time_monitoring":true,"wqp_data_category":"Bioindicators","huc_relevance":[8,"10","11"]},{"id":"FSH-02","group":"biological","name":"Fish","citizen_observable":false,"citizen_question":"Are there any fish visible in the stream, and if so, what types?","visual_anchor_guide":"Observe the stream from a bridge or bank for moving shapes; proper assessment requires electrofishing.","plain_term":"Fish species and abundance","sensor_parameters":["temperature","dissolved_oxygen","flow_rate","turbidity"],"ogc_sensorthings_model":{"datastreamName":"FSH-02-Fish-Abundance","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","phenomenon":"http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"name":"count","definition":"Fish count per survey","symbol":"cnt"}},"waterml_concept":"FishAbundance","epa_storet_parameter":"FISH_ABUNDANCE","states":{"diverse_sensitive":{"policy_severity":0,"sensor_thresholds":{"dissolved_oxygen_min":7.0,"temperature_max":25}},"tolerant_only":{"policy_severity":2,"sensor_thresholds":{"dissolved_oxygen_min":5.0,"temperature_max":30}},"absent_or_dead":{"policy_severity":3,"sensor_thresholds":{"dissolved_oxygen_min":3.0,"temperature_max":35}}},"framework_basis":{"document":"OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)","citation":null},"triage_mapping":{"type":"StreamVitals_policy","note":"policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"},"one_health_message":"consistent with ecological stress; associated with environmental conditions relevant to human and animal health","lab_only":true,"coding":{"system":null,"code":null},"source":"Section III. Fish","sensor_health_indicator":false,"real_time_monitoring":false,"wqp_data_category":"Fish","huc_relevance":[8,"10","11"]},{"id":"AMH-03","group":"biological","name":"Amphibians","citizen_observable":false,"citizen_question":"Have you seen any frogs, salamanders, or other amphibians near the stream?","visual_anchor_guide":"Look for amphibians near water's edge; proper assessment requires permits and specialized sampling.","plain_term":"Amphibian presence and species","sensor_parameters":["temperature","humidity","precipitation"],"ogc_sensorthings_model":{"datastreamName":"AMH-03-Amphibian-Presence","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","phenomenon":"http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"name":"boolean","definition":"Amphibian presence","symbol":"bool"}},"waterml_concept":"AmphibianPopulation","epa_storet_parameter":"AMPHIBIAN_COUNT","states":{"diverse_sensitive":{"policy_severity":0},"tolerant_only":{"policy_severity":2},"absent_or_dead":{"policy_severity":3}},"framework_basis":{"document":"OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)","citation":null},"triage_mapping":{"type":"StreamVitals_policy","note":"policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"},"one_health_message":"consistent with ecological stress; associated with environmental conditions relevant to human and animal health","lab_only":true,"coding":{"system":null,"code":null},"source":"Section IV. Amphibians","sensor_health_indicator":false,"real_time_monitoring":false,"wqp_data_category":"Amphibians","huc_relevance":[8,"10","11"]},{"id":"BIR-04","group":"biological","name":"Birds","citizen_observable":true,"citizen_question":"What bird species do you hear or see near the stream?","visual_anchor_guide":"Listen for bird songs and calls, especially insectivorous species, during early morning hours.","plain_term":"Bird species and insectivorous bird count","sensor_parameters":["noise_level","precipitation"],"ogc_sensorthings_model":{"datastreamName":"BIR-04-Bird-Diversity","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","phenomenon":"http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"name":"count","definition":"Bird species count","symbol":"cnt"}},"waterml_concept":"BirdDiversity","epa_storet_parameter":"BIRD_SPECIES_COUNT","states":{"diverse_sensitive":{"policy_severity":0},"tolerant_only":{"policy_severity":2},"absent_or_dead":{"policy_severity":3}},"framework_basis":{"document":"OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)","citation":null},"triage_mapping":{"type":"StreamVitals_policy","note":"policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"},"one_health_message":"consistent with ecological stress; associated with environmental conditions relevant to human and animal health","lab_only":false,"coding":{"system":null,"code":null},"source":"Section V. Birds","citizen_state_labels":{"diverse_sensitive":"Many species observed","tolerant_only":"Few species observed","absent_or_dead":"None seen"},"sensor_health_indicator":true,"real_time_monitoring":false,"wqp_data_category":"Wildlife","huc_relevance":[8,"10","11"]},{"id":"MDR-05","group":"biological","name":"Microbial Diversity","citizen_observable":false,"citizen_question":"Can you observe any visible biofilm or microbial growth on stream surfaces?","visual_anchor_guide":"Scrape a small area of submerged substrate and note color/texture changes; proper assessment requires laboratory DNA analysis.","plain_term":"Microbial community diversity","sensor_parameters":["dissolved_organic_carbon","conductivity","ph"],"ogc_sensorthings_model":{"datastreamName":"MDR-05-Microbial-Diversity","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","phenomenon":"http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"name":"index","definition":"Microbial diversity index","symbol":"idx"}},"waterml_concept":"MicrobialDiversity","epa_storet_parameter":"MICROBIAL_DIVERSITY","states":{"diverse_sensitive":{"policy_severity":0},"tolerant_only":{"policy_severity":2},"absent_or_dead":{"policy_severity":3}},"framework_basis":{"document":"OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)","citation":null},"triage_mapping":{"type":"StreamVitals_policy","note":"policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"},"one_health_message":"consistent with ecological stress; associated with environmental conditions relevant to human and animal health","lab_only":true,"coding":{"system":null,"code":null},"source":"Section VI. Microbial Diversity","sensor_health_indicator":false,"real_time_monitoring":false,"wqp_data_category":"Microbiology","huc_relevance":[8,"10","11"]},{"id":"FCL-06","group":"physicochemical","name":"Fecal Coliforms","citizen_observable":false,"citizen_question":"Do you notice any unusual odors, discoloration, or sewage-related signs in the water?","visual_anchor_guide":"Note water clarity, odor, and visible pollution; laboratory testing is required for confirmation.","plain_term":"Fecal contamination indicators","sensor_parameters":["turbidity","ph","conductivity","temperature","oxidation_reduction_potential"],"ogc_sensorthings_model":{"datastreamName":"FCL-06-Fecal-Coliforms","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","phenomenon":"http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"name":"CFU/100mL","definition":"Coliform form units per 100 milliliters","symbol":"CFU/100mL"}},"waterml_concept":"FecalColiform","epa_storet_parameter":"FCOLIFORM","states":{"diverse_sensitive":{"policy_severity":0,"sensor_thresholds":{"turbidity_max":10,"ph_range":[6.5,8.5],"conductivity_max":500}},"tolerant_only":{"policy_severity":2,"sensor_thresholds":{"turbidity_max":50,"ph_range":[5.5,9.0],"conductivity_max":1000}},"absent_or_dead":{"policy_severity":3,"sensor_thresholds":{"turbidity_max":100,"ph_range":[4.5,10.0],"conductivity_max":2000}}},"framework_basis":{"document":"OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)","citation":null},"triage_mapping":{"type":"StreamVitals_policy","note":"policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"},"one_health_message":"consistent with ecological stress; associated with environmental conditions relevant to human and animal health","lab_only":true,"coding":{"system":null,"code":null},"source":"Section VII. Fecal Coliforms","sensor_health_indicator":true,"real_time_monitoring":true,"wqp_data_category":"Microbiological","huc_relevance":[8,"10","11"]},{"id":"PRT-07","group":"physicochemical","name":"Pathogens","citizen_observable":false,"citizen_question":"Do you notice any visible signs of pollution such as foam, discoloration, or algal blooms?","visual_anchor_guide":"Note water appearance and odor; pathogen detection requires laboratory molecular methods.","plain_term":"Disease-causing microorganisms","sensor_parameters":["turbidity","chlorophyll_a","ph","conductivity","temperature"],"ogc_sensorthings_model":{"datastreamName":"PRT-07-Pathogens","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","phenomenon":"http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"name":"CFU/mL","definition":"Colony forming units per milliliter","symbol":"CFU/mL"}},"waterml_concept":"PathogenPresence","epa_storet_parameter":"PATHOGEN_DETECTED","states":{"diverse_sensitive":{"policy_severity":0,"sensor_thresholds":{"turbidity_max":10,"chlorophyll_a_max":10}},"tolerant_only":{"policy_severity":2,"sensor_thresholds":{"turbidity_max":50,"chlorophyll_a_max":50}},"absent_or_dead":{"policy_severity":3,"sensor_thresholds":{"turbidity_max":100,"chlorophyll_a_max":100}}},"framework_basis":{"document":"OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)","citation":null},"triage_mapping":{"type":"StreamVitals_policy","note":"policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"},"one_health_message":"consistent with ecological stress; associated with environmental conditions relevant to human and animal health","lab_only":true,"coding":{"system":null,"code":null},"source":"Section VIII. Pathogens","sensor_health_indicator":true,"real_time_monitoring":false,"wqp_data_category":"Pathogens","huc_relevance":[8,"10","11"]},{"id":"ARB-08","group":"physicochemical","name":"Antibiotic Resistance Genes","citizen_observable":false,"citizen_question":"Are you aware of any nearby agricultural or industrial activity that could affect the stream?","visual_anchor_guide":"Note land use around the stream; ARG detection requires laboratory molecular methods.","plain_term":"Antibiotic resistance markers in water","sensor_parameters":["conductivity","turbidity","ph","dissolved_organic_carbon"],"ogc_sensorthings_model":{"datastreamName":"ARB-08-Antibiotic-Resistance-Genes","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","phenomenon":"http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"name":"gene_copies/L","definition":"Antibiotic resistance gene copies per liter","symbol":"copies/L"}},"waterml_concept":"AntibioticResistanceGenes","epa_storet_parameter":"ARG_PRESENCE","states":{"diverse_sensitive":{"policy_severity":0},"tolerant_only":{"policy_severity":2},"absent_or_dead":{"policy_severity":3}},"framework_basis":{"document":"OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)","citation":null},"triage_mapping":{"type":"StreamVitals_policy","note":"policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"},"one_health_message":"consistent with ecological stress; associated with environmental conditions relevant to human and animal health","lab_only":true,"coding":{"system":null,"code":null},"source":"Section IX. Antibiotic Resistance Genes","sensor_health_indicator":false,"real_time_monitoring":false,"wqp_data_category":"Chemical","huc_relevance":[8,"10","11"]},{"id":"DPT-09","group":"biological","name":"Diptera Adults","citizen_observable":false,"citizen_question":"Do you notice an unusual number of flies, mosquitoes, or other flying insects near the stream?","visual_anchor_guide":"Observe flying insect activity near the water surface; formal assessment requires CO2-baited traps.","plain_term":"Adult flying insects (Diptera)","sensor_parameters":["temperature","humidity","precipitation"],"ogc_sensorthings_model":{"datastreamName":"DPT-09-Diptera-Adults","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","phenomenon":"http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"name":"count","definition":"Diptera count per trap","symbol":"cnt"}},"waterml_concept":"DipteraPopulation","epa_storet_parameter":"DIPTERA_ABUNDANCE","states":{"diverse_sensitive":{"policy_severity":0},"tolerant_only":{"policy_severity":2},"absent_or_dead":{"policy_severity":3}},"framework_basis":{"document":"OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)","citation":null},"triage_mapping":{"type":"StreamVitals_policy","note":"policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"},"one_health_message":"consistent with ecological stress; associated with environmental conditions relevant to human and animal health","lab_only":false,"coding":{"system":null,"code":null},"source":"Section X. Diptera Adults","sensor_health_indicator":false,"real_time_monitoring":false,"wqp_data_category":"Insects","huc_relevance":[8,"10","11"]},{"id":"DIA-10","group":"biological","name":"Diatoms and Diatom Teratology","citizen_observable":false,"citizen_question":"Can you observe any algae or slime on submerged stones in the stream?","visual_anchor_guide":"Scrape a small area of submerged stone and note algae color and texture; proper identification requires laboratory microscopy.","plain_term":"Diatom algae and deformities","sensor_parameters":["chlorophyll_a","turbidity","ph","conductivity","nutrient_load"],"ogc_sensorthings_model":{"datastreamName":"DIA-10-Diatom-Teratology","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","phenomenon":"http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"name":"index","definition":"Diatom pollution index","symbol":"DPI"}},"waterml_concept":"DiatomIndex","epa_storet_parameter":"DIATOM_INDEX","states":{"diverse_sensitive":{"policy_severity":0,"sensor_thresholds":{"chlorophyll_a_max":10,"turbidity_max":10}},"tolerant_only":{"policy_severity":2,"sensor_thresholds":{"chlorophyll_a_max":50,"turbidity_max":50}},"absent_or_dead":{"policy_severity":3,"sensor_thresholds":{"chlorophyll_a_max":100,"turbidity_max":100}}},"framework_basis":{"document":"OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)","citation":null},"triage_mapping":{"type":"StreamVitals_policy","note":"policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"},"one_health_message":"consistent with ecological stress; associated with environmental conditions relevant to human and animal health","lab_only":true,"coding":{"system":null,"code":null},"source":"Section I. Diatoms and Diatom Teratology","sensor_health_indicator":true,"real_time_monitoring":false,"wqp_data_category":"Algae","huc_relevance":[8,"10","11"]},{"id":"INV-11","group":"habitat","name":"Invasive Alien Plants of the Riparian Corridor","citizen_observable":true,"citizen_question":"What types of plants do you see along the stream banks, and do any look unusual or non-native?","visual_anchor_guide":"Walk along both banks of a 100-meter stretch and note plant species, especially non-native or fast-growing ones.","plain_term":"Non-native plants along stream banks","sensor_parameters":["vegetation_index","land_use_cover","soil_moisture"],"ogc_sensorthings_model":{"datastreamName":"INV-11-Invasive-Plants","observationType":"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement","phenomenon":"http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement","unitOfMeasurement":{"name":"coverage_percent","definition":"Invasive plant coverage percentage","symbol":"%"}},"waterml_concept":"RiparianVegetation","epa_storet_parameter":"INVASIVE_SPECIES_COVERAGE","states":{"diverse_sensitive":{"policy_severity":0,"sensor_thresholds":{"vegetation_index_max":0.2}},"tolerant_only":{"policy_severity":2,"sensor_thresholds":{"vegetation_index_max":0.5}},"absent_or_dead":{"policy_severity":3,"sensor_thresholds":{"vegetation_index_max":0.8}}},"framework_basis":{"document":"OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)","citation":null},"triage_mapping":{"type":"StreamVitals_policy","note":"policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"},"one_health_message":"consistent with ecological stress; associated with environmental conditions relevant to human and animal health","lab_only":false,"coding":{"system":null,"code":null},"source":"Section XI. Invasive Alien Plants of the Riparian Corridor","citizen_state_labels":{"diverse_sensitive":"None or few patches","tolerant_only":"A few patches","absent_or_dead":"Widespread coverage"},"sensor_health_indicator":true,"real_time_monitoring":true,"wqp_data_category":"Habitat","huc_relevance":[8,"10","11"],"geospatial":{"supports_huc":true,"watershed_mapping":true,"leaflet_integration":true}}]
+[
+  {
+    "id": "BMI-01",
+    "group": "biological",
+    "name": "Benthic Macroinvertebrates",
+    "citizen_observable": true,
+    "citizen_question": "What types of small creatures do you see under stones or in the streambed?",
+    "visual_anchor_guide": "Look under 2-3 submerged stones in flowing water.",
+    "plain_term": "Stream insects and small creatures",
+    "sensor_parameters": [
+      "pH",
+      "dissolved_oxygen",
+      "turbidity",
+      "temperature",
+      "conductivity"
+    ],
+    "ogc_sensorthings_model": {
+      "datastreamName": "BMI-01-Benthic-Macroinvertebrates",
+      "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+      "phenomenon": "http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement",
+      "unitOfMeasurement": {
+        "name": "index",
+        "definition": "Benthic index score",
+        "symbol": "idx"
+      }
+    },
+    "waterml_concept": "BenthicMacroInvertebratesIndex",
+    "epa_storet_parameter": "BMIPP",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0,
+        "sensor_thresholds": {
+          "dissolved_oxygen_min": 7,
+          "turbidity_max": 25,
+          "ph_range": [
+            6.5,
+            8.5
+          ]
+        }
+      },
+      "tolerant_only": {
+        "policy_severity": 2,
+        "sensor_thresholds": {
+          "dissolved_oxygen_min": 5,
+          "turbidity_max": 50,
+          "ph_range": [
+            5.5,
+            9
+          ]
+        }
+      },
+      "absent_or_dead": {
+        "policy_severity": 3,
+        "sensor_thresholds": {
+          "dissolved_oxygen_min": 3,
+          "turbidity_max": 100,
+          "ph_range": [
+            4.5,
+            10
+          ]
+        }
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": false,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section II. Benthic Macroinvertebrates",
+    "citizen_state_labels": {
+      "diverse_sensitive": "Many sensitive species present",
+      "tolerant_only": "Only tolerant species seen",
+      "absent_or_dead": "None seen or dead"
+    },
+    "sensor_health_indicator": true,
+    "real_time_monitoring": true,
+    "wqp_data_category": "Bioindicators",
+    "huc_relevance": [
+      8,
+      "10",
+      "11"
+    ]
+  },
+  {
+    "id": "FSH-02",
+    "group": "biological",
+    "name": "Fish",
+    "citizen_observable": false,
+    "citizen_question": "Are there any fish visible in the stream, and if so, what types?",
+    "visual_anchor_guide": "Observe the stream from a bridge or bank for moving shapes; proper assessment requires electrofishing.",
+    "plain_term": "Fish species and abundance",
+    "sensor_parameters": [
+      "temperature",
+      "dissolved_oxygen",
+      "flow_rate",
+      "turbidity"
+    ],
+    "ogc_sensorthings_model": {
+      "datastreamName": "FSH-02-Fish-Abundance",
+      "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+      "phenomenon": "http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement",
+      "unitOfMeasurement": {
+        "name": "count",
+        "definition": "Fish count per survey",
+        "symbol": "cnt"
+      }
+    },
+    "waterml_concept": "FishAbundance",
+    "epa_storet_parameter": "FISH_ABUNDANCE",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0,
+        "sensor_thresholds": {
+          "dissolved_oxygen_min": 7,
+          "temperature_max": 25
+        }
+      },
+      "tolerant_only": {
+        "policy_severity": 2,
+        "sensor_thresholds": {
+          "dissolved_oxygen_min": 5,
+          "temperature_max": 30
+        }
+      },
+      "absent_or_dead": {
+        "policy_severity": 3,
+        "sensor_thresholds": {
+          "dissolved_oxygen_min": 3,
+          "temperature_max": 35
+        }
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section III. Fish",
+    "sensor_health_indicator": false,
+    "real_time_monitoring": false,
+    "wqp_data_category": "Fish",
+    "huc_relevance": [
+      8,
+      "10",
+      "11"
+    ]
+  },
+  {
+    "id": "AMH-03",
+    "group": "biological",
+    "name": "Amphibians",
+    "citizen_observable": false,
+    "citizen_question": "Have you seen any frogs, salamanders, or other amphibians near the stream?",
+    "visual_anchor_guide": "Look for amphibians near water's edge; proper assessment requires permits and specialized sampling.",
+    "plain_term": "Amphibian presence and species",
+    "sensor_parameters": [
+      "temperature",
+      "humidity",
+      "precipitation"
+    ],
+    "ogc_sensorthings_model": {
+      "datastreamName": "AMH-03-Amphibian-Presence",
+      "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+      "phenomenon": "http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement",
+      "unitOfMeasurement": {
+        "name": "boolean",
+        "definition": "Amphibian presence",
+        "symbol": "bool"
+      }
+    },
+    "waterml_concept": "AmphibianPopulation",
+    "epa_storet_parameter": "AMPHIBIAN_COUNT",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section IV. Amphibians",
+    "sensor_health_indicator": false,
+    "real_time_monitoring": false,
+    "wqp_data_category": "Amphibians",
+    "huc_relevance": [
+      8,
+      "10",
+      "11"
+    ]
+  },
+  {
+    "id": "BIR-04",
+    "group": "biological",
+    "name": "Birds",
+    "citizen_observable": true,
+    "citizen_question": "What bird species do you hear or see near the stream?",
+    "visual_anchor_guide": "Listen for bird songs and calls, especially insectivorous species, during early morning hours.",
+    "plain_term": "Bird species and insectivorous bird count",
+    "sensor_parameters": [
+      "noise_level",
+      "precipitation"
+    ],
+    "ogc_sensorthings_model": {
+      "datastreamName": "BIR-04-Bird-Diversity",
+      "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+      "phenomenon": "http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement",
+      "unitOfMeasurement": {
+        "name": "count",
+        "definition": "Bird species count",
+        "symbol": "cnt"
+      }
+    },
+    "waterml_concept": "BirdDiversity",
+    "epa_storet_parameter": "BIRD_SPECIES_COUNT",
+    "states": {
+      "many_species": {
+        "policy_severity": 0
+      },
+      "few_species": {
+        "policy_severity": 2
+      },
+      "none_observed": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": false,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section V. Birds",
+    "citizen_state_labels": {
+      "many_species": "Many insectivorous species observed",
+      "few_species": "Few insectivorous species observed",
+      "none_observed": "No insectivorous species seen"
+    },
+    "sensor_health_indicator": true,
+    "real_time_monitoring": false,
+    "wqp_data_category": "Wildlife",
+    "huc_relevance": [
+      8,
+      "10",
+      "11"
+    ]
+  },
+  {
+    "id": "MDR-05",
+    "group": "biological",
+    "name": "Microbial Diversity",
+    "citizen_observable": false,
+    "citizen_question": "Can you observe any visible biofilm or microbial growth on stream surfaces?",
+    "visual_anchor_guide": "Scrape a small area of submerged substrate and note color/texture changes; proper assessment requires laboratory DNA analysis.",
+    "plain_term": "Microbial community diversity",
+    "sensor_parameters": [
+      "dissolved_organic_carbon",
+      "conductivity",
+      "ph"
+    ],
+    "ogc_sensorthings_model": {
+      "datastreamName": "MDR-05-Microbial-Diversity",
+      "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+      "phenomenon": "http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement",
+      "unitOfMeasurement": {
+        "name": "index",
+        "definition": "Microbial diversity index",
+        "symbol": "idx"
+      }
+    },
+    "waterml_concept": "MicrobialDiversity",
+    "epa_storet_parameter": "MICROBIAL_DIVERSITY",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section VI. Microbial Diversity",
+    "sensor_health_indicator": false,
+    "real_time_monitoring": false,
+    "wqp_data_category": "Microbiology",
+    "huc_relevance": [
+      8,
+      "10",
+      "11"
+    ]
+  },
+  {
+    "id": "FCL-06",
+    "group": "physicochemical",
+    "name": "Fecal Coliforms",
+    "citizen_observable": false,
+    "citizen_question": "Do you notice any unusual odors, discoloration, or sewage-related signs in the water?",
+    "visual_anchor_guide": "Collect water sample, filter and place on selective growth medium. Culture-based testing yields CFU/100mL. Enzyme-substrate tests, qPCR, and metabarcoding also used.",
+    "plain_term": "Fecal contamination indicators",
+    "sensor_parameters": [
+      "turbidity",
+      "ph",
+      "conductivity",
+      "temperature",
+      "oxidation_reduction_potential"
+    ],
+    "ogc_sensorthings_model": {
+      "datastreamName": "FCL-06-Fecal-Coliforms",
+      "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+      "phenomenon": "http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement",
+      "unitOfMeasurement": {
+        "name": "CFU/100mL",
+        "definition": "Coliform form units per 100 milliliters",
+        "symbol": "CFU/100mL"
+      }
+    },
+    "waterml_concept": "FecalColiform",
+    "epa_storet_parameter": "FCOLIFORM",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0,
+        "sensor_thresholds": {
+          "turbidity_max": 10,
+          "ph_range": [
+            6.5,
+            8.5
+          ],
+          "conductivity_max": 500
+        }
+      },
+      "tolerant_only": {
+        "policy_severity": 2,
+        "sensor_thresholds": {
+          "turbidity_max": 50,
+          "ph_range": [
+            5.5,
+            9
+          ],
+          "conductivity_max": 1000
+        }
+      },
+      "absent_or_dead": {
+        "policy_severity": 3,
+        "sensor_thresholds": {
+          "turbidity_max": 100,
+          "ph_range": [
+            4.5,
+            10
+          ],
+          "conductivity_max": 2000
+        }
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section VII. Fecal Coliforms",
+    "sensor_health_indicator": true,
+    "real_time_monitoring": true,
+    "wqp_data_category": "Microbiological",
+    "huc_relevance": [
+      8,
+      "10",
+      "11"
+    ]
+  },
+  {
+    "id": "PRT-07",
+    "group": "physicochemical",
+    "name": "Pathogens",
+    "citizen_observable": false,
+    "citizen_question": "Do you notice any visible signs of pollution such as foam, discoloration, or algal blooms?",
+    "visual_anchor_guide": "Note water appearance and odor; pathogen detection requires laboratory molecular methods.",
+    "plain_term": "Disease-causing microorganisms",
+    "sensor_parameters": [
+      "turbidity",
+      "chlorophyll_a",
+      "ph",
+      "conductivity",
+      "temperature"
+    ],
+    "ogc_sensorthings_model": {
+      "datastreamName": "PRT-07-Pathogens",
+      "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+      "phenomenon": "http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement",
+      "unitOfMeasurement": {
+        "name": "CFU/mL",
+        "definition": "Colony forming units per milliliter",
+        "symbol": "CFU/mL"
+      }
+    },
+    "waterml_concept": "PathogenPresence",
+    "epa_storet_parameter": "PATHOGEN_DETECTED",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0,
+        "sensor_thresholds": {
+          "turbidity_max": 10,
+          "chlorophyll_a_max": 10
+        }
+      },
+      "tolerant_only": {
+        "policy_severity": 2,
+        "sensor_thresholds": {
+          "turbidity_max": 50,
+          "chlorophyll_a_max": 50
+        }
+      },
+      "absent_or_dead": {
+        "policy_severity": 3,
+        "sensor_thresholds": {
+          "turbidity_max": 100,
+          "chlorophyll_a_max": 100
+        }
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section VIII. Pathogens",
+    "sensor_health_indicator": true,
+    "real_time_monitoring": false,
+    "wqp_data_category": "Pathogens",
+    "huc_relevance": [
+      8,
+      "10",
+      "11"
+    ]
+  },
+  {
+    "id": "ARB-08",
+    "group": "physicochemical",
+    "name": "Antibiotic Resistance Genes",
+    "citizen_observable": false,
+    "citizen_question": "Are you aware of any nearby agricultural or industrial activity that could affect the stream?",
+    "visual_anchor_guide": "Note land use around the stream; ARG detection requires laboratory molecular methods.",
+    "plain_term": "Antibiotic resistance markers in water",
+    "sensor_parameters": [
+      "conductivity",
+      "turbidity",
+      "ph",
+      "dissolved_organic_carbon"
+    ],
+    "ogc_sensorthings_model": {
+      "datastreamName": "ARB-08-Antibiotic-Resistance-Genes",
+      "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+      "phenomenon": "http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement",
+      "unitOfMeasurement": {
+        "name": "gene_copies/L",
+        "definition": "Antibiotic resistance gene copies per liter",
+        "symbol": "copies/L"
+      }
+    },
+    "waterml_concept": "AntibioticResistanceGenes",
+    "epa_storet_parameter": "ARG_PRESENCE",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section IX. Antibiotic Resistance Genes",
+    "sensor_health_indicator": false,
+    "real_time_monitoring": false,
+    "wqp_data_category": "Chemical",
+    "huc_relevance": [
+      8,
+      "10",
+      "11"
+    ]
+  },
+  {
+    "id": "DPT-09",
+    "group": "biological",
+    "name": "Diptera Adults",
+    "citizen_observable": false,
+    "citizen_question": "Do you notice an unusual number of flies, mosquitoes, or other flying insects near the stream?",
+    "visual_anchor_guide": "Observe flying insect activity near the water surface; formal assessment requires CO2-baited traps.",
+    "plain_term": "Adult flying insects (Diptera)",
+    "sensor_parameters": [
+      "temperature",
+      "humidity",
+      "precipitation"
+    ],
+    "ogc_sensorthings_model": {
+      "datastreamName": "DPT-09-Diptera-Adults",
+      "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+      "phenomenon": "http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement",
+      "unitOfMeasurement": {
+        "name": "count",
+        "definition": "Diptera count per trap",
+        "symbol": "cnt"
+      }
+    },
+    "waterml_concept": "DipteraPopulation",
+    "epa_storet_parameter": "DIPTERA_ABUNDANCE",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0
+      },
+      "tolerant_only": {
+        "policy_severity": 2
+      },
+      "absent_or_dead": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": false,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section X. Diptera Adults",
+    "sensor_health_indicator": false,
+    "real_time_monitoring": false,
+    "wqp_data_category": "Insects",
+    "huc_relevance": [
+      8,
+      "10",
+      "11"
+    ]
+  },
+  {
+    "id": "DIA-10",
+    "group": "biological",
+    "name": "Diatoms and Diatom Teratology",
+    "citizen_observable": false,
+    "citizen_question": "Can you observe any algae or slime on submerged stones in the stream?",
+    "visual_anchor_guide": "Scrape periphytic diatoms from submerged stones or substrate. Clean in lab with nitric acid and potassium dichromate. Prepare permanent slides with Naphrax. Identify ~400 valves under stereomicroscope.",
+    "plain_term": "Diatom algae and deformities",
+    "sensor_parameters": [
+      "chlorophyll_a",
+      "turbidity",
+      "ph",
+      "conductivity",
+      "nutrient_load"
+    ],
+    "ogc_sensorthings_model": {
+      "datastreamName": "DIA-10-Diatom-Teratology",
+      "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+      "phenomenon": "http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement",
+      "unitOfMeasurement": {
+        "name": "index",
+        "definition": "Diatom pollution index",
+        "symbol": "DPI"
+      }
+    },
+    "waterml_concept": "DiatomIndex",
+    "epa_storet_parameter": "DIATOM_INDEX",
+    "states": {
+      "diverse_sensitive": {
+        "policy_severity": 0,
+        "sensor_thresholds": {
+          "chlorophyll_a_max": 10,
+          "turbidity_max": 10
+        }
+      },
+      "tolerant_only": {
+        "policy_severity": 2,
+        "sensor_thresholds": {
+          "chlorophyll_a_max": 50,
+          "turbidity_max": 50
+        }
+      },
+      "absent_or_dead": {
+        "policy_severity": 3,
+        "sensor_thresholds": {
+          "chlorophyll_a_max": 100,
+          "turbidity_max": 100
+        }
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": true,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section I. Diatoms and Diatom Teratology",
+    "sensor_health_indicator": true,
+    "real_time_monitoring": false,
+    "wqp_data_category": "Algae",
+    "huc_relevance": [
+      8,
+      "10",
+      "11"
+    ]
+  },
+  {
+    "id": "INV-11",
+    "group": "habitat",
+    "name": "Invasive Alien Plants of the Riparian Corridor",
+    "citizen_observable": true,
+    "citizen_question": "What types of plants do you see along the stream banks, and do any look unusual or non-native?",
+    "visual_anchor_guide": "Walk along both banks of a 100-meter stretch and note plant species, especially non-native or fast-growing ones.",
+    "plain_term": "Non-native plants along stream banks",
+    "sensor_parameters": [
+      "vegetation_index",
+      "land_use_cover",
+      "soil_moisture"
+    ],
+    "ogc_sensorthings_model": {
+      "datastreamName": "INV-11-Invasive-Plants",
+      "observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+      "phenomenon": "http://www.opengis.net/def/nature-of-measurement/OGC-OM/2.0/OM_Measurement",
+      "unitOfMeasurement": {
+        "name": "coverage_percent",
+        "definition": "Invasive plant coverage percentage",
+        "symbol": "%"
+      }
+    },
+    "waterml_concept": "RiparianVegetation",
+    "epa_storet_parameter": "INVASIVE_SPECIES_COVERAGE",
+    "states": {
+      "none_seen": {
+        "policy_severity": 0
+      },
+      "few_patches": {
+        "policy_severity": 2
+      },
+      "widespread": {
+        "policy_severity": 3
+      }
+    },
+    "framework_basis": {
+      "document": "OneAquaHealth Key Indicators of Ecosystem and Biological Health - Factsheets Collection (Zenodo, doi:10.5281/zenodo.20345207)",
+      "citation": null
+    },
+    "triage_mapping": {
+      "type": "StreamVitals_policy",
+      "note": "policy_severity values are StreamVitals' own triage policy unless framework_basis.citation says otherwise"
+    },
+    "one_health_message": "consistent with ecological stress; associated with environmental conditions relevant to human and animal health",
+    "lab_only": false,
+    "coding": {
+      "system": null,
+      "code": null
+    },
+    "source": "Section XI. Invasive Alien Plants of the Riparian Corridor",
+    "citizen_state_labels": {
+      "none_seen": "No invasive plants seen",
+      "few_patches": "A few invasive patches found",
+      "widespread": "Widespread invasive coverage"
+    },
+    "sensor_health_indicator": true,
+    "real_time_monitoring": true,
+    "wqp_data_category": "Habitat",
+    "huc_relevance": [
+      8,
+      "10",
+      "11"
+    ],
+    "geospatial": {
+      "supports_huc": true,
+      "watershed_mapping": true,
+      "leaflet_integration": true
+    }
+  }
+]

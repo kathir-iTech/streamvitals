@@ -12,20 +12,20 @@ const makeObs = (indicatorId, state, confirmed = true) => ({
 
 const allHealthy = [
   makeObs('BMI-01', 'diverse_sensitive'),
-  makeObs('BIR-04', 'diverse_sensitive'),
-  makeObs('INV-11', 'diverse_sensitive'),
+  makeObs('BIR-04', 'many_species'),
+  makeObs('INV-11', 'none_seen'),
 ];
 
 const allAbsent = [
   makeObs('BMI-01', 'absent_or_dead'),
-  makeObs('BIR-04', 'absent_or_dead'),
-  makeObs('INV-11', 'absent_or_dead'),
+  makeObs('BIR-04', 'none_observed'),
+  makeObs('INV-11', 'widespread'),
 ];
 
 const mixed = [
   makeObs('BMI-01', 'diverse_sensitive'),
-  makeObs('BIR-04', 'tolerant_only'),
-  makeObs('INV-11', 'absent_or_dead'),
+  makeObs('BIR-04', 'few_species'),
+  makeObs('INV-11', 'widespread'),
 ];
 
 let passed = 0;
@@ -57,26 +57,26 @@ const t3 = assess([makeObs('BMI-01', 'absent_or_dead')]);
 const order = { T1_NO_PRIORITY_CONCERN: 0, T2_NEEDS_ATTENTION: 1, T3_FURTHER_ASSESSMENT_RECOMMENDED: 2 };
 assert('Monotonicity: tier progression is ordered', order[t1.tier] < order[t2.tier] && order[t2.tier] < order[t3.tier]);
 
-const better = assess([makeObs('BMI-01', 'diverse_sensitive'), makeObs('BIR-04', 'diverse_sensitive')]);
-const worse = assess([makeObs('BMI-01', 'absent_or_dead'), makeObs('BIR-04', 'diverse_sensitive')]);
+const better = assess([makeObs('BMI-01', 'diverse_sensitive'), makeObs('BIR-04', 'many_species')]);
+const worse = assess([makeObs('BMI-01', 'absent_or_dead'), makeObs('BIR-04', 'many_species')]);
 assert('Worse observation never produces better tier', order[worse.tier] >= order[better.tier]);
 
 // Tier assignment
-assert('All diverse_sensitive -> T1_NO_PRIORITY_CONCERN', t1.tier === 'T1_NO_PRIORITY_CONCERN');
+assert('All healthy -> T1_NO_PRIORITY_CONCERN', t1.tier === 'T1_NO_PRIORITY_CONCERN');
 assert('Any tolerant_only -> T2_NEEDS_ATTENTION', t2.tier === 'T2_NEEDS_ATTENTION');
 assert('Any absent_or_dead -> T3_FURTHER_ASSESSMENT_RECOMMENDED', t3.tier === 'T3_FURTHER_ASSESSMENT_RECOMMENDED');
 assert('Mixed states -> worst tier', assess(mixed).tier === 'T3_FURTHER_ASSESSMENT_RECOMMENDED');
 
 // Data status
 assert('All confirmed -> SUFFICIENT', assess(allHealthy).dataStatus === 'SUFFICIENT');
-assert('Half confirmed -> PARTIAL', assess([...allHealthy.slice(0, 2), makeObs('INV-11', 'diverse_sensitive', false)]).dataStatus === 'PARTIAL');
+assert('Half confirmed -> PARTIAL', assess([...allHealthy.slice(0, 2), makeObs('INV-11', 'none_seen', false)]).dataStatus === 'PARTIAL');
 assert('None confirmed -> INSUFFICIENT', assess(allHealthy.map(o => ({...o, confirmed: false}))).dataStatus === 'INSUFFICIENT');
 
 // Missing-data safety
-assert('Unanswered field with other data -> PARTIAL not SUFFICIENT', assess([makeObs('BMI-01', 'diverse_sensitive', true), makeObs('BIR-04', 'diverse_sensitive', false)]).dataStatus === 'PARTIAL');
+assert('Unanswered field with other data -> PARTIAL not SUFFICIENT', assess([makeObs('BMI-01', 'diverse_sensitive', true), makeObs('BIR-04', 'many_species', false)]).dataStatus === 'PARTIAL');
 assert('Unconfirmed observation not evaluated', assess([makeObs('BMI-01', 'absent_or_dead', false)]).drivers.length === 0);
 assert('All missing -> INSUFFICIENT', assess(allHealthy.map(o => ({...o, confirmed: false}))).dataStatus === 'INSUFFICIENT');
-assert('Partial missing data has INSUFFICIENT status not healthy', assess([makeObs('BMI-01', 'diverse_sensitive', false), makeObs('BIR-04', 'diverse_sensitive', false), makeObs('INV-11', 'diverse_sensitive', false)]).dataStatus === 'INSUFFICIENT');
+assert('Partial missing data has INSUFFICIENT status not healthy', assess([makeObs('BMI-01', 'diverse_sensitive', false), makeObs('BIR-04', 'many_species', false), makeObs('INV-11', 'none_seen', false)]).dataStatus === 'INSUFFICIENT');
 
 // Unsupported-indicator safety
 assert('Lab-only indicator without data -> not assessed, never inferred', assess([makeObs('FSH-02', 'absent_or_dead', false)]).drivers.length === 0);
@@ -94,8 +94,8 @@ assert('Verdict timestamp is present', verdict.timestamp !== '');
 assert('Drivers count matches confirmed observations', verdict.drivers.length === 3);
 
 // City separation
-const v1 = assess([makeObs('BMI-01', 'absent_or_dead'), makeObs('BIR-04', 'diverse_sensitive')]);
-const v2 = assess([makeObs('BMI-01', 'absent_or_dead'), makeObs('BIR-04', 'diverse_sensitive')]);
+const v1 = assess([makeObs('BMI-01', 'absent_or_dead'), makeObs('BIR-04', 'many_species')]);
+const v2 = assess([makeObs('BMI-01', 'absent_or_dead'), makeObs('BIR-04', 'many_species')]);
 assert('City separation: same input -> same verdict', JSON.stringify(v1) === JSON.stringify(v2));
 
 // Validation

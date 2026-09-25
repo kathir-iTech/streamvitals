@@ -8,7 +8,7 @@ export type DataStatus = 'SUFFICIENT' | 'PARTIAL' | 'INSUFFICIENT';
 
 export interface ObservationField {
   indicatorId: string;
-  state: 'diverse_sensitive' | 'tolerant_only' | 'absent_or_dead';
+  state: string;
   confirmed: boolean;
   confidence: 'high' | 'uncertain';
 }
