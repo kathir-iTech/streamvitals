@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { assess, validateObservations, INDICATOR_MAP, setNow } = require('./src/lib/adjudicator.cjs');
+const { createSession, getSession, updateSession, savePhoto, deletePhoto, getFullSession, clearSession, isIndexedDBAvailable, _setFailNextOpen, _setFailNextTransaction, _resetDb } = require('./src/lib/field-session.cjs');
 const indicators = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/indicators.json'), 'utf8'));
 
 const makeObs = (indicatorId, state, confirmed = true) => ({
@@ -118,5 +119,40 @@ assert('INDICATOR_MAP has BIR-04', INDICATOR_MAP.has('BIR-04'));
 assert('INDICATOR_MAP has INV-11', INDICATOR_MAP.has('INV-11'));
 assert('INDICATOR_MAP size is 11', INDICATOR_MAP.size === 11);
 
-console.log(`\n--- Results: ${passed} passed, ${failed} failed ---`);
-process.exit(failed > 0 ? 1 : 0);
+// Field-session error paths
+(async () => {
+  _resetDb();
+  assert('isIndexedDBAvailable returns true', isIndexedDBAvailable() === true);
+
+  // Quota exceeded on createSession
+  _setFailNextOpen(true);
+  const r1 = await createSession({ sessionId: 'test-quota', streamName: 'Test', indicators: [] });
+  assert('Quota exceeded: createSession returns success:false with error', r1.success === false && r1.error && r1.error.includes('QuotaExceededError'));
+  _setFailNextOpen(false);
+
+  // Read-only transaction on updateSession
+  _setFailNextTransaction(true);
+  const r2 = await updateSession('test-ro', {});
+  assert('Read-only: updateSession returns success:false with error', r2.success === false && r2.error && r2.error.includes('read-only'));
+  _setFailNextTransaction(false);
+
+  // getFullSession returns empty when no session exists
+  const r3 = await getFullSession('nonexistent');
+  assert('Missing session: getFullSession returns undefined session', r3.session === undefined);
+  assert('Missing session: getFullSession returns empty photos array', Array.isArray(r3.photos) && r3.photos.length === 0);
+
+  // deletePhoto returns success
+  const r4 = await deletePhoto('any-photo-id');
+  assert('deletePhoto returns success', r4.success === true);
+
+  // createSession with valid data returns success
+  const r5 = await createSession({ sessionId: 'test-session', streamName: 'Test Creek', indicators: [] });
+  assert('Valid createSession returns success:true', r5.success === true);
+
+  // Session not found returns undefined
+  const r6 = await getSession('nonexistent-session');
+  assert('Nonexistent session returns undefined', r6 === undefined);
+
+  console.log(`\n--- Results: ${passed} passed, ${failed} failed ---`);
+  process.exit(failed > 0 ? 1 : 0);
+})();
