@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, use } from 'react';
 import { ArrowLeft, ArrowRight, Check, Shield } from 'lucide-react';
 import { indicators } from '@/data/indicators';
 import { getSession, updateSession } from '@/lib/field-session';
@@ -10,14 +10,8 @@ import PhotoCapture from '@/components/PhotoCapture';
 
 const FIELD_INDICATORS = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
 
-function getIndicatorIdFromPath(): string {
-  if (typeof window === 'undefined') return '';
-  const parts = window.location.pathname.split('/');
-  return parts[parts.length - 1];
-}
-
-export default function IndicatorPage() {
-  const [indicatorId, setIndicatorId] = useState<string>(() => getIndicatorIdFromPath());
+export default function IndicatorPage({ params }: { params: Promise<{ indicator: string }> }) {
+  const { indicator: indicatorId } = use(params);
   const indicator = indicators.find((i) => i.id === indicatorId);
   const currentIndex = FIELD_INDICATORS.indexOf(indicatorId);
   const isLabOnly = indicator?.lab_only || false;
@@ -27,11 +21,6 @@ export default function IndicatorPage() {
   const [selectedState, setSelectedState] = useState<string>('');
   const [photos, setPhotos] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    setIndicatorId(getIndicatorIdFromPath());
-  }, []);
 
   useEffect(() => {
     const sessionId = sessionStorage.getItem('current_session_id');
@@ -49,55 +38,6 @@ export default function IndicatorPage() {
       });
     }
   }, [indicatorId]);
-
-  const handleStateSelect = useCallback(async (state: string) => {
-    setSelectedState(state);
-    if (!session) return;
-    setSaving(true);
-    const updatedIndicators = session.indicators.map((i: any) =>
-      i.indicatorId === indicatorId ? { ...i, state, timestamp: new Date().toISOString() } : i
-    );
-    await updateSession(session.sessionId, { indicators: updatedIndicators });
-    setSaving(false);
-  }, [session, indicatorId]);
-
-  const handleNotesChange = useCallback(async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newNotes = e.target.value;
-    setNotes(newNotes);
-    if (!session) return;
-    const updatedIndicators = session.indicators.map((i: any) =>
-      i.indicatorId === indicatorId ? { ...i, notes: newNotes } : i
-    );
-    await updateSession(session.sessionId, { indicators: updatedIndicators });
-  }, [session, indicatorId]);
-
-  const handlePhotoAdded = useCallback(() => {
-    if (!session) return;
-    getSession(session.sessionId).then((s) => {
-      if (s) {
-        const indRecord = s.indicators.find((i: any) => i.indicatorId === indicatorId);
-        if (indRecord) {
-          setPhotos(indRecord.photos || []);
-        }
-      }
-    });
-  }, [session, indicatorId]);
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      window.location.href = `/field/${FIELD_INDICATORS[currentIndex - 1]}`;
-    }
-  };
-
-  const handleNext = () => {
-    if (currentIndex < FIELD_INDICATORS.length - 1) {
-      window.location.href = `/field/${FIELD_INDICATORS[currentIndex + 1]}`;
-    } else {
-      window.location.href = '/field/review';
-    }
-  };
-
-  const canProceed = !isCitizen || selectedState || isLabOnly;
 
   if (!indicator) {
     return (
@@ -161,7 +101,15 @@ export default function IndicatorPage() {
                       <button
                         key={state}
                         type="button"
-                        onClick={() => handleStateSelect(state)}
+                        onClick={() => {
+                          setSelectedState(state);
+                          if (session) {
+                            const updatedIndicators = session.indicators.map((i: any) =>
+                              i.indicatorId === indicatorId ? { ...i, state, timestamp: new Date().toISOString() } : i
+                            );
+                            updateSession(session.sessionId, { indicators: updatedIndicators });
+                          }
+                        }}
                         className={`relative px-4 py-4 rounded-xl border-2 font-bold text-sm transition-all duration-300 focus:ring-2 focus:ring-emerald-400 focus:outline-none cursor-pointer ${
                           isSelected
                             ? 'bg-emerald-500/10 border-emerald-400 scale-[1.02] shadow-lg shadow-emerald-500/20'
@@ -189,7 +137,15 @@ export default function IndicatorPage() {
                     <textarea
                       id={`notes-${indicatorId}`}
                       value={notes}
-                      onChange={handleNotesChange}
+                      onChange={(e) => {
+                        setNotes(e.target.value);
+                        if (session) {
+                          const updatedIndicators = session.indicators.map((i: any) =>
+                            i.indicatorId === indicatorId ? { ...i, notes: e.target.value } : i
+                          );
+                          updateSession(session.sessionId, { indicators: updatedIndicators });
+                        }
+                      }}
                       placeholder="Optional observations, weather conditions, equipment used..."
                       rows={3}
                       className="w-full p-3.5 bg-[#070d1a] border border-emerald-500/15 rounded-xl text-white placeholder-white/30 focus:ring-2 focus:ring-emerald-400 focus:outline-none transition-all resize-none"
@@ -200,7 +156,9 @@ export default function IndicatorPage() {
             </div>
             <div className="flex gap-3">
               <button
-                onClick={handlePrev}
+                onClick={() => {
+                  if (currentIndex > 0) window.location.href = `/field/${FIELD_INDICATORS[currentIndex - 1]}`;
+                }}
                 disabled={currentIndex === 0}
                 className="flex items-center gap-2 px-6 py-3 bg-[#111d35] border border-emerald-500/20 text-white rounded-xl font-medium disabled:opacity-30 disabled:cursor-not-allowed hover:bg-emerald-500/10 hover:border-emerald-400/40 transition-all focus:ring-2 focus:ring-emerald-400 focus:outline-none"
                 aria-label="Previous indicator"
@@ -208,8 +166,14 @@ export default function IndicatorPage() {
                 <ArrowLeft className="w-4 h-4" /> Previous
               </button>
               <button
-                onClick={handleNext}
-                disabled={!canProceed}
+                onClick={() => {
+                  if (currentIndex < FIELD_INDICATORS.length - 1) {
+                    window.location.href = `/field/${FIELD_INDICATORS[currentIndex + 1]}`;
+                  } else {
+                    window.location.href = '/field/review';
+                  }
+                }}
+                disabled={!isCitizen || (!selectedState && !isLabOnly)}
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3 btn-primary disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 {currentIndex === FIELD_INDICATORS.length - 1 ? 'Review Session' : 'Next Indicator'}
