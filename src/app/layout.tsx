@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "StreamVitals — OneAquaHealth IEEE Global Hackathon 2026",
-  description: "AI-Supported Assessment of urban stream health. The deterministic evidence engine evaluates confirmed observations against cited rules.",
+  description: "Field data collection tool for OneAquaHealth stream monitoring volunteers. Collect real data. No assessment. No verdict.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -40,27 +40,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </Link>
             <div className="flex items-center gap-1 text-sm">
-              <Link href="/guided" className="px-3 py-2 text-emerald-300 hover:text-white hover:bg-emerald-500/10 rounded-lg transition-all font-medium">
-                Assessment
+              <Link href="/" className="px-3 py-2 text-emerald-300 hover:text-white hover:bg-emerald-500/10 rounded-lg transition-all font-medium">
+                Home
+              </Link>
+              <Link href="/field" className="px-3 py-2 text-white/50 hover:text-white hover:bg-white/5 rounded-lg transition-all font-medium">
+                Field Companion
               </Link>
               <Link href="/map" className="px-3 py-2 text-white/50 hover:text-white hover:bg-white/5 rounded-lg transition-all font-medium">
                 Map
               </Link>
-              <Link href="/ai-copilot" className="px-3 py-2 text-white/50 hover:text-emerald-300 hover:bg-emerald-500/10 rounded-lg transition-all font-medium">
-                AI Copilot
-              </Link>
-              <Link href="/predict" className="px-3 py-2 text-white/50 hover:text-white hover:bg-white/5 rounded-lg transition-all font-medium">
-                Predictions
-              </Link>
-              <Link href="/report" className="px-3 py-2 text-white/50 hover:text-emerald-300 hover:bg-emerald-500/10 rounded-lg transition-all font-medium">
-                Report
-              </Link>
-              <Link href="/citizen" className="px-3 py-2 text-white/50 hover:text-white hover:bg-white/5 rounded-lg transition-all font-medium">
-                Citizen
-              </Link>
               <span className="ml-3 flex items-center gap-2 text-xs text-white/30 bg-white/5 px-3 py-1.5 rounded-full">
                 <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-                AI-Powered
+                OneAquaHealth
               </span>
             </div>
           </div>
