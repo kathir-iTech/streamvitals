@@ -11,9 +11,14 @@ export interface Indicator {
   code: string;
   category: string;
   is_lab_only: boolean;
+  lab_only: boolean;
+  citizen_observable: boolean;
   protocol_question: string;
+  citizen_question: string;
   visual_anchor_guide: string;
   states: IndicatorState[];
+  citizen_state_labels: Record<string, string>;
+  source: string;
   lab_guidance?: string;
   citation: string;
 }

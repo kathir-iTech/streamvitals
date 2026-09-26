@@ -5,13 +5,23 @@
     "code": "BMI-01",
     "category": "biological",
     "is_lab_only": false,
+    "lab_only": false,
+    "citizen_observable": true,
     "protocol_question": "Turn over 3 riverbed stones in riffle areas. What macroinvertebrate organisms do you observe?",
+    "citizen_question": "Turn over 3 riverbed stones in riffle areas. What macroinvertebrate organisms do you observe? Look for Mayfly, Stonefly, or Caddisfly larvae.",
     "visual_anchor_guide": "Look for Mayfly, Stonefly, or Caddisfly larvae under stones (sensitive) vs. aquatic worms/leeches (tolerant).",
     "states": [
       { "id": "diverse_sensitive", "label": "Diverse sensitive taxa present (Mayflies, Stoneflies)" },
       { "id": "tolerant_only", "label": "Tolerant taxa only (Midges, Leeches, Aquatic Worms)" },
       { "id": "absent_or_dead", "label": "No macroinvertebrates observed / Dead organisms" }
     ],
+    "citizen_state_labels": {
+      "diverse_sensitive": "Diverse Sensitive Taxa",
+      "tolerant_only": "Tolerant Taxa Only",
+      "absent_or_dead": "Absent or Dead Organisms"
+    },
+    "source": "doi:10.5281/zenodo.20345207 — OneAquaHealth Key Indicators Factsheets",
+    "lab_guidance": "Optional: preserve specimens for lab confirmation.",
     "citation": "Schmeller, D., et al. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207"
   },
   {
@@ -20,13 +30,23 @@
     "code": "BIR-04",
     "category": "biological",
     "is_lab_only": false,
+    "lab_only": false,
+    "citizen_observable": true,
     "protocol_question": "Conduct a 10-minute visual/auditory observation along a 100m stream transect. What riverine birds are present?",
+    "citizen_question": "Conduct a 10-minute visual/auditory observation along a 100m stream transect. What riverine birds are present? Listen for Kingfishers, Dippers, or Grey Wagtails.",
     "visual_anchor_guide": "Listen and observe for Kingfishers, Dippers, or Grey Wagtails along the bank using the Merlin Mobile App guide.",
     "states": [
       { "id": "many_species", "label": "Multiple riverine bird species observed active along transect" },
       { "id": "few_species", "label": "Single riverine species or generalist birds observed" },
       { "id": "none_observed", "label": "No avian activity recorded during 10-minute window" }
     ],
+    "citizen_state_labels": {
+      "many_species": "Multiple Species Observed",
+      "few_species": "Few Species Observed",
+      "none_observed": "No Avian Activity Recorded"
+    },
+    "source": "doi:10.5281/zenodo.20345207 — OneAquaHealth Key Indicators Factsheets",
+    "lab_guidance": "Optional: photograph birds for expert confirmation.",
     "citation": "Schmeller, D., et al. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207"
   },
   {
@@ -35,13 +55,23 @@
     "code": "INV-11",
     "category": "habitat",
     "is_lab_only": false,
+    "lab_only": false,
+    "citizen_observable": true,
     "protocol_question": "Examine both stream banks along a 50m stretch. Do you see invasive plant coverage?",
+    "citizen_question": "Examine both stream banks along a 50m stretch. Do you see invasive plant coverage? Check for Japanese Knotweed, Himalayan Balsam, or Giant Hogweed.",
     "visual_anchor_guide": "Check for Japanese Knotweed, Himalayan Balsam, or Giant Hogweed patches choking native vegetation.",
     "states": [
       { "id": "none_seen", "label": "No invasive alien plant species observed" },
       { "id": "few_patches", "label": "Isolated patches along the riparian margin" },
       { "id": "widespread", "label": "Dense, widespread coverage dominating stream banks" }
     ],
+    "citizen_state_labels": {
+      "none_seen": "No Invasive Species Observed",
+      "few_patches": "Isolated Patches",
+      "widespread": "Dense Widespread Coverage"
+    },
+    "source": "doi:10.5281/zenodo.20345207 — OneAquaHealth Key Indicators Factsheets",
+    "lab_guidance": "Optional: collect specimens for lab identification.",
     "citation": "Schmeller, D., et al. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207"
   },
   {
@@ -50,9 +80,14 @@
     "code": "FCL-06",
     "category": "physicochemical",
     "is_lab_only": true,
+    "lab_only": true,
+    "citizen_observable": false,
     "protocol_question": "Collect a 250mL water sample in a sterile container for laboratory membrane filtration (CFU/100mL).",
+    "citizen_question": "Collect a 250mL water sample in a sterile container for laboratory membrane filtration (CFU/100mL). This indicator requires laboratory analysis — you cannot determine the result in the field.",
     "visual_anchor_guide": "Submerge sterile container 10cm below surface facing upstream. Seal tightly, label with sample ID, store at 4°C.",
     "states": [],
+    "citizen_state_labels": {},
+    "source": "doi:10.5281/zenodo.20345207 — OneAquaHealth Key Indicators Factsheets",
     "lab_guidance": "Requires membrane filtration or enzyme-substrate culture testing in an accredited laboratory (Method 9222 / ISO 9308-1). Cannot be evaluated visually in the field.",
     "citation": "Schmeller, D., et al. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207"
   },
@@ -62,9 +97,14 @@
     "code": "DIA-10",
     "category": "biological",
     "is_lab_only": true,
+    "lab_only": true,
+    "citizen_observable": false,
     "protocol_question": "Scrape periphytic diatoms from 5 submerged stones into a sample vial for slide preparation.",
+    "citizen_question": "Scrape periphytic diatoms from 5 submerged stones into a sample vial for slide preparation. This indicator requires laboratory analysis — you cannot determine the result in the field.",
     "visual_anchor_guide": "Use a toothbrush to scrape 10cm² area per stone into distilled water vial. Preserve with 70% ethanol or Lugol's iodine.",
     "states": [],
+    "citizen_state_labels": {},
+    "source": "doi:10.5281/zenodo.20345207 — OneAquaHealth Key Indicators Factsheets",
     "lab_guidance": "Requires nitric acid / potassium dichromate oxidation, resin mounting (Naphrax®), and microscopic valve identification (~400 valves) under 1000x magnification (EN 13942).",
     "citation": "Schmeller, D., et al. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207"
   }

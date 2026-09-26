@@ -14,8 +14,9 @@ function getOfflineReply(indicatorId: string, question: string): string {
 }
 
 export async function POST(request: NextRequest) {
+  let body: any;
   try {
-    const body = await request.json();
+    body = await request.json();
     const { indicatorId, question } = body;
 
     if (!indicatorId || !question) {
@@ -68,6 +69,7 @@ Rules:
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     const indicatorId = body?.indicatorId || 'unknown';
+    const question = body?.question || '';
     return NextResponse.json({
       response: getOfflineReply(indicatorId, question),
       source: 'offline',
