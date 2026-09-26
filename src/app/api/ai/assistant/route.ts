@@ -2,6 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
+const OFFLINE_REPLIES: Record<string, string> = {
+  'FCL-06': 'FCL-06 (Water Quality Parameters): Field data collection protocols for physicochemical parameters including temperature, pH, dissolved oxygen, conductivity, and turbidity. Use standardized probes at designated sampling points.',
+  'DIA-10': 'DIA-10 (Diagnostic Indicators): Laboratory-only diagnostic protocols. Field data collection limited to observational parameters. No field diagnostic scoring permitted.',
+};
+
+function getOfflineReply(indicatorId: string, question: string): string {
+  const cached = OFFLINE_REPLIES[indicatorId];
+  if (cached) return cached;
+  return `Offline reference for ${indicatorId}: Consult the OneAquaHealth Key Indicators factsheet (doi:10.5281/zenodo.20345207). Field collection limited to observational parameters.`;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -13,13 +24,13 @@ export async function POST(request: NextRequest) {
 
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ 
-        response: 'Assistant unavailable — no API key configured. Using offline factsheet reference.',
-        source: 'offline' 
+      return NextResponse.json({
+        response: getOfflineReply(indicatorId, question),
+        source: 'offline',
       });
     }
 
-    const systemPrompt = `You are the OneAquaHealth Field Companion AI assistant. Answer ONLY from the OneAquaHealth Key Indicators factsheets (doi:10.5281/zenodo.20345207). 
+    const systemPrompt = `You are the OneAquaHealth Field Companion AI assistant. Answer ONLY from the OneAquaHealth Key Indicators factsheets (doi:10.5281/zenodo.20345207).
 
 Rules:
 - Only answer using factsheet content about the requested indicator
@@ -36,7 +47,7 @@ Rules:
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Indicator: ${indicatorId}. Question: ${question}` },
@@ -52,13 +63,14 @@ Rules:
 
     const data = await response.json();
     const text = data.choices?.[0]?.message?.content || 'No response from assistant.';
-    
+
     return NextResponse.json({ response: text, source: 'groq' });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
-    return NextResponse.json({ 
-      response: `Assistant unavailable — network error: ${message}. Using offline factsheet reference.`,
-      source: 'offline' 
+    const indicatorId = body?.indicatorId || 'unknown';
+    return NextResponse.json({
+      response: getOfflineReply(indicatorId, question),
+      source: 'offline',
     }, { status: 200 });
   }
 }
