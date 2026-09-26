@@ -7,7 +7,7 @@ export async function GET() {
     tracks: ['Track 1 (Citizen Science UX)', 'Track 3 (AI-Supported Assessment)'],
     generatedAt: new Date().toISOString(),
     doi: '10.5281/zenodo.20345207',
-    citation: 'Schmeller, D., et al. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo.',
+    citation: 'Schmeller, D., et al. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207',
     aiBoundary: 'AI may interpret input. AI may not adjudicate.',
     fhirDisclaimer: 'FHIR R4 export using OAH CI-build structures — draft implementation guide, not certified.',
   });

@@ -1,41 +1,42 @@
 # StreamVitals
 
-StreamVitals — OneAquaHealth IEEE Global Hackathon 2026, Track 3: AI-Supported Assessment
+StreamVitals — OneAquaHealth IEEE Global Hackathon 2026, Track 1 + Track 3
 
 **We don't use AI to decide whether the stream is healthy; we use AI to make sure the thing being assessed is actually what the citizen observed.**
 
 ## What It Does
 
-A citizen answers guided questions about an urban stream, or types a free-text observation. If they use free text, a bounded **AI Observation Quality Gate** converts it into structured fields — flagging contradictions and unsupported claims. The citizen confirms every field. A separate **deterministic evidence engine** (never called "AI") evaluates confirmed observations against real, cited rules from the OneAquaHealth Key Indicators Factsheets and produces a triage tier with a full **Rule Inspector** showing exactly which observation and which sourced rule produced it.
+A citizen answers guided questions about an urban stream across five official OneAquaHealth indicators — Benthic Macroinvertebrates (BMI-01), Birds (BIR-04), Invasive Alien Plants (INV-11), Fecal Coliforms (FCL-06), and Diatoms (DIA-10). FCL-06 and DIA-10 are laboratory-only and cannot be evaluated in the field. The citizen selects observation states, optionally captures photos, and adds field notes. All data is stored persistently in IndexedDB and exported via CSV, JSON, or print.
+
+A bounded **AI Field Assistant** answers questions using only the OneAquaHealth Key Indicators factsheets (doi:10.5281/zenodo.20345207). It never identifies species beyond what's in the factsheet, never gives opinions on water quality or health, and never assigns tiers, scores, or severity levels.
 
 **AI may interpret input. AI may not adjudicate.**
 
 ## How It's Built
 
-- **Frontend**: Next.js 16 (App Router), TypeScript, Tailwind CSS
-- **AI Layer**: Groq (`llama-3.1-8b-instant`) — bounded extraction only, never adjudication
-- **Evidence Engine**: Pure TypeScript, zero network calls, named rules from cited factsheets
-- **Validation**: Zod schemas for all AI outputs; manual fallback fully functional
-- **FHIR Export**: FHIR R4 Bundle with QuestionnaireResponse and Observation resources
-- **Testing**: Node.js test runner (38 evidence engine tests + 13 FHIR tests + 10 AI containment tests)
+- **Frontend**: Next.js 16 (App Router), TypeScript (strict), Tailwind CSS 4
+- **AI Layer**: Groq (`llama-3.3-70b-versatile`) — bounded assistant only, never adjudication
+- **Persistence**: IndexedDB in the browser, session state in sessionStorage
+- **Styling**: Light theme only (#f8f9fc background, #0d9b6e accent, #ffffff cards)
+- **Testing**: Vitest with jsdom environment
+- **Deployment**: Vercel
 
-## Benchmark Results
+## Pages
 
-```
-Deterministic repeatability: 5/5 identical outputs
-Invalid-input safety: 10/10 rejected correctly
-Missing-data safety: 4/4 unknowns correctly prevented from becoming "healthy"
-Rule traceability: 3/3 assessments linked to a source rule
-AI schema validity: 3/3 candidate outputs conform to schema
-AI containment: 10/10 hostile candidates rejected
-Human-confirmation enforcement: 3/3 AI candidates blocked until confirmed
-Evidence traceability: 3/3 drivers resolve to real indicator ID, rule, and source field
-City separation: 1/1 same input → same verdict
-FHIR schema conformance: 13/13 tests passed
-Execution latency: p50=0.007ms, p95=0.033ms (100 iterations)
-```
+1. **`/`** — Home page with 5 indicator cards, each navigates to `/field/[indicator]`
+2. **`/field`** — Session dashboard, creates or continues a monitoring session
+3. **`/field/[indicator]`** — Per-indicator observation form with state selection, photo capture, and field notes
+4. **`/field/review`** — Review all observations, export data (JSON/CSV/Print), submit session
 
-*Self-consistency / rule-conformance on internally constructed scenarios — not an accuracy claim.*
+## Constraints
+
+- No tier ratings (T1/T2/T3) anywhere in the UI
+- No diagnostic assessments
+- Lab-only isolation for FCL-06/DIA-10 indicators
+- All navigation via `window.location.href` only
+- No React Router, no `<Link>` components from Next.js
+- Case-insensitive indicator lookup
+- Light theme only — no theme toggles, no dark mode
 
 ## How to Run Locally
 
@@ -46,40 +47,36 @@ npm install
 # Run development server
 npm run dev
 
-# Run all tests
+# Run tests
 npm test
 
-# Run evidence engine tests only
-node run-tests.js
-
-# Run FHIR tests only
-node run-fhir-tests.js
-
-# Run benchmark
-node run-benchmark.js
+# Build for production
+npm run build
 ```
-
-## Architecture
-
-1. **Intake**: Guided questions (with visual anchors) or free-text box
-2. **AI Gate**: Extracts evidence spans, maps to fixed enum vocabulary, flags contradictions
-3. **Confirmation**: Citizen reviews every field with evidence spans and confidence toggle
-4. **Evidence Engine**: Deterministic rule-based assessment producing triage tier (T1/T2/T3) + data status (SUFFICIENT/PARTIAL/INSUFFICIENT)
-5. **Rule Inspector**: Full chain — observation → indicator → rule → source citation → One Health text
-6. **Reference Context**: Same observation against five OneAquaHealth research cities
-7. **FHIR Export**: R4 Bundle with disclaimer: "draft implementation guide, not certified"
-8. **Provenance Manifest**: Source file, URL, retrieval date, SHA-256, document version
 
 ## Data Sources
 
-- **OneAquaHealth Key Indicators Factsheets**: Zenodo doi:10.5281/zenodo.20345207 (CC-BY 4.0, lead author Maria João Feio)
-- **OAH-FHIR Implementation Guide**: https://build.fhir.org/ig/hl7-eu/oah/ (draft/CI-build, not certified)
-- **Resilience Map**: https://apps.oneaquahealth.eu/resmap/ (client-side SPA)
-- **Five Research Cities**: Coimbra (PT), Benevento (IT), Ghent (BE), Oslo (NO), Toulouse (FR)
+- **OneAquaHealth Key Indicators Factsheets**: Zenodo doi:10.5281/zenodo.20345207 (CC-BY 4.0)
 
-## What's Next
+## Architecture
 
-- Per-city reference data population from OAH Resilience Map API
-- Additional FHIR extensions confirmed in OAH CI-build
-- Multilingual label expansion
-- Vercel Hobby deployment with environment variables configured
+1. **Home**: Indicator selection with status (available/limited)
+2. **Session**: Create or continue a monitoring session
+3. **Field**: Per-indicator observation with state selection and optional photo capture
+4. **Review**: Summary of all observations with export and submit
+5. **AI Assistant**: Bounded factsheet-based Q&A sidebar
+6. **API**: Groq proxy for AI, provenance logging, data export
+
+## API Routes
+
+- `GET /api/sensors` — Sensor configuration for citizen-observable indicators
+- `POST /api/ai/assistant` — AI assistant (Groq proxy with offline fallback)
+- `GET /api/provenance` — Data provenance metadata
+- `POST /api/export` — Export session data (CSV/JSON/GeoJSON)
+
+## Testing
+
+- `src/lib/field-session.test.ts` — 7 tests for IndexedDB session management
+- `src/lib/factsheet-content.test.ts` — 6 tests for factsheet lookup and out-of-scope detection
+
+Run with `npm test` (uses Vitest with jsdom environment).
