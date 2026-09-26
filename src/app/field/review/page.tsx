@@ -59,10 +59,8 @@ export default function ReviewPage() {
 
   if (!session) {
     return (
-      <main className="min-h-screen bg-[#f8f9fc] flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-[#1a1a2e]/40">Loading session...</p>
-        </div>
+      <main className="min-h-screen bg-[#ffffff] flex items-center justify-center p-6">
+        <p className="text-[rgba(0,0,0,0.4)]">Loading session...</p>
       </main>
     );
   }
@@ -72,34 +70,34 @@ export default function ReviewPage() {
   const totalNotes = session.indicators.filter((i: any) => i.notes).length;
 
   return (
-    <main className="min-h-screen bg-[#f8f9fc]">
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-full">
-            <span className="w-2 h-2 bg-emerald-600 rounded-full" />
-            <span className="text-sm text-emerald-700 font-medium">Session Review</span>
+    <main className="min-h-screen bg-[#ffffff]">
+      <div className="max-w-3xl mx-auto px-6 py-12">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 mb-4 bg-[rgba(13,155,110,0.08)] border border-[rgba(13,155,110,0.15)] px-4 py-2 rounded-full">
+            <span className="w-1.5 h-1.5 bg-[#0d9b6e] rounded-full" />
+            <span className="text-xs font-semibold text-[#0d9b6e] tracking-wide uppercase">Session Review</span>
           </div>
-          <h1 className="text-4xl font-black tracking-tighter mb-2 text-[#1a1a2e]">Field Data Review</h1>
-          <p className="text-[#1a1a2e]/50">Your collected observations before export</p>
+          <h1 className="text-5xl font-black tracking-tighter mb-3 text-black leading-[1.05]">Field Data Review</h1>
+          <p className="text-lg text-[rgba(0,0,0,0.5)]">Your collected observations before export</p>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-sm shadow-gray-100">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-gray-50 rounded-xl p-4 text-center">
-              <p className="text-2xl font-black text-emerald-700">{session.indicators.length}</p>
-              <p className="text-xs text-[#1a1a2e]/40 mt-1">Indicators</p>
+        <div className="bg-[#f5faf7] border border-[rgba(0,0,0,0.06)] rounded-2xl p-8 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="bg-white rounded-xl p-6 text-center border border-[rgba(0,0,0,0.04)]">
+              <p className="text-4xl font-black tracking-tighter text-[#0d9b6e]">{session.indicators.length}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1 font-medium">Indicators</p>
             </div>
-            <div className="bg-gray-50 rounded-xl p-4 text-center">
-              <p className="text-2xl font-black text-emerald-700">{totalPhotos}</p>
-              <p className="text-xs text-[#1a1a2e]/40 mt-1">Photos</p>
+            <div className="bg-white rounded-xl p-6 text-center border border-[rgba(0,0,0,0.04)]">
+              <p className="text-4xl font-black tracking-tighter text-[#0d9b6e]">{totalPhotos}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1 font-medium">Photos</p>
             </div>
-            <div className="bg-gray-50 rounded-xl p-4 text-center">
-              <p className="text-2xl font-black text-emerald-700">{totalNotes}</p>
-              <p className="text-xs text-[#1a1a2e]/40 mt-1">Notes</p>
+            <div className="bg-white rounded-xl p-6 text-center border border-[rgba(0,0,0,0.04)]">
+              <p className="text-4xl font-black tracking-tighter text-[#0d9b6e]">{totalNotes}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1 font-medium">Notes</p>
             </div>
-            <div className="bg-amber-50 rounded-xl p-4 text-center">
-              <p className="text-2xl font-black text-amber-700">{labIndicators.length}</p>
-              <p className="text-xs text-[#1a1a2e]/40 mt-1">Pending Lab</p>
+            <div className="bg-[rgba(232,93,58,0.04)] rounded-xl p-6 text-center border border-[rgba(232,93,58,0.1)]">
+              <p className="text-4xl font-black tracking-tighter text-[#e85d3a]">{labIndicators.length}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1 font-medium">Pending Lab</p>
             </div>
           </div>
 
@@ -109,36 +107,36 @@ export default function ReviewPage() {
               const isLab = ind.type === 'lab_only';
               const photoCount = photos.filter((p: any) => p.indicatorId === ind.indicatorId).length;
               return (
-                <div key={ind.indicatorId} className={`rounded-xl border p-4 ${isLab ? 'bg-amber-50 border-amber-200' : 'bg-gray-50 border-gray-200'}`}>
-                  <div className="flex items-center justify-between mb-2">
+                <div key={ind.indicatorId} className={`rounded-xl border p-5 ${isLab ? 'bg-[rgba(232,93,58,0.04)] border-[rgba(232,93,58,0.1)]' : 'bg-white border-[rgba(0,0,0,0.06)]'}`}>
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-black text-[#1a1a2e]/25">{i + 1}</span>
-                      <span className="font-bold text-[#1a1a2e]">{ind.indicatorName}</span>
+                      <span className="text-xs font-black text-[rgba(0,0,0,0.2)]">{i + 1}</span>
+                      <span className="font-bold text-black">{ind.indicatorName}</span>
                       {isLab && (
-                        <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Lab Sample</span>
+                        <span className="text-[10px] bg-[rgba(232,93,58,0.1)] text-[#e85d3a] px-4 py-1 rounded-full font-bold">Lab Sample</span>
                       )}
                     </div>
                     <div className="flex items-center gap-2">
                       {ind.state ? (
-                        <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
+                        <span className="text-xs bg-[rgba(13,155,110,0.08)] text-[#0d9b6e] px-4 py-1 rounded-full font-bold">
                           {getStateLabel(ind.indicatorId, ind.state)}
                         </span>
                       ) : isLab ? (
-                        <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">Pending Lab Analysis</span>
+                        <span className="text-xs bg-[rgba(232,93,58,0.1)] text-[#e85d3a] px-4 py-1 rounded-full font-bold">Pending Lab Analysis</span>
                       ) : null}
                       {photoCount > 0 && (
-                        <span className="text-xs text-[#1a1a2e]/30">{photoCount} photo{photoCount !== 1 ? 's' : ''}</span>
+                        <span className="text-xs text-[rgba(0,0,0,0.25)]">{photoCount} photo{photoCount !== 1 ? 's' : ''}</span>
                       )}
                     </div>
                   </div>
                   {ind.state && !isLab && (
-                    <p className="text-sm text-[#1a1a2e]/50 ml-6">{indInfo?.visual_anchor_guide}</p>
+                    <p className="text-sm text-[rgba(0,0,0,0.4)] ml-6 mt-2">{indInfo?.visual_anchor_guide}</p>
                   )}
                   {isLab && ind.sampleLabel && (
-                    <p className="text-sm text-amber-700/70 ml-6">Sample: {ind.sampleLabel}</p>
+                    <p className="text-sm text-[#e85d3a] ml-6 mt-1 font-medium">Sample: {ind.sampleLabel}</p>
                   )}
                   {ind.notes && (
-                    <p className="text-sm text-[#1a1a2e]/40 ml-6 mt-1 italic">"{ind.notes}"</p>
+                    <p className="text-sm text-[rgba(0,0,0,0.35)] ml-6 mt-1 italic">&ldquo;{ind.notes}&rdquo;</p>
                   )}
                 </div>
               );
@@ -146,35 +144,35 @@ export default function ReviewPage() {
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-sm shadow-gray-100">
-          <h2 className="text-lg font-bold text-[#1a1a2e] mb-4">Human-Readable Summary</h2>
-          <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
-            <div className="text-center mb-4">
-              <h3 className="text-xl font-bold text-emerald-700">Field Monitoring Session</h3>
-              <p className="text-[#1a1a2e]/40 text-sm">OneAquaHealth Key Indicators Framework</p>
+        <div className="bg-[#f5faf7] border border-[rgba(0,0,0,0.06)] rounded-2xl p-8 mb-8">
+          <h2 className="text-xl font-black tracking-tighter mb-6 text-black">Human-Readable Summary</h2>
+          <div className="bg-white rounded-xl p-6 border border-[rgba(0,0,0,0.04)]">
+            <div className="text-center mb-6">
+              <h3 className="text-lg font-black text-[#0d9b6e]">Field Monitoring Session</h3>
+              <p className="text-[rgba(0,0,0,0.4)] text-sm">OneAquaHealth Key Indicators Framework</p>
             </div>
             <div className="space-y-3 text-sm">
-              <div className="flex justify-between"><span className="text-[#1a1a2e]/40">Stream / Location:</span><span className="text-[#1a1a2e] font-medium">{session.streamName}</span></div>
-              <div className="flex justify-between"><span className="text-[#1a1a2e]/40">Volunteer:</span><span className="text-[#1a1a2e] font-medium">{session.volunteer || 'Not provided'}</span></div>
-              <div className="flex justify-between"><span className="text-[#1a1a2e]/40">Date:</span><span className="text-[#1a1a2e] font-medium">{session.date}</span></div>
-              <div className="flex justify-between"><span className="text-[#1a1a2e]/40">Session started:</span><span className="text-[#1a1a2e] font-medium">{session.startedAt}</span></div>
-              <hr className="border-gray-200" />
+              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Stream / Location:</span><span className="font-bold text-black">{session.streamName}</span></div>
+              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Volunteer:</span><span className="font-bold text-black">{session.volunteer || 'Not provided'}</span></div>
+              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Date:</span><span className="font-bold text-black">{session.date}</span></div>
+              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Session started:</span><span className="font-bold text-black">{session.startedAt}</span></div>
+              <hr className="border-[rgba(0,0,0,0.06)]" />
               {session.indicators.map((ind: any, i: number) => (
-                <div key={ind.indicatorId} className={`rounded p-2 ${ind.type === 'lab_only' ? 'bg-amber-50' : ''}`}>
+                <div key={ind.indicatorId} className={`rounded p-2 ${ind.type === 'lab_only' ? 'bg-[rgba(232,93,58,0.04)]' : ''}`}>
                   <div className="flex justify-between items-center">
-                    <span className="text-[#1a1a2e] font-medium">{i + 1}. {ind.indicatorName}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded ${ind.type === 'lab_only' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
+                    <span className="font-bold text-black">{i + 1}. {ind.indicatorName}</span>
+                    <span className={`text-xs px-4 py-1 rounded-full ${ind.type === 'lab_only' ? 'bg-[rgba(232,93,58,0.1)] text-[#e85d3a]' : 'bg-[rgba(13,155,110,0.08)] text-[#0d9b6e]'}`}>
                       {ind.type === 'lab_only' ? 'Lab Sample' : 'Observation'}
                     </span>
                   </div>
-                  <div className="text-[#1a1a2e]/50 mt-1 ml-2">
+                  <div className="text-[rgba(0,0,0,0.4)] mt-1 ml-6">
                     {ind.state ? getStateLabel(ind.indicatorId, ind.state) : 'Pending laboratory analysis'}
                     {ind.notes && <span> — Notes recorded</span>}
                   </div>
                 </div>
               ))}
-              <hr className="border-gray-200" />
-              <div className="flex justify-between text-[#1a1a2e]/40 text-xs">
+              <hr className="border-[rgba(0,0,0,0.06)]" />
+              <div className="flex justify-between text-[rgba(0,0,0,0.3)] text-xs">
                 <span>Total photos: {totalPhotos}</span>
                 <span>Total notes: {totalNotes}</span>
               </div>
@@ -182,33 +180,33 @@ export default function ReviewPage() {
           </div>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6 shadow-sm shadow-gray-100">
+        <div className="bg-[#f5faf7] border border-[rgba(0,0,0,0.06)] rounded-2xl p-8 mb-8">
           <ExportButton sessionId={session.sessionId} />
         </div>
 
         <div className="flex gap-3">
           <button
             onClick={handleContinueLater}
-            className="flex-1 py-4 bg-white border border-gray-200 text-[#1a1a2e] rounded-xl font-bold hover:bg-gray-50 hover:border-gray-300 transition-all focus:ring-2 focus:ring-emerald-400 focus:outline-none flex items-center justify-center gap-2"
+            className="flex-1 py-4 bg-white border border-[rgba(0,0,0,0.08)] text-black rounded-xl font-bold hover:bg-[rgba(0,0,0,0.02)] hover:border-[rgba(0,0,0,0.12)] transition-all focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none flex items-center justify-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" /> Continue Later
           </button>
           <button
             onClick={handleComplete}
-            className="flex-1 py-4 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition-all focus:ring-2 focus:ring-emerald-400 focus:outline-none shadow-sm shadow-emerald-200 text-center"
+            className="flex-1 py-4 bg-black text-white rounded-xl font-bold hover:opacity-85 transition-all focus:ring-2 focus:ring-black focus:outline-none"
           >
             Complete Session
           </button>
         </div>
 
         {sessionComplete && (
-          <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center">
-            <p className="text-emerald-700 font-bold">Session completed successfully.</p>
-            <p className="text-emerald-600/60 text-sm mt-1">Your data has been exported and saved.</p>
+          <div className="mt-6 bg-[rgba(13,155,110,0.06)] border border-[rgba(13,155,110,0.15)] rounded-xl p-5 text-center">
+            <p className="text-[#0d9b6e] font-bold">Session completed successfully.</p>
+            <p className="text-[#0d9b6e]/60 text-sm mt-1">Your data has been exported and saved.</p>
           </div>
         )}
 
-        <p className="text-center text-xs text-[#1a1a2e]/20 mt-6">
+        <p className="text-center text-xs text-[rgba(0,0,0,0.2)] mt-6">
           This data is structured for the OneAquaHealth indicator framework (doi:10.5281/zenodo.20345207). No assessment, no tier, no verdict.
         </p>
       </div>

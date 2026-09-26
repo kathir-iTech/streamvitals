@@ -4,6 +4,35 @@ import { useState, useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { createSession, isIndexedDBAvailable, getSession } from '@/lib/field-session';
 
+function StreamIllustration() {
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="180" stroke="rgba(13,155,110,0.08)" strokeWidth="1" fill="none"/>
+      <circle cx="200" cy="200" r="120" stroke="rgba(13,155,110,0.12)" strokeWidth="1" fill="none"/>
+      <circle cx="200" cy="200" r="60" stroke="rgba(13,155,110,0.15)" strokeWidth="1" fill="none"/>
+      <path d="M200 40 C200 40 140 140 140 200 C140 260 200 360 200 360 C200 360 260 260 260 200 C260 140 200 40 200 40Z" fill="rgba(13,155,110,0.06)" stroke="#0d9b6e" strokeWidth="2"/>
+      <path d="M120 180 L280 180" stroke="rgba(0,0,0,0.08)" strokeWidth="1"/>
+      <path d="M160 120 L240 120" stroke="rgba(0,0,0,0.06)" strokeWidth="1"/>
+      <path d="M140 240 L260 240" stroke="rgba(0,0,0,0.06)" strokeWidth="1"/>
+      <circle cx="200" cy="200" r="8" fill="#0d9b6e" opacity="0.3"/>
+      <circle cx="150" cy="180" r="4" fill="#0d9b6e" opacity="0.4"/>
+      <circle cx="250" cy="220" r="4" fill="#0d9b6e" opacity="0.4"/>
+      <circle cx="180" cy="260" r="3" fill="#0d9b6e" opacity="0.3"/>
+      <circle cx="220" cy="140" r="3" fill="#0d9b6e" opacity="0.3"/>
+      <line x1="150" y1="180" x2="200" y2="200" stroke="#0d9b6e" strokeWidth="1" opacity="0.3"/>
+      <line x1="250" y1="220" x2="200" y2="200" stroke="#0d9b6e" strokeWidth="1" opacity="0.3"/>
+      <line x1="180" y1="260" x2="200" y2="200" stroke="#0d9b6e" strokeWidth="1" opacity="0.2"/>
+      <line x1="220" y1="140" x2="200" y2="200" stroke="#0d9b6e" strokeWidth="1" opacity="0.2"/>
+      <path d="M160 120 L180 100 L200 115 L220 100 L240 120" stroke="#0d9b6e" strokeWidth="1.5" fill="none" opacity="0.5"/>
+      <path d="M160 240 L180 260 L200 245 L220 260 L240 240" stroke="#0d9b6e" strokeWidth="1.5" fill="none" opacity="0.5"/>
+      <ellipse cx="200" cy="320" rx="30" ry="12" fill="rgba(13,155,110,0.1)" stroke="#0d9b6e" strokeWidth="1.5"/>
+      <ellipse cx="130" cy="100" rx="18" ry="10" fill="rgba(13,155,110,0.08)" stroke="#0d9b6e" strokeWidth="1"/>
+      <ellipse cx="270" cy="300" rx="18" ry="10" fill="rgba(13,155,110,0.08)" stroke="#0d9b6e" strokeWidth="1"/>
+      <rect x="185" y="60" width="30" height="8" rx="4" fill="#0d9b6e" opacity="0.3"/>
+    </svg>
+  );
+}
+
 export default function FieldPage() {
   const [streamName, setStreamName] = useState('');
   const [volunteer, setVolunteer] = useState('');
@@ -73,93 +102,79 @@ export default function FieldPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f8f9fc] flex items-center justify-center p-6">
-      <div className="max-w-lg w-full">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-full">
-            <span className="w-2 h-2 bg-emerald-600 rounded-full" />
-            <span className="text-sm text-emerald-700 font-medium">Field Companion</span>
-          </div>
-          <h1 className="text-5xl font-black tracking-tighter mb-3 text-[#1a1a2e]">
-            Field Companion
-          </h1>
-          <p className="text-lg text-[#1a1a2e]/50">Collect real data. No assessment. No verdict.</p>
-        </div>
-
-        {existingSession ? (
-          <div className="bg-white border border-emerald-200 rounded-2xl p-8 animate-fadeInScale shadow-sm shadow-emerald-100">
-            <div className="text-center mb-6">
-              <div className="text-6xl mb-4">📋</div>
-              <h2 className="text-2xl font-bold mb-2 text-[#1a1a2e]">Continue Previous Session</h2>
-              <p className="text-[#1a1a2e]/40 text-sm">Session for <strong className="text-emerald-700">{existingSession.streamName}</strong> was started but not completed.</p>
+    <main className="min-h-screen bg-[#ffffff]">
+      <div className="hero-split">
+        <div className="hero-left">
+          <div className="animate-fadeInUp">
+            <div className="inline-flex items-center gap-2 mb-6 bg-[rgba(13,155,110,0.08)] border border-[rgba(13,155,110,0.15)] px-4 py-2 rounded-full">
+              <span className="w-1.5 h-1.5 bg-[#0d9b6e] rounded-full" />
+              <span className="text-xs font-semibold text-[#0d9b6e] tracking-wide uppercase">OneAquaHealth IEEE 2026</span>
             </div>
-            <button onClick={handleContinue} className="w-full py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-xl font-semibold text-lg flex items-center justify-center gap-3 shadow-sm shadow-emerald-200 hover:shadow-md hover:shadow-emerald-300 transition-all">
-              Continue Monitoring
-              <ArrowRight className="w-5 h-5" />
-            </button>
-            <div className="mt-4 text-center">
-              <button onClick={() => { setExistingSession(null); setStreamName(''); setVolunteer(''); }} className="text-sm text-[#1a1a2e]/40 hover:text-[#1a1a2e]/60 transition-colors">
-                Start a new session instead
-              </button>
-            </div>
-          </div>
-        ) : (
-          <form onSubmit={handleStart} className="bg-white border border-gray-200 rounded-2xl p-8 animate-fadeInScale shadow-sm shadow-gray-200">
-            <div className="space-y-5">
+            <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 text-black leading-[1.05]">
+              Take the<br />stream&rsquo;s vitals
+            </h1>
+            <p className="text-lg text-[rgba(0,0,0,0.5)] leading-relaxed max-w-md mb-10">
+              Collect real field data across five official OneAquaHealth indicators. No assessment, no tier, no verdict — just structured observation.
+            </p>
+            <form onSubmit={handleStart} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#1a1a2e]/70 mb-1.5" htmlFor="stream-name">Stream Name / Location</label>
+                <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor="stream-name">Stream Name / Location</label>
                 <input
                   id="stream-name"
                   type="text"
                   value={streamName}
                   onChange={(e) => setStreamName(e.target.value)}
                   placeholder="e.g., Cedar Creek, Riverside Park"
-                  className="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-[#1a1a2e] placeholder-[#1a1a2e]/30 focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all hover:border-gray-300"
+                  className="w-full max-w-sm px-4 py-3 bg-[#f5faf7] border border-[rgba(0,0,0,0.08)] rounded-full text-black placeholder-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none transition-all text-sm font-medium"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-[#1a1a2e]/70 mb-1.5" htmlFor="volunteer">Volunteer Name <span className="text-[#1a1a2e]/30">(optional)</span></label>
-                <input
-                  id="volunteer"
-                  type="text"
-                  value={volunteer}
-                  onChange={(e) => setVolunteer(e.target.value)}
-                  placeholder="Your name"
-                  className="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-[#1a1a2e] placeholder-[#1a1a2e]/30 focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all hover:border-gray-300"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm font-medium text-[#1a1a2e]/70 mb-1.5" htmlFor="session-date">Date</label>
-                  <input id="session-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-[#1a1a2e] focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all hover:border-gray-300" />
+              <div className="flex gap-3">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor="session-date">Date</label>
+                  <input id="session-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full px-4 py-3 bg-[#f5faf7] border border-[rgba(0,0,0,0.08)] rounded-full text-black focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none text-sm font-medium" />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-[#1a1a2e]/70 mb-1.5" htmlFor="session-time">Time</label>
-                  <input id="session-time" type="time" value={time} onChange={(e) => setTime(e.target.value)} className="w-full p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-[#1a1a2e] focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all hover:border-gray-300" />
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor="session-time">Time</label>
+                  <input id="session-time" type="time" value={time} onChange={(e) => setTime(e.target.value)} className="w-full px-4 py-3 bg-[#f5faf7] border border-[rgba(0,0,0,0.08)] rounded-full text-black focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none text-sm font-medium" />
                 </div>
               </div>
-              {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-              <button type="submit" disabled={loading} className="w-full py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-xl font-semibold text-lg flex items-center justify-center gap-3 shadow-sm shadow-emerald-200 hover:shadow-md transition-all disabled:opacity-40">
+              {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
+              <button type="submit" disabled={loading} className="btn-pill-accent text-lg">
                 {loading ? 'Starting session...' : 'Start Monitoring Session'}
-                <ArrowRight className="w-5 h-5" />
+                <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
-          </form>
-        )}
-
-        <div className="mt-6 bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-emerald-600 text-sm">ℹ</span>
-            </div>
-            <div>
-              <p className="text-sm text-[#1a1a2e]/70 font-medium">What you will collect</p>
-              <p className="text-xs text-[#1a1a2e]/40 mt-1 leading-relaxed">
-                Five official OneAquaHealth indicators across citizen observations and laboratory samples. No scores, no tiers, no verdicts — just structured field data aligned with the OneAquaHealth indicator framework (doi:10.5281/zenodo.20345207).
-              </p>
-            </div>
+              <div className="pt-2">
+                <p className="text-xs text-[rgba(0,0,0,0.3)]">5 official indicators · CC-BY factsheet · DOI:10.5281/zenodo.20345207</p>
+              </div>
+            </form>
+            {existingSession && (
+              <div className="mt-8 p-5 bg-[#f5faf7] border border-[rgba(13,155,110,0.15)] rounded-2xl animate-fadeInScale">
+                <p className="text-sm text-[rgba(0,0,0,0.6)] font-medium">Continue session for <span className="text-[#0d9b6e] font-bold">{existingSession.streamName}</span></p>
+                <button onClick={handleContinue} className="mt-3 btn-pill-outline text-sm">Continue Monitoring <ArrowRight className="w-3 h-3 ml-1" /></button>
+              </div>
+            )}
           </div>
+        </div>
+        <div className="hero-right">
+          <StreamIllustration />
+        </div>
+      </div>
+
+      <div className="stats-strip">
+        <div className="stat-item">
+          <span className="text-3xl font-black tracking-tighter">5</span>
+          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">OneAquaHealth Indicators</span>
+        </div>
+        <div className="stat-divider" />
+        <div className="stat-item">
+          <span className="text-3xl font-black tracking-tighter">CC-BY</span>
+          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Factsheet License</span>
+        </div>
+        <div className="stat-divider" />
+        <div className="stat-item">
+          <span className="text-3xl font-black tracking-tighter">IEEE 2026</span>
+          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Hackathon</span>
         </div>
       </div>
     </main>
