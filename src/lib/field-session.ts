@@ -190,7 +190,7 @@ export async function deletePhoto(photoId: string): Promise<{ success: boolean; 
   }
 }
 
-export async function getFullSession(sessionId: string): Promise<{ session?: FieldSession; photos: { photoId: string; indicatorId: string; timestamp: string }[] }> {
+export async function getFullSession(sessionId: string): Promise<{ session?: FieldSession; photos: { photoId: string; indicatorId: string; timestamp: string; dataUrl: string }[] }> {
   const indicatorNames = ['Benthic Macroinvertebrates', 'Birds', 'Invasive Alien Plants', 'Fecal Coliforms', 'Diatoms and Diatom Teratology'];
   const indicatorIds = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
   const photos = await getSessionPhotos(sessionId);
