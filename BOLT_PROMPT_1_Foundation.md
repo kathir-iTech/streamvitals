@@ -1,5 +1,6 @@
 # BOLT Prompt 1: Foundation
 
+
 ## Project: StreamVitals Field Companion
 ### IEEE OneAquaHealth Global Hackathon 2026 — Track 1 + Track 3
 
