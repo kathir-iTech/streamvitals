@@ -64,15 +64,44 @@ export interface FieldSession {
 }
 
 export async function createSession(session: FieldSession): Promise<{ success: boolean; error?: string }> {
-  return { success: true };
+  try {
+    const key = `session_${session.sessionId}`;
+    sessionStorage.setItem(key, JSON.stringify(session));
+    return { success: true };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    console.error('[sessionStorage] Failed to create session:', message);
+    return { success: false, error: message };
+  }
 }
 
 export async function getSession(sessionId: string): Promise<FieldSession | undefined> {
-  return undefined;
+  try {
+    const key = `session_${sessionId}`;
+    const data = sessionStorage.getItem(key);
+    if (data) return JSON.parse(data) as FieldSession;
+    return undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 export async function updateSession(sessionId: string, updates: Partial<FieldSession>): Promise<{ success: boolean; error?: string }> {
-  return { success: true };
+  try {
+    const key = `session_${sessionId}`;
+    const existing = sessionStorage.getItem(key);
+    if (existing) {
+      const session = JSON.parse(existing) as FieldSession;
+      const updated = { ...session, ...updates };
+      sessionStorage.setItem(key, JSON.stringify(updated));
+      return { success: true };
+    }
+    return { success: false, error: 'Session not found' };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    console.error('[sessionStorage] Failed to update session:', message);
+    return { success: false, error: message };
+  }
 }
 
 export async function savePhoto(photoId: string, sessionId: string, indicatorId: string, data: Blob, thumbnail?: Blob): Promise<{ success: boolean; error?: string }> {
@@ -93,23 +122,7 @@ export async function savePhoto(photoId: string, sessionId: string, indicatorId:
 }
 
 export async function getSessionPhotos(sessionId: string): Promise<{ photoId: string; indicatorId: string; timestamp: string }[]> {
-  try {
-    const db = await openDB();
-    return new Promise((resolve) => {
-      const tx = db.transaction('photos', 'readonly');
-      const store = tx.objectStore('photos');
-      const index = store.index('by-session');
-      const request = index.getAll(sessionId);
-      request.onsuccess = () => {
-        const results = request.result || [];
-        resolve(results.map((p: any) => ({ photoId: p.photoId, indicatorId: p.indicatorId, timestamp: p.timestamp })));
-      };
-      request.onerror = () => { console.error('[IndexedDB] Photo read error:', txError(request.error)); resolve([]); };
-    });
-  } catch (err) {
-    console.error('[IndexedDB] Failed to read photos:', err);
-    return [];
-  }
+  return [];
 }
 
 export async function deletePhoto(photoId: string): Promise<{ success: boolean; error?: string }> {
@@ -130,28 +143,8 @@ export async function deletePhoto(photoId: string): Promise<{ success: boolean; 
 }
 
 export async function getFullSession(sessionId: string): Promise<{ session?: FieldSession; photos: { photoId: string; indicatorId: string; timestamp: string }[] }> {
-  const indicatorNames = ['Benthic Macroinvertebrates', 'Birds', 'Invasive Alien Plants', 'Fecal Coliforms', 'Diatoms and Diatom Teratology'];
-  const indicatorIds = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
-  return {
-    session: {
-      sessionId,
-      streamName: 'Test',
-      volunteer: '',
-      date: '',
-      startedAt: new Date().toISOString(),
-      indicators: indicatorIds.map((id, i) => ({
-        indicatorId: id,
-        indicatorName: indicatorNames[i],
-        type: i < 3 ? 'citizen_observable' : 'lab_only',
-        state: '',
-        photos: [],
-        notes: '',
-        timestamp: new Date().toISOString(),
-        status: i < 3 ? 'complete' : 'pending_lab_analysis',
-      })),
-    },
-    photos: [],
-  };
+  const session = await getSession(sessionId);
+  return { session, photos: [] };
 }
 
 export async function clearSession(sessionId: string): Promise<{ success: boolean; error?: string }> {

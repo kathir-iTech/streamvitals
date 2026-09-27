@@ -3,7 +3,7 @@
 import { use, useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, ArrowRight, Shield } from 'lucide-react';
 import { indicators } from '@/data/indicators';
-import { updateSession } from '@/lib/field-session';
+import { updateSession, getSession, createSession } from '@/lib/field-session';
 import BoundedAssistant from '@/components/BoundedAssistant';
 import PhotoCapture from '@/components/PhotoCapture';
 
@@ -29,12 +29,17 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
   }, []);
 
   useEffect(() => {
-    const id = sessionStorage.getItem('current_session_id');
-    if (id) setSessionId(id);
-  }, []);
+    if (!sessionId) return;
+    getSession(sessionId).then((session) => {
+      if (session && !session.completedAt) {
+        const indicatorRecord = session.indicators.find((ind: any) => ind.indicatorId === indicatorId);
+        if (indicatorRecord) setSelectedState(indicatorRecord.state || '');
+      }
+    }).catch(() => {});
+  }, [sessionId, indicatorId]);
 
   const stateLabels = indicator?.citizen_state_labels || {};
-  const stateKeys = Object.keys(indicator?.states || {});
+  const stateKeys = (indicator?.states || []).map((s: any) => s.id);
   const progress = ((currentIndex + 1) / FIELD_INDICATORS.length) * 100;
 
   const handleStateSelect = useCallback((state: string) => {
@@ -45,25 +50,36 @@ const handleSaveIndicator = useCallback(async () => {
     if (!sessionId) return;
     setSaving(true);
     try {
-      const now = new Date().toISOString();
-      const newSession = {
-        sessionId,
-        streamName: '',
-        volunteer: '',
-        date: '',
-        indicators: [{
-          indicatorId,
-          indicatorName: indicator?.name || '',
-          type: (isCitizen ? 'citizen_observable' : 'lab_only') as 'citizen_observable' | 'lab_only',
-          state: selectedState || undefined,
-          photos,
-          notes,
-          timestamp: now,
-          status: isCitizen ? 'complete' as const : 'pending_lab_analysis' as const,
-        }],
-        startedAt: now,
-      };
-      await updateSession(sessionId, { indicators: newSession.indicators });
+      const result = await getSession(sessionId);
+      if (result) {
+        const updatedIndicators = result.indicators.map((ind: any) => {
+          if (ind.indicatorId === indicatorId) {
+            return { ...ind, state: selectedState || undefined, photos, notes, timestamp: new Date().toISOString() };
+          }
+          return ind;
+        });
+        await updateSession(sessionId, { indicators: updatedIndicators });
+      } else {
+        const now = new Date().toISOString();
+        const newSession = {
+          sessionId,
+          streamName: '',
+          volunteer: '',
+          date: '',
+          indicators: [{
+            indicatorId,
+            indicatorName: indicator?.name || '',
+            type: (isCitizen ? 'citizen_observable' : 'lab_only') as 'citizen_observable' | 'lab_only',
+            state: selectedState || undefined,
+            photos,
+            notes,
+            timestamp: now,
+            status: isCitizen ? 'complete' as const : 'pending_lab_analysis' as const,
+          }],
+          startedAt: now,
+        };
+        await createSession(newSession);
+      }
     } catch (err) {
       console.error('Failed to save indicator data:', err);
     } finally {
@@ -192,7 +208,7 @@ const handleSaveIndicator = useCallback(async () => {
           </button>
 <button
             onClick={handleNext}
-            disabled={saving}
+            disabled={saving || (isCitizen && !selectedState)}
             className="flex-1 flex items-center justify-center gap-2 px-6 py-3 btn-pill-accent disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {currentIndex === FIELD_INDICATORS.length - 1 ? 'Review Session' : 'Next Indicator'}

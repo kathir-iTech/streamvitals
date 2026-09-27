@@ -39,7 +39,7 @@ const [selectedState, setSelectedState] = useState<string>('');
   }, [sessionId, indicatorId]);
 
   const stateLabels = indicator?.citizen_state_labels || {};
-  const stateKeys = Object.keys(indicator?.states || {});
+  const stateKeys = (indicator?.states || []).map((s: any) => s.id);
   const progress = ((currentIndex + 1) / FIELD_INDICATORS.length) * 100;
 
   const handleStateSelect = useCallback((state: string) => {
@@ -208,7 +208,7 @@ const [selectedState, setSelectedState] = useState<string>('');
           </button>
           <button
             onClick={handleNext}
-            disabled={saving}
+            disabled={saving || (isCitizen && !selectedState)}
             className="flex-1 flex items-center justify-center gap-2 px-6 py-3 btn-pill-accent disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {saving ? 'Saving...' : (currentIndex === FIELD_INDICATORS.length - 1 ? 'Review Session' : 'Next Indicator')}
