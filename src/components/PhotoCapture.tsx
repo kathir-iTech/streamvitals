@@ -8,42 +8,54 @@ interface PhotoCaptureProps {
   sessionId: string;
   indicatorId: string;
   maxPhotos?: number;
+  onPhotosChange?: (photoIds: string[]) => void;
 }
 
-export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3 }: PhotoCaptureProps) {
+export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3, onPhotosChange }: PhotoCaptureProps) {
   const [photos, setPhotos] = useState<{ photoId: string; url: string; timestamp: string }[]>([]);
   const [capturing, setCapturing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const notifyChange = useCallback((newPhotos: { photoId: string; url: string; timestamp: string }[]) => {
+    onPhotosChange?.(newPhotos.map((p) => p.photoId));
+  }, [onPhotosChange]);
+
   const handleCapture = useCallback(async () => {
-    if (photos.length >= maxPhotos) return;
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-      const video = document.createElement('video');
-      video.srcObject = stream;
-      video.play();
-      setCapturing(true);
-      const canvas = document.createElement('canvas');
-      canvas.width = 640;
-      canvas.height = 480;
-      const ctx = canvas.getContext('2d')!;
-      const doCapture = async () => {
-        ctx.drawImage(video, 0, 0, 640, 480);
-        stream.getTracks().forEach((t) => t.stop());
-        setCapturing(false);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-        const photoId = `photo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-        const blob = await (await fetch(dataUrl)).blob();
-        const result = await savePhoto(photoId, sessionId, indicatorId, blob);
-        if (result.success) {
-          setPhotos((prev) => [...prev, { photoId, url: dataUrl, timestamp: new Date().toISOString() }]);
+    setPhotos((currentPhotos) => {
+      if (currentPhotos.length >= maxPhotos) return currentPhotos;
+      (async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.play();
+          setCapturing(true);
+          const canvas = document.createElement('canvas');
+          canvas.width = 640;
+          canvas.height = 480;
+          const ctx = canvas.getContext('2d')!;
+          const doCapture = async () => {
+            ctx.drawImage(video, 0, 0, 640, 480);
+            stream.getTracks().forEach((t) => t.stop());
+            setCapturing(false);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            const photoId = `photo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+            const blob = await (await fetch(dataUrl)).blob();
+            const result = await savePhoto(photoId, sessionId, indicatorId, blob);
+            if (result.success) {
+              const newPhotos = [...currentPhotos, { photoId, url: dataUrl, timestamp: new Date().toISOString() }];
+              setPhotos(newPhotos);
+              notifyChange(newPhotos);
+            }
+          };
+          setTimeout(doCapture, 100);
+        } catch {
+          if (fileInputRef.current) fileInputRef.current.click();
         }
-      };
-      setTimeout(doCapture, 100);
-    } catch {
-      if (fileInputRef.current) fileInputRef.current.click();
-    }
-  }, [photos.length, maxPhotos, sessionId, indicatorId]);
+      })();
+      return currentPhotos;
+    });
+  }, [maxPhotos, sessionId, indicatorId, notifyChange]);
 
   const handleFileUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -53,15 +65,23 @@ export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3 }: 
     const result = await savePhoto(photoId, sessionId, indicatorId, blob);
     if (result.success) {
       const url = URL.createObjectURL(blob);
-      setPhotos((prev) => [...prev, { photoId, url, timestamp: new Date().toISOString() }]);
+      setPhotos((prev) => {
+        const newPhotos = [...prev, { photoId, url, timestamp: new Date().toISOString() }];
+        notifyChange(newPhotos);
+        return newPhotos;
+      });
     }
     e.target.value = '';
-  }, [sessionId, indicatorId]);
+  }, [sessionId, indicatorId, notifyChange]);
 
   const handleRemove = useCallback(async (photoId: string) => {
     await deletePhoto(photoId);
-    setPhotos((prev) => prev.filter((p) => p.photoId !== photoId));
-  }, []);
+    setPhotos((prev) => {
+      const newPhotos = prev.filter((p) => p.photoId !== photoId);
+      notifyChange(newPhotos);
+      return newPhotos;
+    });
+  }, [notifyChange]);
 
   return (
     <div className="space-y-3">
@@ -84,7 +104,7 @@ export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3 }: 
               <Camera className="w-5 h-5 text-[#0d9b6e]/40" />
               <span className="text-[10px] text-[#0d9b6e]/40">Capture</span>
             </button>
-            <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileUpload} className="hidden" />
+            <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileUpload} className="hidden" suppressHydrationWarning />
             <button onClick={() => fileInputRef.current?.click()} className="w-20 h-20 rounded-xl border-2 border-dashed border-[rgba(0,0,0,0.1)] flex flex-col items-center justify-center gap-1 hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.04)] transition-all" aria-label="Upload photo">
               <ImageIcon className="w-5 h-5 text-[#0d9b6e]/40" />
               <span className="text-[10px] text-[#0d9b6e]/40">Upload</span>
