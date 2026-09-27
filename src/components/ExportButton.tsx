@@ -117,18 +117,18 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
-        <button onClick={generateJSON} disabled={exporting} className="bg-black hover:bg-[rgba(0,0,0,0.8)] text-white rounded-full px-6 py-2.5 font-bold text-sm flex items-center gap-2 transition-all disabled:opacity-40">
-          <Download className="w-4 h-4" /> Export JSON
-        </button>
-        <button onClick={generateCSV} disabled={exporting} className="bg-white hover:bg-[rgba(0,0,0,0.02)] text-black border border-[rgba(0,0,0,0.08)] rounded-full px-6 py-2.5 font-bold text-sm flex items-center gap-2 transition-all disabled:opacity-40">
-          <Download className="w-4 h-4" /> Export CSV
-        </button>
-        <button onClick={generateHumanReadable} disabled={exporting} className="bg-white hover:bg-[rgba(0,0,0,0.02)] text-black border border-[rgba(0,0,0,0.08)] rounded-full px-6 py-2.5 font-bold text-sm flex items-center gap-2 transition-all disabled:opacity-40">
-          <FileText className="w-4 h-4" /> Print Summary
-        </button>
-        <button onClick={handlePrint} disabled={exporting} className="bg-white hover:bg-[rgba(0,0,0,0.02)] text-black border border-[rgba(0,0,0,0.08)] rounded-full px-6 py-2.5 font-bold text-sm flex items-center gap-2 transition-all disabled:opacity-40">
-          <Printer className="w-4 h-4" /> Print Page
-        </button>
+<button onClick={generateJSON} disabled={exporting} className="btn-pill-accent text-sm flex items-center gap-2">
+           <Download className="w-4 h-4" /> Export JSON
+         </button>
+         <button onClick={generateCSV} disabled={exporting} className="btn-pill-outline text-sm flex items-center gap-2">
+           <Download className="w-4 h-4" /> Export CSV
+         </button>
+         <button onClick={generateHumanReadable} disabled={exporting} className="btn-pill-outline text-sm flex items-center gap-2">
+           <FileText className="w-4 h-4" /> Print Summary
+         </button>
+         <button onClick={handlePrint} disabled={exporting} className="btn-pill-outline text-sm flex items-center gap-2">
+           <Printer className="w-4 h-4" /> Print Page
+         </button>
       </div>
       <p className="text-xs text-[rgba(0,0,0,0.25)]">Export structured data aligned with the OneAquaHealth indicator framework.</p>
     </div>

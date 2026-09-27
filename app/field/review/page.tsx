@@ -185,13 +185,13 @@ export default function ReviewPage() {
         <div className="flex gap-3">
           <button
             onClick={handleContinueLater}
-            className="flex-1 py-4 bg-white border border-[rgba(0,0,0,0.08)] text-black rounded-xl font-bold hover:bg-[rgba(0,0,0,0.02)] hover:border-[rgba(0,0,0,0.12)] transition-all focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none flex items-center justify-center gap-2"
+            className="flex-1 py-4 btn-pill-outline flex items-center justify-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" /> Continue Later
           </button>
           <button
             onClick={handleComplete}
-            className="flex-1 py-4 bg-black text-white rounded-xl font-bold hover:opacity-85 transition-all focus:ring-2 focus:ring-black focus:outline-none"
+            className="flex-1 py-4 btn-pill-accent flex items-center justify-center gap-2"
           >
             Complete Session
           </button>

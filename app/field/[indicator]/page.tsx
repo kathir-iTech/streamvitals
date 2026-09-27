@@ -201,7 +201,7 @@ const handleSaveIndicator = useCallback(async () => {
           <button
             onClick={handlePrev}
             disabled={currentIndex === 0}
-            className={`flex items-center gap-2 px-6 py-3 bg-white border border-[rgba(0,0,0,0.08)] text-black rounded-xl font-medium disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[rgba(0,0,0,0.02)] hover:border-[rgba(0,0,0,0.12)] transition-all focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none ${currentIndex === 0 ? 'opacity-30' : ''}`}
+            className="btn-pill-outline flex items-center gap-2"
             aria-label="Previous indicator"
           >
             <ArrowLeft className="w-4 h-4" /> Previous
