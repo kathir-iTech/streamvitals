@@ -37,11 +37,12 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
   const [messages, setMessages] = useState<AssistantMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const [isOnline, setIsOnline] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const content = getIndicatorContent(indicatorId);
 
   useEffect(() => {
+    setIsOnline(navigator.onLine);
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
     window.addEventListener('online', handleOnline);
@@ -135,15 +136,16 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
       {isOnline && (
         <div className="border-t border-[rgba(0,0,0,0.06)] p-3">
           <div className="flex items-center gap-2 mb-1">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask about this indicator..."
-              disabled={loading}
-              className="flex-1 px-3 py-2 bg-white border border-[rgba(0,0,0,0.08)] rounded-full text-xs text-black placeholder-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none disabled:opacity-40"
-            />
+<input
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Ask about this indicator..."
+                  disabled={loading}
+                  suppressHydrationWarning
+                  className="flex-1 px-3 py-2 bg-white border border-[rgba(0,0,0,0.08)] rounded-full text-xs text-black placeholder-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none disabled:opacity-40"
+                />
             <button onClick={handleSend} disabled={loading || !input.trim()} className="px-3 py-2 bg-[#0d9b6e] text-white rounded-full hover:bg-[#0a7d58] disabled:opacity-40 transition-all">
               {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
             </button>
