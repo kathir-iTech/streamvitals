@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import { Camera, X, ImageIcon } from 'lucide-react';
-import { savePhoto, deletePhoto } from '@/lib/field-session';
+import { savePhoto, deletePhoto, getSessionPhotos } from '@/lib/field-session';
 
 interface PhotoCaptureProps {
   sessionId: string;
@@ -15,6 +15,19 @@ export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3, on
   const [photos, setPhotos] = useState<{ photoId: string; url: string; timestamp: string }[]>([]);
   const [capturing, setCapturing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!sessionId) return;
+    getSessionPhotos(sessionId).then((savedPhotos) => {
+      const indicatorPhotos = savedPhotos
+        .filter((p) => p.indicatorId === indicatorId)
+        .map((p) => ({ photoId: p.photoId, url: p.dataUrl, timestamp: p.timestamp }));
+      if (indicatorPhotos.length > 0) {
+        setPhotos(indicatorPhotos);
+        notifyChange(indicatorPhotos);
+      }
+    });
+  }, [sessionId, indicatorId]);
 
   const notifyChange = useCallback((newPhotos: { photoId: string; url: string; timestamp: string }[]) => {
     onPhotosChange?.(newPhotos.map((p) => p.photoId));

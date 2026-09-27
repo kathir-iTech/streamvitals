@@ -131,7 +131,6 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await page.goto('/field/bmi-01');
     const quickQuestionBtn = page.locator('button:has-text("What does this indicator measure?")');
     await quickQuestionBtn.click();
-    await page.waitForTimeout(3000);
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '07-assistant.png'), fullPage: true });
   });
 });

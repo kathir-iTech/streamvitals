@@ -40,6 +40,15 @@ function txError(err: DOMException | null): string {
   return err.message || 'IndexedDB operation failed';
 }
 
+function blobToDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
 export interface FieldIndicatorRecord {
   indicatorId: string;
   indicatorName: string;
@@ -135,7 +144,7 @@ export async function savePhoto(photoId: string, sessionId: string, indicatorId:
   }
 }
 
-export async function getSessionPhotos(sessionId: string): Promise<{ photoId: string; indicatorId: string; timestamp: string }[]> {
+export async function getSessionPhotos(sessionId: string): Promise<{ photoId: string; indicatorId: string; timestamp: string; dataUrl: string }[]> {
   try {
     const db = await openDB();
     return new Promise((resolve) => {
@@ -143,9 +152,18 @@ export async function getSessionPhotos(sessionId: string): Promise<{ photoId: st
       const store = tx.objectStore('photos');
       const index = store.index('by-session');
       const request = index.getAll(sessionId);
-      request.onsuccess = () => {
+      request.onsuccess = async () => {
         const results = request.result || [];
-        resolve(results.map((p: any) => ({ photoId: p.photoId, indicatorId: p.indicatorId, timestamp: p.timestamp })));
+        const photosWithData = await Promise.all(results.map(async (p: any) => {
+          try {
+            const blob = p.data instanceof Blob ? p.data : new Blob([p.data]);
+            const dataUrl = await blobToDataUrl(blob);
+            return { photoId: p.photoId, indicatorId: p.indicatorId, timestamp: p.timestamp, dataUrl };
+          } catch {
+            return { photoId: p.photoId, indicatorId: p.indicatorId, timestamp: p.timestamp, dataUrl: '' };
+          }
+        }));
+        resolve(photosWithData);
       };
       request.onerror = () => { console.error('[IndexedDB] Photo read error:', txError(request.error)); resolve([]); };
     });
