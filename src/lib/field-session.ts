@@ -7,7 +7,7 @@ function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     try {
       const request = indexedDB.open(DB_NAME, DB_VERSION);
-      const timeout = setTimeout(() => { request.abort(); reject(new Error('IndexedDB timeout')); }, 3000);
+      const timeout = setTimeout(() => { (request as any).abort(); reject(new Error('IndexedDB timeout')); }, 3000);
       request.onupgradeneeded = (event) => {
         clearTimeout(timeout);
         const db = (event.target as IDBOpenDBRequest).result;
