@@ -12,7 +12,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     launchOptions: {
-      args: ['--font-render-hinting=none'],
+      args: ['--font-render-hinting=none', '--enable-indexeddb', '--enable-features=IndexedDB'],
     },
   },
   webServer: {
