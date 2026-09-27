@@ -98,8 +98,19 @@ test.describe.serial('StreamVitals Smoke Test', () => {
       await page.screenshot({ path: path.join(ARTIFACTS_DIR, `04-${indicatorId.toLowerCase()}-no-state-buttons.png`), fullPage: true });
     }
 
-    // Go back to BMI-01 to test review flow
-    await page.goto('/field/bmi-01');
+    // Go back to BMI-01 by clicking Previous (not URL navigation)
+    await page.locator('button:has-text("Previous")').click();
+    await page.waitForURL('/field/fcl-06');
+    await page.locator('button:has-text("Previous")').click();
+    await page.waitForURL('/field/inv-11');
+    await page.locator('button:has-text("Previous")').click();
+    await page.waitForURL('/field/bir-04');
+    await page.locator('button:has-text("Previous")').click();
+    await page.waitForURL('/field/bmi-01');
+    // Verify previously selected state still present after Previous navigation
+    await expect(page.locator('button:has-text("Diverse Sensitive Taxa")')).toHaveClass(/bg-\[rgba\(13,155,110,0\.06\)\]/);
+    await page.screenshot({ path: path.join(ARTIFACTS_DIR, '03d-bmi-01-prev-back.png'), fullPage: true });
+
     await page.locator('button:has-text("Next Indicator")').click();
     await page.waitForURL('/field/bir-04');
     await page.locator('button:has-text("Next Indicator")').click();
@@ -111,11 +122,15 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await page.locator('button:has-text("Next Indicator"), button:has-text("Review Session")').click();
     await page.waitForURL('/field/review');
 
-    // Step 5: Review page shows all indicators
+    // Step 5: Review page shows all indicators and non-zero photo count
     await expect(page).toHaveURL('/field/review');
     await expect(page.getByText('Benthic Macroinvertebrates')).toBeVisible();
     await expect(page.getByText('Birds')).toBeVisible();
     await expect(page.getByText('Invasive Alien Plants')).toBeVisible();
+    const photoCountEl = page.locator('.text-4xl.font-black').first();
+    await expect(photoCountEl).toBeVisible();
+    const photoCountText = await photoCountEl.textContent();
+    expect(parseInt(photoCountText || '0')).toBeGreaterThan(0);
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '05-review.png'), fullPage: true });
 
     // Step 6: Export triggers download
