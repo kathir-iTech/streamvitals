@@ -124,9 +124,13 @@ test.describe.serial('StreamVitals Smoke Test', () => {
 
     // Step 5: Review page shows all indicators and non-zero photo count
     await expect(page).toHaveURL('/field/review');
-    await expect(page.getByText('Benthic Macroinvertebrates')).toBeVisible();
-    await expect(page.getByText('Birds')).toBeVisible();
-    await expect(page.getByText('Invasive Alien Plants')).toBeVisible();
+    await expect(page.getByText('Benthic Macroinvertebrates').first()).toBeVisible();
+    await expect(page.getByText('Birds').first()).toBeVisible();
+    await expect(page.getByText('Invasive Alien Plants').first()).toBeVisible();
+    // Human-Readable Summary shows real selected states, not generic "pending lab analysis"
+    await expect(page.getByText('Diverse Sensitive Taxa').first()).toBeVisible();
+    // Lab samples show real sample IDs, pending analysis only for lab indicators
+    await expect(page.getByText(/SMP-.*-001/).first()).toBeVisible();
     const photoCountEl = page.locator('.text-4xl.font-black').first();
     await expect(photoCountEl).toBeVisible();
     const photoCountText = await photoCountEl.textContent();
@@ -142,8 +146,11 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     }
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '06-export.png'), fullPage: true });
 
-    // Step 7: Field Assistant bounded scope
+    // Step 7: Field Assistant bounded scope (collapsed by default, opens on toggle)
     await page.goto('/field/bmi-01');
+    await expect(page.locator('button[aria-label="Open Field Assistant"]')).toBeVisible();
+    await page.locator('button[aria-label="Open Field Assistant"]').click();
+    await expect(page.locator('aside[aria-label="Field Assistant panel"]')).toBeVisible();
     const quickQuestionBtn = page.locator('button:has-text("What does this indicator measure?")');
     await quickQuestionBtn.click();
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '07-assistant.png'), fullPage: true });
