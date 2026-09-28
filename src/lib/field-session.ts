@@ -191,29 +191,10 @@ export async function deletePhoto(photoId: string): Promise<{ success: boolean; 
 }
 
 export async function getFullSession(sessionId: string): Promise<{ session?: FieldSession; photos: { photoId: string; indicatorId: string; timestamp: string; dataUrl: string }[] }> {
-  const indicatorNames = ['Benthic Macroinvertebrates', 'Birds', 'Invasive Alien Plants', 'Fecal Coliforms', 'Diatoms and Diatom Teratology'];
-  const indicatorIds = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
+  const session = await getSession(sessionId);
   const photos = await getSessionPhotos(sessionId);
-  return {
-    session: {
-      sessionId,
-      streamName: 'Test',
-      volunteer: '',
-      date: '',
-      startedAt: new Date().toISOString(),
-      indicators: indicatorIds.map((id, i) => ({
-        indicatorId: id,
-        indicatorName: indicatorNames[i],
-        type: i < 3 ? 'citizen_observable' : 'lab_only',
-        state: '',
-        photos: [],
-        notes: '',
-        timestamp: new Date().toISOString(),
-        status: i < 3 ? 'complete' : 'pending_lab_analysis',
-      })),
-    },
-    photos,
-  };
+  if (!session) return { photos };
+  return { session, photos };
 }
 
 export async function clearSession(sessionId: string): Promise<{ success: boolean; error?: string }> {

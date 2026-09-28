@@ -155,20 +155,28 @@ export default function ReviewPage() {
               <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Date:</span><span className="font-bold text-black">{session.date}</span></div>
               <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Session started:</span><span className="font-bold text-black">{session.startedAt}</span></div>
               <hr className="border-[rgba(0,0,0,0.06)]" />
-              {session.indicators.map((ind: any, i: number) => (
-                <div key={ind.indicatorId} className={`rounded p-2 ${ind.type === 'lab_only' ? 'bg-[rgba(232,93,58,0.04)]' : ''}`}>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-[rgba(0,0,0,0.4)]">{ind.type === 'lab_only' ? 'Lab Sample' : 'Observation'}</span>
-                    <span className={`text-xs px-4 py-1 rounded-full ${ind.type === 'lab_only' ? 'bg-[rgba(232,93,58,0.1)] text-[#e85d3a]' : 'bg-[rgba(13,155,110,0.08)] text-[#0d9b6e]'}`}>
-                      {ind.type === 'lab_only' ? 'Lab Sample' : 'Observation'}
-                    </span>
+              {session.indicators.map((ind: any) => {
+                const isLab = ind.type === 'lab_only';
+                const stateLabel = ind.state ? getStateLabel(ind.indicatorId, ind.state) : null;
+                return (
+                  <div key={ind.indicatorId} className={`rounded p-2 ${isLab ? 'bg-[rgba(232,93,58,0.04)]' : ''}`}>
+                    <div className="flex justify-between items-center gap-2">
+                      <span className="font-bold text-black text-sm">{ind.indicatorName} <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">({ind.indicatorId})</span></span>
+                      <span className={`text-xs px-4 py-1 rounded-full font-bold whitespace-nowrap ${isLab ? 'bg-[rgba(232,93,58,0.1)] text-[#e85d3a]' : 'bg-[rgba(13,155,110,0.08)] text-[#0d9b6e]'}`}>
+                        {isLab ? 'Lab Sample — Pending analysis' : (stateLabel || 'No observation recorded')}
+                      </span>
+                    </div>
+                    <div className="text-[rgba(0,0,0,0.4)] mt-1 ml-6 text-sm">
+                      {isLab ? (
+                        <>{ind.sampleLabel ? `Sample ${ind.sampleLabel}` : 'Sample pending lab analysis'}</>
+                      ) : (
+                        <>{stateLabel || 'No state selected'}</>
+                      )}
+                      {ind.notes && <span> — Notes recorded</span>}
+                    </div>
                   </div>
-                  <div className="text-[rgba(0,0,0,0.4)] mt-1 ml-6">
-                    {ind.state ? getStateLabel(ind.indicatorId, ind.state) : 'Pending laboratory analysis'}
-                    {ind.notes && <span> — Notes recorded</span>}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
               <hr className="border-[rgba(0,0,0,0.06)]" />
               <div className="flex justify-between text-[rgba(0,0,0,0.3)] text-xs">
                 <span>Total photos: {totalPhotos}</span>
