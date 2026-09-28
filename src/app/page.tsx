@@ -34,8 +34,9 @@ export default function HomePage() {
 
       <div className="max-w-5xl mx-auto px-6 py-16">
         <h2 className="text-3xl font-black tracking-tighter mb-8 text-black">Five Official Indicators</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {indicators.map((ind) => (
+        <h3 className="text-sm font-bold uppercase tracking-wider text-[#0d9b6e] mb-4">Field-observable (3)</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+          {indicators.filter((ind) => ind.citizen_observable && !ind.lab_only).map((ind) => (
             <a
               key={ind.id}
               href={`/field/${ind.id}`}
@@ -45,14 +46,34 @@ export default function HomePage() {
                 <span className="inline-block px-3 py-1 rounded-full bg-[rgba(13,155,110,0.08)] text-[#0d9b6e] text-xs font-bold uppercase tracking-wider">
                   {ind.id}
                 </span>
-                {ind.lab_only && (
-                  <span className="text-[10px] bg-[rgba(232,93,58,0.1)] text-[#e85d3a] px-3 py-1 rounded-full font-bold">Lab Required</span>
-                )}
               </div>
               <h3 className="text-lg font-bold text-black mb-2 group-hover:text-[#0d9b6e] transition-colors">{ind.name}</h3>
               <p className="text-sm text-[rgba(0,0,0,0.4)] mb-3">{ind.category}</p>
               <p className="text-xs text-[rgba(0,0,0,0.3)]">{ind.citizen_question.substring(0, 80)}...</p>
               <div className="mt-4 flex items-center text-[#0d9b6e] text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                Select indicator <ArrowRight className="w-4 h-4 ml-1" />
+              </div>
+            </a>
+          ))}
+        </div>
+        <h3 className="text-sm font-bold uppercase tracking-wider text-[#e85d3a] mb-4">Lab samples (2)</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {indicators.filter((ind) => ind.lab_only).map((ind) => (
+            <a
+              key={ind.id}
+              href={`/field/${ind.id}`}
+              className="bg-white border border-[rgba(0,0,0,0.06)] rounded-xl p-6 hover:border-[#e85d3a] hover:bg-[rgba(232,93,58,0.03)] transition-all cursor-pointer group"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="inline-block px-3 py-1 rounded-full bg-[rgba(13,155,110,0.08)] text-[#0d9b6e] text-xs font-bold uppercase tracking-wider">
+                  {ind.id}
+                </span>
+                <span className="text-[10px] bg-[rgba(232,93,58,0.1)] text-[#e85d3a] px-3 py-1 rounded-full font-bold">Lab Required</span>
+              </div>
+              <h3 className="text-lg font-bold text-black mb-2 group-hover:text-[#e85d3a] transition-colors">{ind.name}</h3>
+              <p className="text-sm text-[rgba(0,0,0,0.4)] mb-3">{ind.category}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.3)]">{ind.citizen_question.substring(0, 80)}...</p>
+              <div className="mt-4 flex items-center text-[#e85d3a] text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
                 Select indicator <ArrowRight className="w-4 h-4 ml-1" />
               </div>
             </a>

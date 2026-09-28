@@ -1,9 +1,10 @@
 'use client';
 
-import { use, useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, ArrowRight, Shield } from 'lucide-react';
+import { use, useState, useEffect, useCallback, useMemo } from 'react';
+import { ArrowLeft, ArrowRight, Shield, AlertTriangle } from 'lucide-react';
 import { indicators } from '@/data/indicators';
 import { createSession, getSession, updateSession } from '@/lib/field-session';
+import { checkNoteQuality } from '@/lib/note-quality';
 import BoundedAssistant from '@/components/BoundedAssistant';
 import PhotoCapture from '@/components/PhotoCapture';
 
@@ -41,6 +42,11 @@ const [selectedState, setSelectedState] = useState<string>('');
   const stateLabels = indicator?.citizen_state_labels || {};
   const stateKeys = (indicator?.states || []).map((s: any) => s.id);
   const progress = ((currentIndex + 1) / FIELD_INDICATORS.length) * 100;
+  const noteQuality = useMemo(
+    () => checkNoteQuality(indicatorId, selectedState, notes),
+    [indicatorId, selectedState, notes]
+  );
+  const noteBlocked = isCitizen && notes.trim().length > 0 && !noteQuality.ok;
 
   const handleStateSelect = useCallback((state: string) => {
     setSelectedState(state);
@@ -192,6 +198,19 @@ const [selectedState, setSelectedState] = useState<string>('');
                   suppressHydrationWarning
                   className="w-full px-4 py-3 bg-[#f5faf7] border border-[rgba(0,0,0,0.08)] rounded-xl text-black placeholder-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none transition-all resize-none text-sm font-medium"
                 />
+                {noteBlocked && (
+                  <div data-testid="note-quality-warning" role="alert" className="mt-2 bg-[rgba(232,93,58,0.06)] border border-[rgba(232,93,58,0.2)] rounded-xl p-4">
+                    <p className="text-sm font-bold text-[#e85d3a] flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4" /> Check your note before continuing
+                    </p>
+                    <ul className="mt-2 space-y-1">
+                      {noteQuality.issues.map((issue, i) => (
+                        <li key={i} className="text-sm text-[rgba(0,0,0,0.6)]">• {issue.message}</li>
+                      ))}
+                    </ul>
+                    <p className="text-xs text-[rgba(0,0,0,0.4)] mt-2">AI checks what you wrote — it never decides water quality. Edit your note or observation to continue.</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -208,7 +227,7 @@ const [selectedState, setSelectedState] = useState<string>('');
           </button>
           <button
             onClick={handleNext}
-            disabled={saving || (isCitizen && !selectedState)}
+            disabled={saving || (isCitizen && !selectedState) || noteBlocked}
             className="flex-1 flex items-center justify-center gap-2 px-6 py-3 btn-pill-accent disabled:opacity-30 disabled:cursor-not-allowed"
           >
             {saving ? 'Saving...' : (currentIndex === FIELD_INDICATORS.length - 1 ? 'Review Session' : 'Next Indicator')}
@@ -216,9 +235,7 @@ const [selectedState, setSelectedState] = useState<string>('');
           </button>
         </div>
       </div>
-      <div className="hidden lg:block fixed right-0 top-0 h-full w-72 border-l border-[rgba(0,0,0,0.06)] p-4 overflow-y-auto bg-[#f5faf7]">
-        <BoundedAssistant indicatorId={indicatorId} />
-      </div>
+      <BoundedAssistant indicatorId={indicatorId} />
     </main>
   );
 }

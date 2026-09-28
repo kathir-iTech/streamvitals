@@ -38,6 +38,7 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const [open, setOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const content = getIndicatorContent(indicatorId);
 
@@ -57,9 +58,10 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
 
   const scrollToBottom = () => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); };
 
-  const handleSend = useCallback(async () => {
-    if (!input.trim() || loading) return;
-    const userMessage: AssistantMessage = { role: 'user', content: input, timestamp: new Date(), source: 'factsheet' };
+  const handleSend = useCallback(async (overrideText?: string) => {
+    const text = (overrideText ?? input).trim();
+    if (!text || loading) return;
+    const userMessage: AssistantMessage = { role: 'user', content: text, timestamp: new Date(), source: 'factsheet' };
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setLoading(true);
@@ -68,7 +70,7 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
         const response = getOfflineResponse(content, indicatorId);
         setMessages((prev) => [...prev, { role: 'assistant', content: response, timestamp: new Date(), source: 'offline' }]);
       } else {
-        const groqResponse = await callGroq(indicatorId, input);
+        const groqResponse = await callGroq(indicatorId, text);
         setMessages((prev) => [...prev, { role: 'assistant', content: groqResponse, timestamp: new Date(), source: 'groq' }]);
       }
     } catch {
@@ -79,16 +81,31 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
     }
   }, [input, loading, isOnline, content, indicatorId]);
 
-  const handleQuickQuestion = (question: string) => { setInput(question); handleSend(); };
+  const handleQuickQuestion = (question: string) => { void handleSend(question); };
   const handleKeyDown = (e: React.KeyboardEvent) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
   const handleClear = () => { setMessages([]); };
 
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        aria-label="Open Field Assistant"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-5 py-3 bg-[#0d9b6e] text-white rounded-full shadow-lg hover:bg-[#0a7d58] transition-all text-sm font-bold"
+      >
+        <Bot className="w-4 h-4" /> Field Assistant
+      </button>
+    );
+  }
+
   return (
-    <aside className="w-64 bg-[#f5faf7] border-l border-[rgba(0,0,0,0.06)] flex flex-col h-full">
+    <aside className="fixed right-0 top-0 h-full w-80 max-w-[90vw] z-40 bg-[#f5faf7] border-l border-[rgba(0,0,0,0.06)] flex flex-col shadow-xl" aria-label="Field Assistant panel">
       <div className="p-4 border-b border-[rgba(0,0,0,0.06)]">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-bold text-black flex items-center gap-2"><Bot className="w-4 h-4 text-[#0d9b6e]" /> Field Assistant</h3>
-          <button onClick={handleClear} className="text-[rgba(0,0,0,0.2)] hover:text-black transition-colors"><X className="w-3 h-3" /></button>
+          <div className="flex items-center gap-2">
+            <button onClick={handleClear} aria-label="Clear assistant history" className="text-[rgba(0,0,0,0.2)] hover:text-black transition-colors text-[10px] font-bold px-2 py-1">Clear</button>
+            <button onClick={() => setOpen(false)} aria-label="Close Field Assistant" className="text-[rgba(0,0,0,0.2)] hover:text-black transition-colors"><X className="w-4 h-4" /></button>
+          </div>
         </div>
         <div className="bg-white rounded-lg p-2.5 border border-[rgba(0,0,0,0.06)]">
           <div className="flex items-start gap-2">
@@ -146,7 +163,7 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
                   suppressHydrationWarning
                   className="flex-1 px-3 py-2 bg-white border border-[rgba(0,0,0,0.08)] rounded-full text-xs text-black placeholder-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none disabled:opacity-40"
                 />
-            <button onClick={handleSend} disabled={loading || !input.trim()} className="px-3 py-2 bg-[#0d9b6e] text-white rounded-full hover:bg-[#0a7d58] disabled:opacity-40 transition-all">
+            <button onClick={() => void handleSend()} disabled={loading || !input.trim()} aria-label="Send question" className="px-3 py-2 bg-[#0d9b6e] text-white rounded-full hover:bg-[#0a7d58] disabled:opacity-40 transition-all">
               {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
             </button>
           </div>
