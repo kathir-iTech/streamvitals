@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { Download, FileText, Printer } from 'lucide-react';
+import { Download, FileText, Printer, FlaskConical } from 'lucide-react';
 import { getFullSession } from '@/lib/field-session';
 import { indicators } from '@/data/indicators';
 
@@ -31,7 +31,7 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
       framework: 'OneAquaHealth Key Indicators',
       doi: '10.5281/zenodo.20345207',
       session: { sessionId: session.sessionId, streamName: session.streamName, volunteer: session.volunteer, date: session.date, startedAt: session.startedAt, completedAt: session.completedAt },
-      indicators: session.indicators.map((ind) => ({ indicatorId: ind.indicatorId, indicatorName: ind.indicatorName, type: ind.type, state: ind.state, status: ind.status, photos: result.photos.filter((p) => p.indicatorId === ind.indicatorId).map((p) => ({ photoId: p.photoId, timestamp: p.timestamp })), notes: ind.notes, sampleLabel: ind.sampleLabel, labProtocolGuidance: ind.labProtocolGuidance, timestamp: ind.timestamp })),
+      indicators: session.indicators.map((ind) => ({ indicatorId: ind.indicatorId, indicatorName: ind.indicatorName, type: ind.type, state: ind.state, status: ind.status, photos: result.photos.filter((p) => p.indicatorId === ind.indicatorId).map((p) => ({ photoId: p.photoId, timestamp: p.timestamp })), notes: ind.notes, note_flag: ind.note_flag || '', sampleLabel: ind.sampleLabel, labProtocolGuidance: ind.labProtocolGuidance, timestamp: ind.timestamp })),
     };
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -46,8 +46,8 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
     const result = await getFullSession(sessionId);
     if (!result.session) return;
     const session = result.session;
-    const headers = ['indicatorId', 'indicatorName', 'type', 'state', 'status', 'photos', 'notes', 'sampleLabel', 'timestamp'];
-    const rows = session.indicators.map((ind) => [ind.indicatorId, ind.indicatorName, ind.type, ind.state || '', ind.status, result.photos.filter((p) => p.indicatorId === ind.indicatorId).length.toString(), ind.notes.replace(/,/g, ';'), ind.sampleLabel || '', ind.timestamp]);
+    const headers = ['indicatorId', 'indicatorName', 'type', 'state', 'status', 'photos', 'notes', 'note_flag', 'sampleLabel', 'timestamp'];
+    const rows = session.indicators.map((ind) => [ind.indicatorId, ind.indicatorName, ind.type, ind.state || '', ind.status, result.photos.filter((p) => p.indicatorId === ind.indicatorId).length.toString(), (ind.notes || '').replace(/,/g, ';'), (ind.note_flag || '').replace(/,/g, ';'), ind.sampleLabel || '', ind.timestamp]);
     const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -84,6 +84,40 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
     a.click();
     URL.revokeObjectURL(url);
   }, [sessionId, getStateLabel]);
+
+  const generateLabSubmissionSheet = useCallback(async () => {
+    const result = await getFullSession(sessionId);
+    if (!result.session) return;
+    const session = result.session;
+    const labRecords = session.indicators.filter((ind) => ind.type === 'lab_only');
+    if (labRecords.length === 0) return;
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+    const esc = (v: string) => (v || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const lines: string[] = [];
+    lines.push('<!DOCTYPE html><html><head><title>Lab Submission Sheet</title>');
+    lines.push('<style>body{font-family:system-ui,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;color:#000;line-height:1.6}h1{color:#0d9b6e;border-bottom:2px solid #0d9b6e;padding-bottom:8px;font-size:24px}h2{font-size:16px;margin-top:28px}table{width:100%;border-collapse:collapse;margin:12px 0}th,td{border:1px solid #ccc;padding:8px 12px;text-align:left;font-size:12px;vertical-align:top}th{background:#0d9b6e;color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.04em}.id{font-family:ui-monospace,monospace;font-size:18px;font-weight:700;color:#0d9b6e}.meta{font-size:12px;color:#333}@media print{body{margin:0}}</style></head><body>');
+    lines.push('<h1>Lab Submission Sheet</h1>');
+    lines.push(`<p class="meta"><strong>Stream / Location:</strong> ${esc(session.streamName)} &nbsp;|&nbsp; <strong>Collector:</strong> ${esc(session.volunteer) || 'Not provided'} &nbsp;|&nbsp; <strong>Collection date:</strong> ${esc(session.date)}<br/><strong>Session ID:</strong> ${esc(session.sessionId)}</p>`);
+    for (const ind of labRecords) {
+      const photos = result.photos.filter((p) => p.indicatorId === ind.indicatorId);
+      lines.push('<h2>' + esc(ind.indicatorName) + ' (' + esc(ind.indicatorId) + ')</h2>');
+      lines.push('<table>');
+      lines.push('<tr><th>Sample ID (write on container)</th><td class="id">' + esc(ind.sampleLabel || 'not assigned') + '</td></tr>');
+      lines.push('<tr><th>Indicator</th><td>' + esc(ind.indicatorName) + ' (' + esc(ind.indicatorId) + ')</td></tr>');
+      lines.push('<tr><th>Collector</th><td>' + esc(session.volunteer || 'Not provided') + '</td></tr>');
+      lines.push('<tr><th>Location</th><td>' + esc(session.streamName) + '</td></tr>');
+      lines.push('<tr><th>Collection timestamp</th><td>' + esc(ind.timestamp) + '</td></tr>');
+      lines.push('<tr><th>Notes</th><td>' + (ind.notes ? esc(ind.notes) : '&mdash;') + '</td></tr>');
+      lines.push('<tr><th>Photos attached</th><td>' + photos.length + ' photo' + (photos.length === 1 ? '' : 's') + '</td></tr>');
+      lines.push('</table>');
+    }
+    lines.push('<p style="margin-top:30px;color:#888;font-size:11px">Fields above are only those collected in the field by StreamVitals Field Companion. No result, no assessment, no tier. Factsheets: doi:10.5281/zenodo.20345207</p>');
+    lines.push('</body></html>');
+    printWindow.document.write(lines.join('\n'));
+    printWindow.document.close();
+    setTimeout(() => printWindow.print(), 500);
+  }, [sessionId]);
 
   const handlePrint = useCallback(async () => {
     const result = await getFullSession(sessionId);
@@ -126,9 +160,12 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
          <button onClick={generateHumanReadable} disabled={exporting} className="btn-pill-outline text-sm flex items-center gap-2">
            <FileText className="w-4 h-4" /> Print Summary
          </button>
-         <button onClick={handlePrint} disabled={exporting} className="btn-pill-outline text-sm flex items-center gap-2">
-           <Printer className="w-4 h-4" /> Print Page
-         </button>
+          <button onClick={handlePrint} disabled={exporting} className="btn-pill-outline text-sm flex items-center gap-2">
+            <Printer className="w-4 h-4" /> Print Page
+          </button>
+          <button onClick={generateLabSubmissionSheet} disabled={exporting} className="btn-pill-outline text-sm flex items-center gap-2" data-testid="lab-submission-sheet">
+            <FlaskConical className="w-4 h-4" /> Lab Submission Sheet
+          </button>
       </div>
       <p className="text-xs text-[rgba(0,0,0,0.25)]">Export structured data aligned with the OneAquaHealth indicator framework.</p>
     </div>

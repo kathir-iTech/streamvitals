@@ -22,7 +22,9 @@
     },
     "source": "doi:10.5281/zenodo.20345207 — OneAquaHealth Key Indicators Factsheets",
     "lab_guidance": "Optional: preserve specimens for lab confirmation.",
-    "citation": "Schmeller, D., Calapez, A.R., Silva, J.P., Norte, A.C., Serra, S.R.Q., Dias, M., Silva, G.T., Bouchali, R., Loyau, A., Almeida, S.F.P., Schmitt, R., Chen, A., Ramos, J.A., Feio, M.J. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207"
+    "citation": "Schmeller, D., Calapez, A.R., Silva, J.P., Norte, A.C., Serra, S.R.Q., Dias, M., Silva, G.T., Bouchali, R., Loyau, A., Almeida, S.F.P., Schmitt, R., Chen, A., Ramos, J.A., Feio, M.J. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207",
+    "why_this_matters": "Healthy macroinvertebrate communities indicate clean water and functioning ecological processes, which are directly linked to human and animal health by supporting safe drinking water sources, fisheries and disease-limiting environments.",
+    "why_this_matters_source": "Importance of indicator — II. Benthic Macroinvertebrates (factsheet_text.txt)"
   },
   {
     "id": "BIR-04",
@@ -47,7 +49,9 @@
     },
     "source": "doi:10.5281/zenodo.20345207 — OneAquaHealth Key Indicators Factsheets",
     "lab_guidance": "Optional: photograph birds for expert confirmation.",
-    "citation": "Schmeller, D., Calapez, A.R., Silva, J.P., Norte, A.C., Serra, S.R.Q., Dias, M., Silva, G.T., Bouchali, R., Loyau, A., Almeida, S.F.P., Schmitt, R., Chen, A., Ramos, J.A., Feio, M.J. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207"
+    "citation": "Schmeller, D., Calapez, A.R., Silva, J.P., Norte, A.C., Serra, S.R.Q., Dias, M., Silva, G.T., Bouchali, R., Loyau, A., Almeida, S.F.P., Schmitt, R., Chen, A., Ramos, J.A., Feio, M.J. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207",
+    "why_this_matters": "The number of insectivorous bird species between areas differing in degree of urbanisation, and across habitat changes evaluated in long-term monitoring, will elucidate about the resilience of the ecosystem regarding pest control (disease vector mosquitoes, plant pests, etc), and the quality of cultural services that contribute to human well-being.",
+    "why_this_matters_source": "Importance of indicator — V. Birds (factsheet_text.txt)"
   },
   {
     "id": "INV-11",
@@ -72,7 +76,9 @@
     },
     "source": "doi:10.5281/zenodo.20345207 — OneAquaHealth Key Indicators Factsheets",
     "lab_guidance": "Optional: collect specimens for lab identification.",
-    "citation": "Schmeller, D., Calapez, A.R., Silva, J.P., Norte, A.C., Serra, S.R.Q., Dias, M., Silva, G.T., Bouchali, R., Loyau, A., Almeida, S.F.P., Schmitt, R., Chen, A., Ramos, J.A., Feio, M.J. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207"
+    "citation": "Schmeller, D., Calapez, A.R., Silva, J.P., Norte, A.C., Serra, S.R.Q., Dias, M., Silva, G.T., Bouchali, R., Loyau, A., Almeida, S.F.P., Schmitt, R., Chen, A., Ramos, J.A., Feio, M.J. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207",
+    "why_this_matters": "In terms of health impacts, AIPs, particularly angiosperms, are frequently associated with the production of allergenic pollen and toxic compounds, which can cause wounds, skin irritation, allergic reactions and poisoning. Additionally, IAPs may act as mediators of disease vectors (e.g., dipteran vectors, ticks) and allow the occurrence and proliferation of vector-borne diseases.",
+    "why_this_matters_source": "Importance of indicator — XI. Invasive Alien Plants of the riparian corridor (factsheet_text.txt)"
   },
   {
     "id": "FCL-06",
@@ -83,13 +89,15 @@
     "lab_only": true,
     "citizen_observable": false,
     "protocol_question": "Collect a 250mL water sample in a sterile container for laboratory membrane filtration (CFU/100mL).",
-    "citizen_question": "Collect a 250mL water sample in a sterile container for laboratory membrane filtration (CFU/100mL). This indicator requires laboratory analysis — you cannot determine the result in the field.",
-    "visual_anchor_guide": "Submerge sterile container 10cm below surface facing upstream. Seal tightly, label with sample ID, store at 4°C.",
+    "citizen_question": "Collect a 250mL water sample in a sterile container for laboratory membrane filtration (CFU/100mL).",
+    "visual_anchor_guide": "Collect water sample in sterile container. Filter on selective growth medium. Incubate at warm temperatures. Count colonies as CFU/100mL.",
     "states": [],
     "citizen_state_labels": {},
     "source": "doi:10.5281/zenodo.20345207 — OneAquaHealth Key Indicators Factsheets",
     "lab_guidance": "Requires membrane filtration or enzyme-substrate culture testing in an accredited laboratory (Method 9222 / ISO 9308-1). Cannot be evaluated visually in the field.",
-    "citation": "Schmeller, D., Calapez, A.R., Silva, J.P., Norte, A.C., Serra, S.R.Q., Dias, M., Silva, G.T., Bouchali, R., Loyau, A., Almeida, S.F.P., Schmitt, R., Chen, A., Ramos, J.A., Feio, M.J. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207"
+    "citation": "Schmeller, D., Calapez, A.R., Silva, J.P., Norte, A.C., Serra, S.R.Q., Dias, M., Silva, G.T., Bouchali, R., Loyau, A., Almeida, S.F.P., Schmitt, R., Chen, A., Ramos, J.A., Feio, M.J. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207",
+    "why_this_matters": "Their presence suggests inputs from human or animal waste and therefore a potential exposure to enteric pathogens including pathogenic bacteria, and parasites. This makes them a reliable early warning signal for the potential presence of harmful pathogens such as E. coli O157, Salmonella, or viruses (e.g. norovirus causing gastroenteritis) and parasites associated with gastrointestinal diseases.",
+    "why_this_matters_source": "Importance of indicator — VII. Fecal Coliforms (factsheet_text.txt)"
   },
   {
     "id": "DIA-10",
@@ -100,12 +108,14 @@
     "lab_only": true,
     "citizen_observable": false,
     "protocol_question": "Scrape periphytic diatoms from 5 submerged stones into a sample vial for slide preparation.",
-    "citizen_question": "Scrape periphytic diatoms from 5 submerged stones into a sample vial for slide preparation. This indicator requires laboratory analysis — you cannot determine the result in the field.",
-    "visual_anchor_guide": "Use a toothbrush to scrape 10cm² area per stone into distilled water vial. Preserve with 70% ethanol or Lugol's iodine.",
+    "citizen_question": "Scrape periphytic diatoms from 5 submerged stones into a sample vial for slide preparation.",
+    "visual_anchor_guide": "Scrape periphytic diatoms from submerged stones into sample vial. Clean with nitric acid and potassium dichromate. Prepare permanent slides using Naphrax®.",
     "states": [],
     "citizen_state_labels": {},
     "source": "doi:10.5281/zenodo.20345207 — OneAquaHealth Key Indicators Factsheets",
     "lab_guidance": "Requires nitric acid / potassium dichromate oxidation, resin mounting (Naphrax®), and microscopic valve identification (~400 valves) under 1000x magnification (EN 13942).",
-    "citation": "Schmeller, D., Calapez, A.R., Silva, J.P., Norte, A.C., Serra, S.R.Q., Dias, M., Silva, G.T., Bouchali, R., Loyau, A., Almeida, S.F.P., Schmitt, R., Chen, A., Ramos, J.A., Feio, M.J. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207"
+    "citation": "Schmeller, D., Calapez, A.R., Silva, J.P., Norte, A.C., Serra, S.R.Q., Dias, M., Silva, G.T., Bouchali, R., Loyau, A., Almeida, S.F.P., Schmitt, R., Chen, A., Ramos, J.A., Feio, M.J. (2026). OneAquaHealth Key Indicators Factsheets Collection. Zenodo. doi:10.5281/zenodo.20345207",
+    "why_this_matters": "Certain diatom species can form harmful algal blooms (HABs) in freshwater environments. These blooms can produce toxins and/or deplete oxygen levels in the water, harm aquatic organisms, leading to fish kills and posing risks to human health through contaminated water or food consumption.",
+    "why_this_matters_source": "Importance of indicator — I. Diatoms and diatom teratology (factsheet_text.txt)"
   }
 ]

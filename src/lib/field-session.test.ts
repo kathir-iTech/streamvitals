@@ -22,10 +22,11 @@ describe('field-session', () => {
     expect(result.success).toBe(true);
   });
 
-  it('returns error when session creation fails', async () => {
+  it('rejects a session with no sessionId, stream name, or start time', async () => {
     const badSession = { sessionId: '', streamName: '', volunteer: '', date: '', indicators: [], startedAt: '' };
     const result = await createSession(badSession);
     expect(result.success).toBe(false);
+    expect(result.error).toBeTruthy();
   });
 
   it('retrieves a session by ID', async () => {

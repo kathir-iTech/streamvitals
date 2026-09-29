@@ -4,6 +4,15 @@ import * as path from 'path';
 
 const ARTIFACTS_DIR = path.join(__dirname, 'artifacts');
 
+// Distinctive values typed by the test. If the review page shows anything else
+// (e.g. a hardcoded stub), these assertions fail.
+const STREAM_NAME = 'Zephyr Creek QA Marker 4821';
+const VOLUNTEER_NAME = 'Jordan Reyes QA Marker 77';
+const BMI_NOTES = 'Three riffle stones turned over, caddis cases on two of them.';
+
+// One photo is uploaded to BMI-01 in step 3a.
+const EXPECTED_PHOTO_COUNT = 1;
+
 test.describe.serial('StreamVitals Smoke Test', () => {
   test.beforeAll(() => {
     fs.mkdirSync(ARTIFACTS_DIR, { recursive: true });
@@ -22,7 +31,8 @@ test.describe.serial('StreamVitals Smoke Test', () => {
 
     // Step 2: Load /field, fill form, start session
     await page.goto('/field');
-    await page.fill('#stream-name', 'Cedar Creek Test');
+    await page.fill('#stream-name', STREAM_NAME);
+    await page.fill('#volunteer-name', VOLUNTEER_NAME);
     await page.fill('#session-date', new Date().toISOString().split('T')[0]);
     await page.fill('#session-time', new Date().toTimeString().slice(0, 5));
     await page.click('button:has-text("Start Monitoring Session")');
@@ -43,10 +53,10 @@ test.describe.serial('StreamVitals Smoke Test', () => {
 
     // Notes persist after state selection
     const notesField = page.locator('textarea[id*="notes-"]');
-    await notesField.fill('Test notes BMI-01');
-    await expect(notesField).toHaveValue('Test notes BMI-01');
+    await notesField.fill(BMI_NOTES);
+    await expect(notesField).toHaveValue(BMI_NOTES);
     await firstButton.click();
-    await expect(notesField).toHaveValue('Test notes BMI-01');
+    await expect(notesField).toHaveValue(BMI_NOTES);
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '03a-notes-persist.png'), fullPage: true });
 
     // Photo upload shows thumbnail without reload
@@ -90,12 +100,32 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await page.waitForURL('/field/fcl-06');
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '03c-fcl-06.png'), fullPage: true });
 
-    // Step 4: FCL-06 and DIA-10 have zero state selection buttons
+    // Step 4: FCL-06 and DIA-10 have zero state buttons, but DO have a sample ID,
+    // a photo capture control, and a notes field.
     for (const indicatorId of ['FCL-06', 'DIA-10']) {
       await page.goto(`/field/${indicatorId.toLowerCase()}`);
       const stateFieldsets = page.locator('fieldset[aria-label="Select your observation"]');
       await expect(stateFieldsets).toHaveCount(0);
-      await page.screenshot({ path: path.join(ARTIFACTS_DIR, `04-${indicatorId.toLowerCase()}-no-state-buttons.png`), fullPage: true });
+
+      // Sample ID must be visible at the moment of collection.
+      // It loads asynchronously from IndexedDB, so wait for it to appear.
+      const sampleId = page.locator('[data-testid="sample-id-value"]');
+      await expect(sampleId).toBeVisible({ timeout: 10000 });
+      await expect(sampleId).toHaveText(/^SMP-\d{8}-\d{3}$/);
+      await expect(page.getByText('Write this ID on the container')).toBeVisible();
+
+      // Photo capture and notes must be present on lab pages
+      await expect(page.locator('button[aria-label="Capture photo"]')).toBeVisible();
+      await expect(page.locator('input[type="file"]')).toHaveCount(1);
+      const labNotes = page.locator('textarea[id*="notes-"]');
+      await expect(labNotes).toBeVisible();
+
+      // The protocol sentence must appear exactly once, not duplicated
+      const protocolHeading = page.getByText('Laboratory Protocol Required');
+      await expect(protocolHeading).toHaveCount(1);
+      await expect(page.getByText('You cannot determine the result in the field')).toHaveCount(1);
+
+      await page.screenshot({ path: path.join(ARTIFACTS_DIR, `04-${indicatorId.toLowerCase()}-lab-page.png`), fullPage: true });
     }
 
     // Go back to BMI-01 by clicking Previous (not URL navigation)
@@ -122,19 +152,42 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await page.locator('button:has-text("Next Indicator"), button:has-text("Review Session")').click();
     await page.waitForURL('/field/review');
 
-    // Step 5: Review page shows all indicators and non-zero photo count
+    // Step 5: Review page shows the data that was actually typed/collected
     await expect(page).toHaveURL('/field/review');
     await expect(page.getByText('Benthic Macroinvertebrates').first()).toBeVisible();
     await expect(page.getByText('Birds').first()).toBeVisible();
     await expect(page.getByText('Invasive Alien Plants').first()).toBeVisible();
-    // Human-Readable Summary shows real selected states, not generic "pending lab analysis"
+
+    // CRITICAL: the stream name and volunteer typed at /field must appear on
+    // the review page. This guards against a stubbed/fabricated review page.
+    await expect(page.getByText(STREAM_NAME).first()).toBeVisible();
+    await expect(page.getByText(VOLUNTEER_NAME).first()).toBeVisible();
+    expect(await page.getByText('Not provided').count()).toBe(0);
+    expect(await page.getByText('Test').count()).toBe(0);
+
+    // Session date typed at /field must appear (not blank)
+    const sessionDate = new Date().toISOString().split('T')[0];
+    await expect(page.getByText(sessionDate).first()).toBeVisible();
+
+    // Human-Readable Summary shows real selected states, not generic "pending lab analysis".
+    // Each citizen indicator had its FIRST state button selected above, so these are
+    // the labels that must come back from the stored session.
     await expect(page.getByText('Diverse Sensitive Taxa').first()).toBeVisible();
-    // Lab samples show real sample IDs, pending analysis only for lab indicators
+    await expect(page.getByText('Multiple Species Observed').first()).toBeVisible();
+    await expect(page.getByText('No Invasive Species Observed').first()).toBeVisible();
+
+    // Lab samples show real sample IDs
     await expect(page.getByText(/SMP-.*-001/).first()).toBeVisible();
-    const photoCountEl = page.locator('.text-4xl.font-black').first();
-    await expect(photoCountEl).toBeVisible();
-    const photoCountText = await photoCountEl.textContent();
-    expect(parseInt(photoCountText || '0')).toBeGreaterThan(0);
+    await expect(page.getByText(/SMP-.*-002/).first()).toBeVisible();
+
+    // CRITICAL: the uploaded photo count must match what the review page displays.
+    // 1 photo was uploaded to BMI-01 during step 3a.
+    const photoCountEl = page.locator('[data-testid="photo-total"]');
+    await expect(photoCountEl).toHaveText(String(EXPECTED_PHOTO_COUNT));
+    await expect(page.getByText('1 photo').first()).toBeVisible();
+
+    // Notes typed on the indicator page must appear on the review page
+    await expect(page.getByText(BMI_NOTES).first()).toBeVisible();
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '05-review.png'), fullPage: true });
 
     // Step 6: Export triggers download

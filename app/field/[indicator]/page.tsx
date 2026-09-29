@@ -1,7 +1,7 @@
 'use client';
 
 import { use, useState, useEffect, useCallback, useMemo } from 'react';
-import { ArrowLeft, ArrowRight, Shield, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Shield, AlertTriangle, FlaskConical } from 'lucide-react';
 import { indicators } from '@/data/indicators';
 import { updateSession, getSession, createSession } from '@/lib/field-session';
 import { checkNoteQuality } from '@/lib/note-quality';
@@ -22,6 +22,8 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
   const [notes, setNotes] = useState<string>('');
   const [photos, setPhotos] = useState<string[]>([]);
   const [sessionId, setSessionId] = useState<string>('');
+  const [sampleLabel, setSampleLabel] = useState<string>('');
+  const [noteFlag, setNoteFlag] = useState<string>('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -34,7 +36,12 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
     getSession(sessionId).then((session) => {
       if (session && !session.completedAt) {
         const indicatorRecord = session.indicators.find((ind: any) => ind.indicatorId === indicatorId);
-        if (indicatorRecord) setSelectedState(indicatorRecord.state || '');
+        if (indicatorRecord) {
+          setSelectedState(indicatorRecord.state || '');
+          setNotes(indicatorRecord.notes || '');
+          setNoteFlag(indicatorRecord.note_flag || '');
+          if (indicatorRecord.sampleLabel) setSampleLabel(indicatorRecord.sampleLabel);
+        }
       }
     }).catch(() => {});
   }, [sessionId, indicatorId]);
@@ -46,13 +53,18 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
     () => checkNoteQuality(indicatorId, selectedState, notes),
     [indicatorId, selectedState, notes]
   );
-  const noteBlocked = isCitizen && notes.trim().length > 0 && !noteQuality.ok;
+  // Warns rather than blocks: once the volunteer explicitly chooses to keep the
+  // note, noteFlag is set and the warning clears.
+  const noteBlocked = !noteFlag && isCitizen && notes.trim().length > 0 && !noteQuality.ok;
+  const pendingFlag = !noteFlag && noteQuality.issues.length > 0
+    ? noteQuality.issues.map((i) => i.kind).join(';')
+    : '';
 
   const handleStateSelect = useCallback((state: string) => {
     setSelectedState(state);
   }, []);
 
-const handleSaveIndicator = useCallback(async () => {
+  const handleSaveIndicator = useCallback(async () => {
     if (!sessionId) return;
     setSaving(true);
     try {
@@ -60,7 +72,14 @@ const handleSaveIndicator = useCallback(async () => {
       if (result) {
         const updatedIndicators = result.indicators.map((ind: any) => {
           if (ind.indicatorId === indicatorId) {
-            return { ...ind, state: selectedState || undefined, photos, notes, timestamp: new Date().toISOString() };
+            return {
+              ...ind,
+              state: selectedState || undefined,
+              photos,
+              notes,
+              note_flag: noteFlag || (isCitizen ? pendingFlag : ''),
+              timestamp: new Date().toISOString(),
+            };
           }
           return ind;
         });
@@ -79,6 +98,7 @@ const handleSaveIndicator = useCallback(async () => {
             state: selectedState || undefined,
             photos,
             notes,
+            note_flag: noteFlag || (isCitizen ? pendingFlag : ''),
             timestamp: now,
             status: isCitizen ? 'complete' as const : 'pending_lab_analysis' as const,
           }],
@@ -91,7 +111,7 @@ const handleSaveIndicator = useCallback(async () => {
     } finally {
       setSaving(false);
     }
-}, [sessionId, indicatorId, selectedState, notes, photos, indicator, isCitizen]);
+  }, [sessionId, indicatorId, selectedState, notes, photos, indicator, isCitizen, noteFlag, pendingFlag]);
 
   const handleNext = useCallback(async () => {
     await handleSaveIndicator();
@@ -141,23 +161,43 @@ const handleSaveIndicator = useCallback(async () => {
         </div>
 
         <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-3 text-black leading-[1.05]">{indicator.name}</h1>
-        <p className="text-lg text-[rgba(0,0,0,0.5)] mb-8 max-w-2xl">{indicator.citizen_question}</p>
+        <p className="text-lg text-[rgba(0,0,0,0.5)] mb-6 max-w-2xl">{indicator.citizen_question}</p>
+
+        {indicator.why_this_matters && (
+          <div className="bg-[rgba(13,155,110,0.04)] border border-[rgba(13,155,110,0.12)] rounded-xl p-5 mb-6">
+            <p className="text-sm font-bold text-[#0d9b6e] mb-1.5">Why this matters — One Health</p>
+            <p className="text-sm text-[rgba(0,0,0,0.6)] leading-relaxed">{indicator.why_this_matters}</p>
+            {indicator.why_this_matters_source && (
+              <p className="text-[11px] text-[rgba(0,0,0,0.35)] mt-2 italic">Source: {indicator.why_this_matters_source}</p>
+            )}
+          </div>
+        )}
 
         <div className="step-card mb-8" suppressHydrationWarning>
+          {isLabOnly && sampleLabel && (
+            <div className="bg-[#0d9b6e] text-white rounded-xl p-6 mb-6" data-testid="sample-id-card">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-white/70 mb-2">Write this ID on the container</p>
+              <p className="text-4xl font-black tracking-tighter font-mono" data-testid="sample-id-value">{sampleLabel}</p>
+              <p className="text-xs text-white/80 mt-2">Write this exact ID on the bottle or container before it goes to the lab.</p>
+            </div>
+          )}
+
           <div className="flex items-start gap-3 mb-6">
             <Shield className="w-5 h-5 text-[#0d9b6e] flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-bold text-[#0d9b6e]">Visual Anchor</p>
+              <p className="text-sm font-bold text-[#0d9b6e]">{isLabOnly ? 'Collection Protocol' : 'Visual Anchor'}</p>
               <p className="text-sm text-[rgba(0,0,0,0.5)] mt-1">{indicator.visual_anchor_guide}</p>
             </div>
           </div>
+
           {isLabOnly && (
             <div className="mt-4 bg-[rgba(232,93,58,0.04)] border border-[rgba(232,93,58,0.12)] rounded-xl p-5">
-              <p className="text-[#e85d3a] text-sm font-bold mb-2">Laboratory Protocol Required</p>
-              <p className="text-[rgba(0,0,0,0.6)] text-sm leading-relaxed">{indicator.visual_anchor_guide}</p>
-              <p className="text-[#e85d3a] text-sm mt-3 font-medium">This requires laboratory analysis. You cannot determine the result in the field.</p>
+              <p className="text-[#e85d3a] text-sm font-bold mb-2 flex items-center gap-2"><FlaskConical className="w-4 h-4" /> Laboratory Protocol Required</p>
+              <p className="text-[rgba(0,0,0,0.6)] text-sm leading-relaxed">{indicator.lab_guidance || indicator.protocol_question}</p>
+              <p className="text-[#e85d3a] text-sm mt-3 font-medium">You cannot determine the result in the field.</p>
             </div>
           )}
+
           {isCitizen && stateKeys.length > 0 && (
             <fieldset className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label="Select your observation">
               {stateKeys.map((state) => {
@@ -184,36 +224,58 @@ const handleSaveIndicator = useCallback(async () => {
               })}
             </fieldset>
           )}
-          {isCitizen && (
-            <div className="mt-6 space-y-4">
-              <PhotoCapture sessionId={sessionId} indicatorId={indicatorId} onPhotosChange={(ids) => setPhotos(ids)} />
-              <div>
-                <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor={`notes-${indicatorId}`}>Field Notes</label>
-<textarea
-                   id={`notes-${indicatorId}`}
-                   placeholder="Optional observations, weather conditions, equipment used..."
-                   rows={3}
-                   value={notes}
-                   onChange={(e) => setNotes(e.target.value)}
-                   suppressHydrationWarning
-                   className="w-full px-4 py-3 bg-[#f5faf7] border border-[rgba(0,0,0,0.08)] rounded-xl text-black placeholder-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none transition-all resize-none text-sm font-medium"
-                 />
-                {noteBlocked && (
-                  <div data-testid="note-quality-warning" role="alert" className="mt-2 bg-[rgba(232,93,58,0.06)] border border-[rgba(232,93,58,0.2)] rounded-xl p-4">
-                    <p className="text-sm font-bold text-[#e85d3a] flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4" /> Check your note before continuing
-                    </p>
-                    <ul className="mt-2 space-y-1">
-                      {noteQuality.issues.map((issue, i) => (
-                        <li key={i} className="text-sm text-[rgba(0,0,0,0.6)]">• {issue.message}</li>
-                      ))}
-                    </ul>
-                    <p className="text-xs text-[rgba(0,0,0,0.4)] mt-2">AI checks what you wrote — it never decides water quality. Edit your note or observation to continue.</p>
-                  </div>
-                )}
-              </div>
+
+          <div className="mt-6 space-y-4" suppressHydrationWarning>
+            <PhotoCapture sessionId={sessionId} indicatorId={indicatorId} onPhotosChange={(ids) => setPhotos(ids)} />
+            <div>
+              <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor={`notes-${indicatorId}`}>
+                {isLabOnly ? 'Sampling Notes' : 'Field Notes'}
+              </label>
+              <textarea
+                id={`notes-${indicatorId}`}
+                placeholder={isLabOnly
+                  ? 'Collection time, weather, sample condition, handling notes...'
+                  : 'Optional observations, weather conditions, equipment used...'}
+                rows={3}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                suppressHydrationWarning
+                className="w-full px-4 py-3 bg-[#f5faf7] border border-[rgba(0,0,0,0.08)] rounded-xl text-black placeholder-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none transition-all resize-none text-sm font-medium"
+              />
+              {noteBlocked && (
+                <div data-testid="note-quality-warning" role="alert" className="mt-2 bg-[rgba(232,93,58,0.06)] border border-[rgba(232,93,58,0.2)] rounded-xl p-4">
+                  <p className="text-sm font-bold text-[#e85d3a] flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4" /> Check your note before continuing
+                  </p>
+                  <ul className="mt-2 space-y-1">
+                    {noteQuality.issues.map((issue, i) => (
+                      <li key={i} className="text-sm text-[rgba(0,0,0,0.6)]">• {issue.message}</li>
+                    ))}
+                  </ul>
+                  <p className="text-xs text-[rgba(0,0,0,0.4)] mt-2">This is a rule-based wording check, not AI. It only looks for assessment words and notes that contradict your selection. It never judges the water.</p>
+                  <button
+                    onClick={() => setNoteFlag(pendingFlag)}
+                    data-testid="keep-note-override"
+                    className="mt-3 btn-pill-outline text-xs"
+                  >
+                    Keep my note anyway
+                  </button>
+                </div>
+              )}
+              {noteFlag && (
+                <div data-testid="note-flag-recorded" className="mt-2 bg-[rgba(13,155,110,0.06)] border border-[rgba(13,155,110,0.2)] rounded-xl p-3 flex items-center justify-between gap-3 flex-wrap">
+                  <p className="text-xs text-[#0d9b6e] font-medium">Note kept, with a recorded flag ({noteFlag}). It will be marked in the export.</p>
+                  <button
+                    onClick={() => { setNoteFlag(''); setNotes(''); }}
+                    data-testid="clear-note-override"
+                    className="text-xs text-[rgba(0,0,0,0.4)] underline hover:text-black"
+                  >
+                    Clear and rewrite
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
         <div className="flex gap-3">
@@ -225,12 +287,12 @@ const handleSaveIndicator = useCallback(async () => {
           >
             <ArrowLeft className="w-4 h-4" /> Previous
           </button>
-<button
+          <button
             onClick={handleNext}
             disabled={saving || (isCitizen && !selectedState) || noteBlocked}
             className="flex-1 flex items-center justify-center gap-2 px-6 py-3 btn-pill-accent disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            {currentIndex === FIELD_INDICATORS.length - 1 ? 'Review Session' : 'Next Indicator'}
+            {saving ? 'Saving...' : (currentIndex === FIELD_INDICATORS.length - 1 ? 'Review Session' : 'Next Indicator')}
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>

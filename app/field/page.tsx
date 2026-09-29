@@ -131,6 +131,19 @@ export default function FieldPage() {
               </div>
               <div className="flex gap-3">
                 <div className="flex-1">
+                  <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor="volunteer-name">Volunteer Name</label>
+                  <input
+                    id="volunteer-name"
+                    type="text"
+                    value={volunteer}
+                    onChange={(e) => setVolunteer(e.target.value)}
+                    placeholder="e.g., Jordan Reyes"
+                    className="w-full px-4 py-3 bg-[#f5faf7] border border-[rgba(0,0,0,0.08)] rounded-full text-black placeholder-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none transition-all text-sm font-medium"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="flex-1">
                   <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor="session-date">Date</label>
                   <input id="session-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full px-4 py-3 bg-[#f5faf7] border border-[rgba(0,0,0,0.08)] rounded-full text-black focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none text-sm font-medium" />
                 </div>

@@ -56,6 +56,7 @@ export interface FieldIndicatorRecord {
   state?: string;
   photos: string[];
   notes: string;
+  note_flag?: string;
   timestamp: string;
   sampleLabel?: string;
   labProtocolGuidance?: string;
@@ -73,6 +74,15 @@ export interface FieldSession {
 }
 
 export async function createSession(session: FieldSession): Promise<{ success: boolean; error?: string }> {
+  if (!session.sessionId || !session.sessionId.trim()) {
+    return { success: false, error: 'sessionId is required' };
+  }
+  if (!session.streamName || !session.streamName.trim()) {
+    return { success: false, error: 'streamName is required' };
+  }
+  if (!session.startedAt) {
+    return { success: false, error: 'startedAt is required' };
+  }
   try {
     const db = await openDB();
     return new Promise((resolve) => {

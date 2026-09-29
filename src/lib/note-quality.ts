@@ -25,6 +25,29 @@ interface ContradictionRule {
   describe: string;
 }
 
+// A bare taxon name is not a contradiction if the volunteer wrote it under a
+// negation ("did not see knotweed", "no mayfly found"). Without this guard the
+// rules flag ordinary sentences that actually agree with the selected state.
+const NEGATORS = new Set([
+  'no', 'not', 'never', 'none', 'nothing', 'without', 'zero', 'absent',
+  'neither', 'nor', 'cannot', 'cant', "can't", 'didnt', "didn't", 'wasnt',
+  "wasn't", 'werent', "weren't", 'isnt', "isn't", 'arent', "aren't", 'dont',
+  "don't", 'doesnt', "doesn't", 'unable', 'failed', 'sign', 'signs', 'trace',
+  'traces', 'evidence', ' sighting', 'sightings',
+]);
+
+function isNegated(text: string, index: number): boolean {
+  const before = text.slice(Math.max(0, index - 60), index).toLowerCase();
+  const words = before.replace(/[^a-z'\s-]/g, ' ').split(/[\s-]+/).filter(Boolean);
+  for (let i = words.length - 1; i >= 0; i--) {
+    if (NEGATORS.has(words[i])) return true;
+    // Coordination ("did not see knotweed or balsam") keeps the negation alive,
+    // so allow a few filler words before giving up.
+    if (words.length - 1 - i >= 5) break;
+  }
+  return false;
+}
+
 const CONTRADICTION_RULES: Record<string, ContradictionRule[]> = {
   'BMI-01': [
     {
@@ -92,7 +115,7 @@ export function checkNoteQuality(indicatorId: string, selectedState: string, not
       if (rule.state !== selectedState) continue;
       for (const pattern of rule.patterns) {
         const m = text.match(pattern);
-        if (m) {
+        if (m && m.index !== undefined && !isNegated(text, m.index)) {
           issues.push({
             kind: 'contradiction',
             matched: m[0],

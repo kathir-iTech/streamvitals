@@ -39,7 +39,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="flex items-center gap-6 text-sm font-medium">
               <Link href="/" className="text-[rgba(0,0,0,0.5)] hover:text-black transition-colors">Home</Link>
               <Link href="/field" className="text-[rgba(0,0,0,0.5)] hover:text-black transition-colors">Field Companion</Link>
-              <Link href="/field" className="nav-pill">Log in →</Link>
             </div>
           </div>
         </nav>

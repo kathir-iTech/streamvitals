@@ -21,6 +21,8 @@ export interface Indicator {
   source: string;
   lab_guidance?: string;
   citation: string;
+  why_this_matters?: string;
+  why_this_matters_source?: string;
 }
 
 export const indicators: Indicator[] = indicatorsData as unknown as Indicator[];

@@ -86,7 +86,7 @@ export default function ReviewPage() {
               <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1 font-medium">Indicators</p>
             </div>
             <div className="bg-white rounded-xl p-6 text-center border border-[rgba(0,0,0,0.04)]">
-              <p className="text-4xl font-black tracking-tighter text-[#0d9b6e]">{totalPhotos}</p>
+              <p className="text-4xl font-black tracking-tighter text-[#0d9b6e]" data-testid="photo-total">{totalPhotos}</p>
               <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1 font-medium">Photos</p>
             </div>
             <div className="bg-white rounded-xl p-6 text-center border border-[rgba(0,0,0,0.04)]">
@@ -135,6 +135,11 @@ export default function ReviewPage() {
                   )}
                   {ind.notes && (
                     <p className="text-sm text-[rgba(0,0,0,0.35)] ml-6 mt-1 italic">&ldquo;{ind.notes}&rdquo;</p>
+                  )}
+                  {ind.note_flag && (
+                    <p className="text-[11px] text-[#e85d3a] ml-6 mt-1 font-semibold" data-testid={`note-flag-${ind.indicatorId}`}>
+                      Note flagged: {ind.note_flag} (kept by volunteer)
+                    </p>
                   )}
                 </div>
               );

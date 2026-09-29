@@ -9,19 +9,21 @@ export default defineConfig({
   workers: 1,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     launchOptions: {
-      args: ['--font-render-hinting=none', '--enable-indexeddb', '--enable-features=IndexedDB'],
+      args: ['--font-render-hinting=none'],
     },
   },
-  webServer: {
-    command: 'npx next dev',
-    url: 'http://localhost:3000',
-    timeout: 60000,
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: process.env.PLAYWRIGHT_BASE_URL
+    ? undefined
+    : {
+        command: 'npx next start',
+        url: 'http://localhost:3000',
+        timeout: 120000,
+        reuseExistingServer: false,
+      },
   projects: [
     {
       name: 'chromium',
