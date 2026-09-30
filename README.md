@@ -14,6 +14,8 @@ A citizen answers guided questions about an urban stream across five official On
 
 The citizen selects observation states, optionally captures photos, and adds field notes. All data is stored persistently in IndexedDB and exported via CSV, JSON, or a printable **Lab Submission Sheet**.
 
+Offline boundary: data entry keeps working without connectivity on an already-open session, but loading a new page and reaching the AI assistant both require a connection. There is no service worker, so this is a documented fallback, not offline-first.
+
 A bounded **AI Field Assistant** answers questions using only the OneAquaHealth Key Indicators factsheets (doi:10.5281/zenodo.20345207). It never identifies species beyond what's in the factsheet, never gives opinions on water quality or health, and never assigns tiers, scores, or severity levels.
 
 **AI may interpret input. AI may not adjudicate.**
