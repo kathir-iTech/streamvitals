@@ -207,5 +207,27 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     const quickQuestionBtn = page.locator('button:has-text("What does this indicator measure?")');
     await quickQuestionBtn.click();
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '07-assistant.png'), fullPage: true });
+
+    // Step 8: Offline assistant scope (no GROQ_API_KEY in test env, so the
+    // route takes its offline branch). An out-of-scope question must get the
+    // refusal, an in-scope equipment question must get the factsheet card —
+    // genuinely different answers, not the same canned text twice.
+    const outOfScopeRes = await page.request.post('/api/ai/assistant', {
+      data: { indicatorId: 'BMI-01', question: 'What is the purpose of this work?' },
+    });
+    expect(outOfScopeRes.ok()).toBe(true);
+    const outOfScopeBody = await outOfScopeRes.json();
+    expect(outOfScopeBody.source).toBe('offline');
+    expect(outOfScopeBody.response).toContain('falls outside that scope');
+
+    const inScopeRes = await page.request.post('/api/ai/assistant', {
+      data: { indicatorId: 'BMI-01', question: 'What equipment do I need for this sample?' },
+    });
+    expect(inScopeRes.ok()).toBe(true);
+    const inScopeBody = await inScopeRes.json();
+    expect(inScopeBody.source).toBe('offline');
+    expect(inScopeBody.response).not.toContain('falls outside that scope');
+    expect(inScopeBody.response).toContain('Offline reference for BMI-01');
+    expect(inScopeBody.response).not.toBe(outOfScopeBody.response);
   });
 });

@@ -57,6 +57,9 @@ export function isOutOfScope(question: string): boolean {
     'what result', 'is it contaminated', 'should i drink', 'is it safe',
     'assessment tier', 'what category', 'how polluted', 'what level of concern',
     'triage', 'severity', 'policy', 'adjudicate', 'evaluate', 'verdict',
+    'purpose of this work', 'purpose of the work',
+    'purpose of this project', 'purpose of the project',
+    'point of this work',
   ];
   return outOfScopeTerms.some((term) => lower.includes(term));
 }

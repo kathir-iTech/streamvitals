@@ -45,4 +45,13 @@ describe('factsheet-content', () => {
     expect(isOutOfScope('What macroinvertebrates do you see?')).toBe(false);
     expect(isOutOfScope('How many birds were observed?')).toBe(false);
   });
+
+  it('isOutOfScope returns true for purpose-of-work questions', () => {
+    expect(isOutOfScope('What is the purpose of this work?')).toBe(true);
+  });
+
+  it('isOutOfScope does not flag equipment or protocol questions', () => {
+    expect(isOutOfScope('What equipment do I need for this sample?')).toBe(false);
+    expect(isOutOfScope('What is the purpose of membrane filtration?')).toBe(false);
+  });
 });

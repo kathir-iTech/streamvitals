@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { isOutOfScope } from '@/lib/factsheet-content';
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
+// Same refusal the online path uses (system prompt) and the UI fallback uses.
+// Offline mode must distinguish out-of-scope questions instead of returning
+// the same generic card for everything.
+const OUT_OF_SCOPE_RESPONSE = "I'm equipped to answer using the OneAquaHealth protocol and factsheet definitions I have. This question falls outside that scope — please consult the official monitoring guide.";
 
 const OFFLINE_REPLIES: Record<string, string> = {
   'FCL-06': 'FCL-06 (Water Quality Parameters): Field data collection protocols for physicochemical parameters including temperature, pH, dissolved oxygen, conductivity, and turbidity. Use standardized probes at designated sampling points.',
@@ -8,6 +14,7 @@ const OFFLINE_REPLIES: Record<string, string> = {
 };
 
 function getOfflineReply(indicatorId: string, question: string): string {
+  if (typeof question === 'string' && isOutOfScope(question)) return OUT_OF_SCOPE_RESPONSE;
   const cached = OFFLINE_REPLIES[indicatorId];
   if (cached) return cached;
   return `Offline reference for ${indicatorId}: Consult the OneAquaHealth Key Indicators factsheet (doi:10.5281/zenodo.20345207). Field collection limited to observational parameters.`;
