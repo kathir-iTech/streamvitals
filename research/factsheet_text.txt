@@ -1,0 +1,660 @@
+
+
+-- 1 of 14 --
+
+Recomended citation:
+Schmeller, D., Calapez, A. R., Silva, J. P., Norte, A. C., Serra, S. R. Q., Dias, M., Silva, G. T., Bouchali, R., Loyau,
+A., Almeida, S. F. P., Schmitt, R., Chen, A., Ramos, J. A., & Feio, M. J. (2026). OneAquaHealth Key Indicators of
+Ecosystem and Biological Health - Factsheets Collection. Zenodo. https://doi.org/10.5281/zenodo.20345207
+
+-- 2 of 14 --
+
+Rational
+How is the indicator measured?
+Introduction
+Key indicators included in this collection:
+The OneAquaHealth project aims to identify and refine indicators at both ecosystem and biological levels that can
+reflect the potential risks to human and animal health originating from degraded freshwater ecosystems in urban
+areas. These indicators are essential for understanding how urbanization impacts ecosystem functions and the
+dissemination of health hazards, aligning with the broader concepts of One Health, EcoHealth and Planetary Health.
+Their monitoring can provide early warning signals of ecosystem degradation and potential disease emergence that
+may threaten human health in urban environments.
+For each selected indicator, a factsheet has been developed outlining its rationale, sampling methods, metrics, and
+potential data sources. This collection supports harmonized monitoring approaches and interdisciplinary research
+linking environmental quality, biodiversity, and public health in urban aquatic systems. These factsheets are intended
+to inform decision-makers and other stakeholders working in public health, sustainable cities, nature conservation
+and environmental education.
+I. Diatoms and Diatom Teratology
+II. Benthic Macroinvertebrates
+III. Fish
+IV. Amphibians
+V. Birds
+VI. Microbial Diversity
+VII. Fecal Coliforms
+VIII. Pathogens
+IX. Antibiotic Resistance Genes
+X. Diptera Adults
+XI. Invasive Alien Plants of the Riparian Corridor
+
+-- 3 of 14 --
+
+Rational How is the indicator measured?
+Importance of indicator
+Diatoms are ubiquitous in aquatic environments and a
+key component of river ecosystems, contributing to
+primary productivity, nutrient cycling and oxygenation.
+Pollutants such as heavy metals, pharmaceuticals and
+others may cause deformities in the frustules (valves –
+external silicate walls) – teratologies, which reflect
+diatom health.
+Certain diatom species can form harmful algal blooms
+(HABs) in freshwater environments. These blooms can
+produce toxins and/or deplete oxygen levels in the
+water, harm aquatic organisms, leading to fish kills and
+posing risks to human health through contaminated
+water or food consumption. These algal blooms can
+proliferate with water pollution though human
+activities, such as nutrient runoff from agriculture,
+urban development, and industrial activities.
+They are widely used as bioindicators of water quality,
+presenting high sensitivity to environmental changes,
+organic pollution, and eutrophication. Induce selection
+pressure, change in abundances, diversity loss, and
+increase mortality rate.
+They are among the biological quality elements used in
+the assessment of the ecological quality status of
+rivers, according to the European Water Framework
+Directive (2000).
+The alteration in the structure of the aquatic
+communities indicates alteration in ecosystem
+functioning and ecosystem services.
+I. Diatoms and diatom teratology
+Periphytic diatoms are scraped from the surface of
+submerged stones/substrate. They can also be
+collected from the sediment or from the surface of
+aquatic plants.
+Samples are cleaned in the laboratory using nitric acid
+and potassium dichromate at room temperature for 24h
+(European Committee for Standardisation, 2003) to
+remove organic content. Permanent slides are prepared
+using Naphrax®. About 400 diatom valves are identified
+and counted per sample, following the European
+standard (European Committee for Standardisation,
+2004).
+The identification is performed under a microscope to
+species level based in their morphology. Deformities in
+the morphology of the valves should also be registered
+and counted. Samples can also be identified through
+metagenomics.
+Common biotic indices used to reach the biological
+quality status are the Biological Diatom Index (IBD)
+(Coste et al. 2009), and the Indice de Polluosensibilité
+(IPS) (Coste in Cemagref, 1982). In the European Union
+each member-state adopted their own index, and
+reference values for the different types of rivers must
+be considered in the evaluation.
+Representation of a diatom
+Photos: S. F. P. Almeida
+
+-- 4 of 14 --
+
+Rational How is the indicator measured?
+Importance of indicator
+Macroinvertebrates are ubiquitous in rivers and include
+small aquatic organisms such as insect larvae,
+crustaceans, worms and molluscs. They are key
+biological quality elements under the Water Framework
+Directive, widely used as sensitive indicators of
+freshwater ecosystem health. Because they have
+limited mobility, relatively long life cycles, and variable
+tolerance to pollution, changes in their communities
+reflect cumulative environmental conditions. They also
+play a key role as links between primary producers (e.g.
+algae) and higher trophic levels (e.g. fish, birds), directly
+influencing the functioning and stability of ecosystem
+food chains.
+Healthy macroinvertebrate communities indicate clean
+water and functioning ecological processes, which are
+directly linked to human and animal health by
+supporting safe drinking water sources, fisheries and
+disease-limiting environments.
+Macroinvertebrates community structure reveals
+patterns of water quality, habitat integrity and
+ecosystem functioning, including long-term exposure
+to pollutants, physical disturbances, and changes in
+biodiversity.
+Regular monitoring help identify trends in ecosystem
+degradation or recovery, assess restoration efforts,
+monitoring climate changes effects and detect early
+signals of emerging environmental stressors and health
+risks.
+Their use is highly relevant for environmental policy,
+supporting regulatory frameworks (e.g. Water
+Framework Directive), providing solid biological
+evidence for environmental protection decisions,
+guiding water management for human consumption,
+recreation, and fisheries, and enhancing public health
+by identifying ecosystems at risk of contamination or
+conditions favourable to disease.
+II. Benthic Macroinvertebrates
+Macroinvertebrates assemblages are collected in
+streams with a hand-net (500 μm mesh size, 0.25 × 0.25
+m opening) by kick sampling covering six sub-samples (×
+1 m length) allocated across habitat types (organic and
+inorganic) according to their relative availability within
+the reach. Collected organisms are preserved in ethanol
+and later processed in the laboratory, where they are
+sorted, identified under a stereomicroscope and
+counted. From these data, metrics such as taxa
+richness, diversity and biotic scores (e.g. BMWP) are
+calculated to reflect the community’s sensitivity or
+tolerance to pollution.
+Sampling by kick and sweep upstream
+sediment by foot with a hand-net
+Taxonomic
+identification
+Biotic indices scores are assigned to taxa based on their
+tolerance to pollution
+
+-- 5 of 14 --
+
+Rational How is the indicator measured?
+Importance of indicator
+Fish are widespread and an essential component of aquatic
+ecosystems. As biological quality elements under the Water
+Framework Directive, they are effective indicators of
+ecosystem and biological health.
+Changes in fish presence, diversity, and health reveal water
+quality, habitat integrity, and general ecological functioning,
+providing reliable information for assessing the status of
+water bodies. Their monitoring is also relevant for human and
+animal health: fish are important food sources for humans and
+wildlife, can accumulate pollutants such as heavy metals and
+pesticides, and can be vectors and reservoirs of pathogens
+transmissible across species including to humans. For these
+reasons, fish monitoring supports both ecological assessment
+and public health vigilance, ensuring cleaner, safer and more
+resilient freshwater systems.
+Freshwater fish respond consistently to cumulative and long-
+term environmental conditions, reflecting changes in water
+chemistry, pollution, hydrology, landscape features, habitat
+quality, climate impacts and overall ecosystem health.
+Regular monitoring reveals spatial and temporal trends that
+help identify degradation or recovery, assess restoration
+efforts and detect early signals of ecological stress and health
+risks.
+The results support environmental policy, including the Water
+Framework Directive and guiding management actions,
+contributing to the protection of human and animal health by
+monitoring pollutant accumulation, pathogen risks and overall
+freshwater ecosystem resilience.
+III. Fish
+Fish communities in wadeable streams are assessed using
+standardized field sampling electrofishing (single-pass using
+backpack battery-powered electrofishing gear). A sampling
+reach is selected (minimum of 100 m), ideally containing a
+representative mix of habitats such as riffles, runs, and pools.
+The operator walks upstream through the entire reach, ensuring
+all habitats are sampled evenly. Captured fish are identified to
+the species level, counted and measured, with data recorded on
+species richness and abundance (number of individuals per
+species captured within the 100m reach or per time effort –
+CPUE, catch per unit effort). Native species are returned alive to
+the stream at the end of sampling. Exotic or invasive species are
+removed according to local regulations.
+Common indices used to assess biological quality include the
+Fish-based Index of Biotic Integrity, or the European Fish Index,
+alongside diversity metrics and species richness.
+European eel (Anguilla anguilla), a critically endangered species of
+high ecological, cultural and economic value, traditionally
+consumed by humans.
+Electrofishing sampling to catch stream ichthyofauna
+Luciobarbus bocagei	Achondrostoma oligolepis
+Gobio lozanoi Gasterosteus aculeatus
+Some fish species found in urban
+streams sampled by electrofishing
+𝐻 = − ෍
+𝑖=1
+𝑠
+𝑝𝑖 ln 𝑝𝑖
+where H is the Shannon-Weaver diversity index, s is the total number
+of species, pi is the proportion of all individuals in the sample that
+belongs to species i, and ln is the natural logarithm.
+H' < 1: Very low diversity; often associated with highly disturbed or
+degraded streams.
+H' between 1 and 2: Moderate diversity; indicates some ecological
+stress.
+H' between 2 and 3: Good diversity; relatively healthy ecosystem.
+H' > 3: High diversity; near-pristine or minimally disturbed conditions.
+
+-- 6 of 14 --
+
+Rational How is the indicator measured?
+Importance of indicator
+Amphibians are vital vertebrates whose dependence on aquatic
+ecosystems for reproduction makes them vulnerable to
+environmental changes. Their physiological sensitivity,
+especially their permeable skin, allows them to function as
+bioindicators of ecosystem health, providing early warnings of
+environmental contamination.
+Amphibians also deliver important ecosystem services by
+controlling pest populations, such as mosquitos and thereby
+reducing the transmission of mosquito-borne diseases, serving
+as a food source for other wildlife, and facilitating nutrient
+cycling between terrestrial and aquatic ecosystems.
+Urbanization seems to influence the diversity, population, and
+disease dynamics of amphibians.
+Habitat loss and water contamination are extensively
+documented causes of amphibian population declines.
+The number of endemic and vulnerable species is associated
+to a better ecological condition of streams while more
+degraded streams may be a source of several pathogens
+affecting amphibians.
+When habitats are degraded or fragmented, amphibian
+populations become isolated and stressed. This stress can
+weaken their immune systems, making them more
+susceptible to pathogens such as Batrachochytrium
+dendrobatidis (Bd) and Batrachochytrium salamandrivorans
+(Bsal), which are responsible for chytridiomycosis, a
+devastating skin disease. Ranaviruses might also more easily
+infect stressed individuals, including fish and amphibians.
+IV. Amphibians
+Amphibians are sampled with a hand net (mesh size 3-5mm), by
+wading a total length of 100 meters in each stream, covering
+various habitat types (i.e., lentic and lotic zones). Along each
+transect, amphibians (adults, larvae and eggs) are captured,
+identified and counted.
+The body condition of the animals is assessed through their
+weight and size (using a calliper). In addition, buccal and skin
+swabbing may be conducted. The swabs are placed in a sterile,
+labelled tube and stored on ice for later analysis for Ranaviruses,
+the chytrid fungi Batrachochytrium dendrobatitis and B.
+salamandrivorans, and the protective skin microbiome.
+All animals are immediately released. Standardised biosecurity
+and sanitation procedures (https://shorturl.at/ftJuP) should be
+implemented between each individual sampled and across
+various sampling sites. Nitrile gloves should be used to handle
+the animals, and callipers and weigh pans must be thoroughly
+wiped down with 70% ethanol and rinsed with distilled water
+after each use.
+Mind that all amphibians are protected and for
+handling and capturing them in the field,
+you need special permits from your national
+authorities.
+Photos of amphibian surveys
+Photos: C. Vigileos and G.T. Silva
+Triturus marmoratus
+
+-- 7 of 14 --
+
+Rational How is the indicator measured?
+Importance of indicator
+A healthy ecosystem harbours a diverse and
+balanced community of birds, including more
+sensitive bird species like insectivorous birds.
+These birds are benefitted by the presence of
+orchards, small woody features, scrubs and
+shrubs, hedgerows and other boundaries that
+provide resources and constitute connectivity
+network in the landscape.
+Provides data about the presence and number of
+insectivorous bird species.
+The number of insectivorous bird species between areas
+differering in degree of urbanisation, and accross habitat
+changes evaluated in long-term monitoring, will elucidate
+about the resilience of the ecosystem regarding pest control
+(disease vector mosquitoes, plant pests, etc), and the quality
+of cultural services that contribute to human well-being.
+For example, an increase in population density per km2 from
+500 to 3000, or an increase of impervious area by 35%, may
+lead to a loss of one insectivorous bird species in that area.
+A breeding pair of one such species, like the blue tit Cyanistes
+caeruleus, can feed their nestlings with about 700 aphids
+during the breeding season (Cowie and Hinsley 1988).
+Estimating a population of 7800 breeding pairs of blue tits in a
+150km2 city, this means less 5 460k aphids consumed each
+spring.
+Cowie, R. J., & Hinsley, S. A. (1988). Journal of Animal Ecology,
+57, 611-626. doi: 10.2307/4928
+V. Birds
+This indicator is based on bird censuses (point counts)
+through the detection of their sounds (songs and calls).
+Bird censuses should be performed at the early hours of
+the day (up to three hours after sunrise), during 10
+minutes, at each location under evaluation, using the
+mobile app Merlin (Cornell Lab Lab of Ornithology,
+Cornell University) or similar, for those with no
+experience in ornithology.
+The bird species detected are classified according to
+its feeding guild following Wilman et al. (2014), and the
+number of insectivorous bird species are counted.
+Wilman, H., Belmaker, J., Simpson, J., de la Rosa, C.,
+Rivadeneira, M. M., & Jetz, W. (2014). Ecology, 95, 2027. doi:
+https://doi.org/10.1890/13-1917.1
+Blue tit Cyanistes caeruleus, an insectivorous bird species,
+feeding one of its newly fledged chicks (photo from pixabay.com)
+
+-- 8 of 14 --
+
+Rational How is the indicator measured?
+Importance of indicator
+Microbial diversity refers to the variety of microorganisms—
+bacteria, archaea, fungi, and micro-eukaryotes—present in a
+given environment, such as freshwater, soil, or sediment.
+High microbial diversity generally reflects a healthy and
+resilient ecosystem, where different species perform
+complementary functions beneficial for the ecosystem, such
+as nutrient cycling, organic matter decomposition, and
+pathogen biocontrol.
+Low diversity can indicate environmental stress, pollution, or
+the dominance of opportunistic or pathogenic microbes,
+making microbial diversity a useful indicator of ecosystem
+health and water quality.
+Monitoring microbial diversity provides insight into ecosystem
+stability and function. High diversity supports ecosystem
+resilience, nutrient cycling, and suppression of pathogens,
+whereas low diversity can signal pollution, habitat
+degradation, or increased disease risk.
+Tracking microbial diversity over time helps evaluate the
+impact of environmental changes, restoration efforts, or
+pollution mitigation strategies, and informs water
+management decisions aimed at maintaining healthy and
+balanced microbial communities.
+VI. Microbial diversity
+Microbial diversity is typically assessed using molecular
+methods targeting environmental DNA that capture the
+identity and abundance of microbial taxa.
+Common approaches include sequencing of universal marker
+genes (16S rRNA for bacteria, 18S rRNA for micro-eukaryotes)
+or shotgun metagenomics (i.e. the sequencing of the totality
+of DNA), which provides functional information in addition to
+taxonomic profiles.
+Analyses generate metrics such as species richness (number
+of microbial taxa), Shannon (H) or Simpson (S) diversity
+indices (accounting for abundance and evenness J), and beta
+diversity (differences between communities), with:
+𝐻 = − ෍
+𝑖=1
+𝑠
+𝑝𝑖 ln 𝑝𝑖
+𝑆 = − ෍
+𝑖=1
+𝑠
+𝑝𝑖
+2
+𝐽 = 𝐻
+ln(𝑟𝑖𝑐ℎ𝑛𝑒𝑠𝑠)
+These measures can be expressed as diversity indices,
+relative abundance of taxa, or the presence/absence of key
+functional groups.
+Boxplot showing two diversity metrics (Shannon and
+Evenness) decreasing in biofilms from disturbed
+ecosystems.
+
+-- 9 of 14 --
+
+Rational How is the indicator measured?
+Importance of indicator
+Fecal coliforms living naturally in the intestinal
+tract of warmed-animal, including humans.
+They are used as indicator of recent animal
+and human fecal contamination in water.
+Their presence suggests inputs from human or
+animal waste and therefore a potential
+exposure to enteric pathogens including
+pathogenic bacteria, and parasites.
+Monitoring of fecal coliforms provide a simple
+way to assess the sanitary quality of surface
+water, recreational water, and drinking-water
+sources, by estimating potential infectious
+health risks.
+Fecal coliforms provide essential information about the
+sanitary quality of water. Because they come from the
+digestive systems of humans and animals, their presence
+indicates that fecal material has entered the environment.
+This makes them a reliable early warning signal for the
+potential presence of harmful pathogens such as E. coli O157,
+Salmonella, or viruses (e.g. norovirus causing gastroenteritis)
+and parasites associated with gastrointestinal diseases.
+Fecal coliforms are widely used in water-quality regulations
+for drinking water, recreational waters, shellfish harvesting
+areas, and environmental monitoring programs. Because they
+are simple and inexpensive to measure, they remain a
+cornerstone indicator for public health protection, ecosystem
+management, and policy decision-making.
+VII. Fecal Coliforms
+Water samples are collected and analyzed using several
+complementary methods. The most common approach
+is culture-based testing, where a known volume of
+water is filtered and the filter is placed on a selective
+growth medium (i.e. allowing the growth of fecal
+coliforms only). When incubated at warm temperatures
+fecal coliforms will grow, forming visible colonies.
+These colonies are then counted and the result is
+expressed as colony-forming units per 100 mL (CFU/100
+mL). Enzyme-substrate tests work in a similar way but
+use color changes or fluorescence to detect these
+bacteria more quickly.
+In addition to culture methods, molecular tools such as
+qPCR can be used. qPCR detects and counts specific
+DNA sequences from fecal coliforms, offering rapid and
+sensitive results, even when bacteria are present at low
+levels or are no longer alive.
+Environmental DNA metabarcoding can provide a
+broader picture of microbial communities in water.
+Although not used to quantify fecal coliforms directly,
+metabarcoding can confirm the presence of related
+indicator bacteria and identify other microorganisms
+associated with fecal contamination.
+Agar plate showing the colonies of fecal coliforms
+and enabling their quantification.
+Boxplot showing the relative
+abundance of fecal coliforms,
+i.e., their proportion relative
+to the total number of
+bacteria, as a percentage.
+0
+20
+40
+
+-- 10 of 14 --
+
+Rational How is the indicator measured?
+Importance of indicator
+Pathogen indicator refers to the detection of microorganisms
+(bacteria, viruses, fungi, or protozoa) that can cause disease in
+humans, domestic animals, or wildlife.
+These organisms are naturally present in the environment at
+low levels, but their abundance can increase due to pollution,
+wastewater discharge, or environmental disturbances.
+Monitoring pathogens in water is essential to assess health
+risks and prevent outbreaks of infectious diseases.
+Monitoring pathogen presence is critical for protecting public
+health, livestock, and wildlife. High levels of pathogens in
+water can indicate contamination from sewage, agricultural
+runoff, or wildlife, posing risks for drinking water, recreation,
+and aquaculture.
+Tracking pathogens over time supports early warning
+systems, informs treatment and sanitation strategies, and
+helps reduce the spread of infectious diseases in both
+humans and animals.
+VIII. Pathogens
+Pathogens can be detected using culture-based methods,
+molecular techniques such as qPCR targeting specific
+pathogen genes, or metagenomics and metabarcoding, which
+identifies a broad range of microbial pathogens from
+environmental DNA.
+Measurements may include the presence/absence of specific
+pathogens, their abundance, or the relative frequency of
+pathogenic taxa within the microbial community.
+𝑃𝑎𝑡ℎ𝑜𝑔𝑒𝑛 𝑎𝑏𝑢𝑛𝑑𝑎𝑛𝑐𝑒. = 𝑃𝑎𝑡ℎ𝑜𝑔𝑒𝑛 𝑛𝑢𝑚𝑏𝑒𝑟
+𝑇𝑜𝑡𝑎𝑙 𝑚𝑖𝑐𝑟𝑜𝑏𝑒 𝑛𝑢𝑚𝑏𝑒𝑟 × 100
+Pathogens metrics can also be converted into infectious
+health risk indexes (between 0 and 1), mixing pathogen
+richness, abundance and their severity (i.e., virulence, number
+of infectious cases).
+𝑃𝑎𝑡ℎ𝑜𝑔𝑒𝑛 𝑟𝑖𝑠𝑘 = 𝑃𝑎𝑡ℎ𝑜. 𝑟𝑖𝑐ℎ𝑛𝑒𝑠𝑠 + (𝑃𝑎𝑡ℎ𝑜. 𝑎𝑏𝑛𝑑𝑎𝑛𝑐𝑒 ∗ 𝑠𝑒𝑣𝑒𝑟𝑖𝑡𝑦)
+2
+Advanced methods also allow detection of toxin-producing
+strains or antibiotic-resistant genes associated with
+pathogens, providing more detailed health risk information.
+Pseudomonas aeruginosa (human pathogen)
+growing on selective media.
+
+-- 11 of 14 --
+
+Rational How is the indicator measured?
+Importance of indicator
+Antibiotic Resistance Genes (ARGs) indicate the presence of
+bacteria that can resist to antibiotic treatments.
+They originate from human, animal, or environmental
+microbes and can be spread through wastewater, agriculture,
+or urban runoff.
+Their detection in water reveals potential risks for the
+emergence and circulation of antibiotic-resistant bacteria
+relevant to human and animal health.
+Monitoring of ARGs help identify areas where antibiotic
+resistance is accumulating and spreading in the environment.
+They provide insights into contamination sources, such as
+wastewater treatment plants or livestock operations.
+Because antibiotic resistance affects both human and animal
+health, monitoring ARGs supports One Health strategies and
+helps anticipate future public-health risks linked to resistant
+infections.
+IX. Antibiotic Resistance Genes
+ARGs are detected using molecular methods (i.e., detection of
+DNA) because they cannot be reliably measured through
+culture alone. However, culture on selective medium,
+amended with antibiotic, allow the detection of antibiotic-
+resistant bacteria. Targeted qPCR quantifies specific
+resistance genes, while metagenomics (i.e., sequencing of the
+totality of DNA) allows the detection of a broad range of ARGs
+and links them to microbial communities.
+Results are generally expressed as gene copies per volume of
+water or as relative abundance.
+Agar plate amended with antibiotic showing the
+growth of antibiotic-resistant bacteria, allowing
+their detection and quantification
+
+-- 12 of 14 --
+
+Rational How is the indicator measured?
+Importance of indicator
+By tracking how different Diptera adults respond to urban
+pressures and restoration, this indicator highlights when
+ecological imbalances may translate into increased vector
+presence and health risks for humans and other animals.
+Diptera include some of the most medically relevant taxa
+worldwide, such as mosquitoes (Culicidae), biting midges
+(Ceratopogonidae), sand flies (Phlebotominae), and blackflies
+(Simuliidae).
+Some taxa may transmit viruses, parasites and bacteria
+through blood-feeding. Changes in their abundance or
+distribution can therefore signal shifts in the risk of vector-
+borne diseases within urban environments.
+Diptera adult assemblages integrate signals from aquatic,
+semi-aquatic, and terrestrial taxa, capturing ecological
+responses across stream channels, riparian zones, and wet
+urban habitats. These groups include key ecological
+functional roles (decomposers, pollinators, herbivores,
+predators, parasites) as well as medically relevant vectors
+capable of transmitting pathogens, including invasive species
+expanding under favorable conditions.
+Repeated measurements across space and time provide
+insight into ecosystem condition and vector-borne health
+risks for humans, livestock, pets, and wildlife.
+Changes in Diptera communities can reveal environmental
+changes, habitat degradation, shifts expected under climate,
+land-use and restoration scenarios. While some taxa (e.g.,
+Culicidae) are already monitored for public-health purposes,
+other complex but informative groups strengthen ecological
+assessment.
+This indicator supports One Health policy by linking
+biodiversity, environmental quality, and human health and
+well-being, helping define city-specific baselines for informed
+urban planning.
+X. Diptera Adults
+Riverine Diptera adult assemblages are assessed using
+standardized CO₂-baited traps (e.g., Biogents BG-Pro, with
+CO₂ generated by dry-ice sublimation powered by a
+powerbank).
+At least two traps are placed per site along the urban stream,
+ideally 25 m apart (minimum 5 m), avoiding direct exposure to
+sunlight.
+Traps operate overnight, from a few hours before sunset to a
+few hours after sunrise. After collection, samples are
+transported in a cooler and stored at –80 °C upon arrival in the
+laboratory.
+Specimens are then morphologically identified under a
+stereomicroscope, and community metrics (richness,
+abundance, taxonomic composition) are quantified. These
+metrics are then related to environmental and climatic
+variables to assess ecological patterns and responses.
+Additionally, pathogen screening can be performed by
+extracting DNA and RNA from pools of previously identified
+frozen specimens (grouped by species, site and date), or by
+preserving individuals in RNAlater. This enables extraction,
+amplification and sequencing for the detection of viral,
+bacterial or parasitic pathogens.
+Culicidae, Aedes sp.
+→ CO₂ trap at site
+Simuliidae
+Morphological ID←
+Dipteran adults offer a sensitive early-warning
+indicators of urban stream health
+
+-- 13 of 14 --
+
+Rational How is the indicator measured?
+Importance of indicator
+Invasive Alien Plants (IAP) are plant species introduced –
+intentionally or accidentally – outside their natural geographic
+range that spread rapidly and cause ecological, economic,
+and/or social harm.
+IAPs are a typical feature of biological communities in urban,
+peri-urban and human-disturbed ecosystems.
+In terms of health impacts, AIPs, particularly angiosperms, are
+frequently associated with the production of allergenic pollen
+and toxic compounds, which can cause wounds, skin
+irritation, allergic reactions and poisoning. Additionally,
+IAPs may act as mediators of disease vectors (e.g., dipteran
+vectors, ticks) and allow the occurrence and proliferation of
+vector-borne diseases.
+IAPs, due to their negative impacts on ecosystems and human
+health, can serve as indicators of ecological degradation and
+disturbance.
+These species tend to thrive in disturbed, nutrient-enriched,
+or poorly managed environments and their presence can
+reflect habitat disturbance (e.g., soil movement, bank erosion,
+vegetation clearing), hydrological alteration (e.g., modified
+flow regimes, channelization), nutrient enrichment or
+pollution (which favours fast-growing opportunistic species),
+loss of native biodiversity (as invasives displace or suppress
+indigenous plants), and reduced ecosystem stability or
+resilience (where natural communities recover incompletely
+or cannot recover).
+AIPs are a cost-effective, sensitive, and easily observable
+indicator of disturbance, ecosystem stress, and biodiversity
+decline, making them a good tool in freshwater health
+monitoring.
+XI. Invasive Alien Plants of the riparian corridor
+The non-native community in the riparian corridor is visually
+surveyed along a 100-meter stretch of the stream on both banks.
+Ten checkpoints are established at 10-meter intervals. At each
+checkpoint, the assessment is conducted from the water’s edge
+toward the riverside, covering a linear distance of 5 meters and a
+width of 2 meters.
+Whenever possible, species are identified in situ. The relative
+coverage (%) of each species is visually estimated, and each
+species is classified as cosmopolitan, alien, naturalized,
+potentially invasive, or invasive, in accordance with national
+legislation.
+Invasive Alien Plants examples
+Examples of IAPs that can be found in the riparian corridors of
+European streams and rivers.
+A. donax
+T. fluminensis
+A. altissima
+
+-- 14 of 14 --
+

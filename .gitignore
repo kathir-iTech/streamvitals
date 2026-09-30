@@ -42,17 +42,18 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Strategy/planning files from parent folder
+# Strategy/planning files from parent folder (but keep the citable source text)
 *MASTER-PLAN*
 *OPENCODE-BUILD-PROMPT*
 *WINNING*
 *STRATEGY*
 *RESEARCH*
-research/
+!research/
+research/*
+!research/factsheet_text.txt
 
 # Working files
 factsheet.pdf
-factsheet_text.txt
 zenodo_api_response.json
 resmap.html
 extract_pdf.js
@@ -60,8 +61,7 @@ run-tests.js
 run-fhir-tests.js
 run-benchmark.js
 
-# package files
-package-lock.json
+# package files (lockfile is committed for reproducible installs)
 
 .vercel
 
