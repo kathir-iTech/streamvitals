@@ -177,3 +177,11 @@
   background: rgba(0, 0, 0, 0.08);
 }
 
+@media (max-width: 480px) {
+  .stats-strip {
+    gap: 1.25rem;
+    padding: 1.5rem 1rem;
+    flex-wrap: wrap;
+  }
+}
+

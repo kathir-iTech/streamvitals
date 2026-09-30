@@ -229,5 +229,25 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     expect(inScopeBody.response).not.toContain('falls outside that scope');
     expect(inScopeBody.response).toContain('Offline reference for BMI-01');
     expect(inScopeBody.response).not.toBe(outOfScopeBody.response);
+
+    // Step 9: client fallback (assistant API unreachable) differentiates scope
+    // through the real UI. Aborting the API call forces the component's catch
+    // path while the device reports online, so the typed question reaches
+    // getOfflineResponse instead of the model.
+    await page.goto('/field/bmi-01');
+    await page.route('/api/ai/assistant', (r) => r.abort());
+    const panel = page.locator('aside[aria-label="Field Assistant panel"]');
+    if (!(await panel.isVisible())) {
+      await page.locator('button[aria-label="Open Field Assistant"]').click();
+    }
+    await expect(panel).toBeVisible();
+    const askInput = panel.locator('input[placeholder*="Ask"]');
+    await askInput.fill('What is the purpose of this work?');
+    await panel.locator('button[aria-label="Send question"]').click();
+    await expect(panel).toContainText('falls outside that scope', { timeout: 15000 });
+    await askInput.fill('What equipment do I need for this sample?');
+    await panel.locator('button[aria-label="Send question"]').click();
+    await expect(panel).toContainText('Based on the OneAquaHealth factsheet', { timeout: 15000 });
+    await page.unroute('/api/ai/assistant');
   });
 });

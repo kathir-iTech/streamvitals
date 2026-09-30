@@ -284,7 +284,7 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
           </div>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 pb-24 sm:pb-0">
           <button
             onClick={handlePrev}
             disabled={currentIndex === 0}

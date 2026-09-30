@@ -139,11 +139,15 @@ export async function updateSession(sessionId: string, updates: Partial<FieldSes
 
 export async function savePhoto(photoId: string, sessionId: string, indicatorId: string, data: Blob, thumbnail?: Blob): Promise<{ success: boolean; error?: string }> {
   try {
+    // Store dataURLs (strings), not Blobs: Blob records fail to clone on some
+    // WebKit builds (UnknownError), which breaks photo save on iPhones.
+    const dataUrl = await blobToDataUrl(data);
+    const thumbUrl = thumbnail ? await blobToDataUrl(thumbnail) : undefined;
     const db = await openDB();
     return new Promise((resolve) => {
       const tx = db.transaction('photos', 'readwrite');
       const store = tx.objectStore('photos');
-      store.put({ photoId, sessionId, indicatorId, data, thumbnail, timestamp: new Date().toISOString() });
+      store.put({ photoId, sessionId, indicatorId, data: dataUrl, thumbnail: thumbUrl, timestamp: new Date().toISOString() });
       tx.oncomplete = () => resolve({ success: true });
       tx.onerror = () => resolve({ success: false, error: txError(tx.error) });
     });
@@ -166,6 +170,10 @@ export async function getSessionPhotos(sessionId: string): Promise<{ photoId: st
         const results = request.result || [];
         const photosWithData = await Promise.all(results.map(async (p: any) => {
           try {
+            // New records store dataURLs directly; old records hold Blobs.
+            if (typeof p.data === 'string' && p.data.startsWith('data:')) {
+              return { photoId: p.photoId, indicatorId: p.indicatorId, timestamp: p.timestamp, dataUrl: p.data };
+            }
             const blob = p.data instanceof Blob ? p.data : new Blob([p.data]);
             const dataUrl = await blobToDataUrl(blob);
             return { photoId: p.photoId, indicatorId: p.indicatorId, timestamp: p.timestamp, dataUrl };

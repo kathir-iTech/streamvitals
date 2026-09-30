@@ -195,7 +195,7 @@ export default function ReviewPage() {
           <ExportButton sessionId={session.sessionId} />
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 pb-24 sm:pb-0">
           <button
             onClick={handleContinueLater}
             className="flex-1 py-4 btn-pill-outline flex items-center justify-center gap-2"

@@ -153,7 +153,7 @@ export default function FieldPage() {
                 </div>
               </div>
               {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
-              <button type="submit" disabled={loading} className="btn-pill-accent text-lg">
+              <button type="submit" disabled={loading} className="btn-pill-accent text-lg whitespace-nowrap">
                 {loading ? 'Starting session...' : 'Start Monitoring Session'}
                 <ArrowRight className="w-4 h-4" />
               </button>
