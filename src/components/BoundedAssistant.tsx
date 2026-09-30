@@ -3,9 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Bot, Shield, WifiOff, Loader2, X, Send } from 'lucide-react';
 import { indicators } from '@/data/indicators';
-import { isOutOfScope } from '@/lib/factsheet-content';
-
-const OUT_OF_SCOPE_RESPONSE = "I'm equipped to answer using the OneAquaHealth protocol and factsheet definitions I have. This question falls outside that scope — please consult the official monitoring guide.";
+import { getOfflineAssistantResponse, OUT_OF_SCOPE_RESPONSE } from '@/lib/factsheet-content';
 
 interface AssistantMessage {
   role: 'user' | 'assistant';
@@ -29,10 +27,8 @@ function getIndicatorContent(indicatorId: string): IndicatorContent | null {
   return { id: ind.id, name: ind.name, citizen_question: ind.citizen_question, visual_anchor_guide: ind.visual_anchor_guide, citizen_state_labels: ind.citizen_state_labels || {}, source: ind.source };
 }
 
-function getOfflineResponse(content: IndicatorContent | null, indicatorId: string, question: string): string {
-  if (typeof question === 'string' && isOutOfScope(question)) return OUT_OF_SCOPE_RESPONSE;
-  if (!content) return `Indicator ${indicatorId} content is not available offline.`;
-  return `Based on the OneAquaHealth factsheet (${content.source}):\n\nIndicator: ${content.name}\n\nProtocol Question: ${content.citizen_question}\n\nVisual Anchor: ${content.visual_anchor_guide}\n\nThis indicator requires laboratory analysis.`;
+function getOfflineResponse(indicatorId: string, question: string): string {
+  return getOfflineAssistantResponse(indicatorId, question);
 }
 
 export default function BoundedAssistant({ indicatorId }: { indicatorId: string }) {
@@ -69,19 +65,19 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
     setLoading(true);
     try {
       if (!isOnline) {
-        const response = getOfflineResponse(content, indicatorId, text);
+        const response = getOfflineResponse(indicatorId, text);
         setMessages((prev) => [...prev, { role: 'assistant', content: response, timestamp: new Date(), source: 'offline' }]);
       } else {
         const groqResponse = await callGroq(indicatorId, text);
         setMessages((prev) => [...prev, { role: 'assistant', content: groqResponse, timestamp: new Date(), source: 'groq' }]);
       }
     } catch {
-      const response = getOfflineResponse(content, indicatorId, text);
+      const response = getOfflineResponse(indicatorId, text);
       setMessages((prev) => [...prev, { role: 'assistant', content: response, timestamp: new Date(), source: 'offline' }]);
     } finally {
       setLoading(false);
     }
-  }, [input, loading, isOnline, content, indicatorId]);
+  }, [input, loading, isOnline, indicatorId]);
 
   const handleQuickQuestion = (question: string) => { void handleSend(question); };
   const handleKeyDown = (e: React.KeyboardEvent) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };

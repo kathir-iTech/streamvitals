@@ -209,9 +209,8 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '07-assistant.png'), fullPage: true });
 
     // Step 8: Offline assistant scope (no GROQ_API_KEY in test env, so the
-    // route takes its offline branch). An out-of-scope question must get the
-    // refusal, an in-scope equipment question must get the factsheet card —
-    // genuinely different answers, not the same canned text twice.
+    // route takes its offline branch). In-scope, nonsense, and meta questions
+    // must each get a different, correct answer — not one canned paragraph.
     const outOfScopeRes = await page.request.post('/api/ai/assistant', {
       data: { indicatorId: 'BMI-01', question: 'What is the purpose of this work?' },
     });
@@ -219,6 +218,7 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     const outOfScopeBody = await outOfScopeRes.json();
     expect(outOfScopeBody.source).toBe('offline');
     expect(outOfScopeBody.response).toContain('falls outside that scope');
+    expect(outOfScopeBody.response).toContain('protocol, states, or sampling');
 
     const inScopeRes = await page.request.post('/api/ai/assistant', {
       data: { indicatorId: 'BMI-01', question: 'What equipment do I need for this sample?' },
@@ -227,8 +227,41 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     const inScopeBody = await inScopeRes.json();
     expect(inScopeBody.source).toBe('offline');
     expect(inScopeBody.response).not.toContain('falls outside that scope');
-    expect(inScopeBody.response).toContain('Offline reference for BMI-01');
+    expect(inScopeBody.response).toContain('Based on the OneAquaHealth factsheet');
+    expect(inScopeBody.response).toContain('Benthic Macroinvertebrates');
     expect(inScopeBody.response).not.toBe(outOfScopeBody.response);
+
+    const nonsenseRes = await page.request.post('/api/ai/assistant', {
+      data: { indicatorId: 'FCL-06', question: 'What is the capital of France?' },
+    });
+    expect(nonsenseRes.ok()).toBe(true);
+    const nonsenseBody = await nonsenseRes.json();
+    expect(nonsenseBody.source).toBe('offline');
+    expect(nonsenseBody.response).toBe(outOfScopeBody.response);
+
+    const metaRes = await page.request.post('/api/ai/assistant', {
+      data: { indicatorId: 'FCL-06', question: 'Why do you keep saying the same thing?' },
+    });
+    expect(metaRes.ok()).toBe(true);
+    const metaBody = await metaRes.json();
+    expect(metaBody.source).toBe('offline');
+    expect(metaBody.response).toContain('offline mode');
+    expect(metaBody.response).not.toBe(nonsenseBody.response);
+    expect(metaBody.response).not.toBe(inScopeBody.response);
+
+    // Three questions, three distinct responses.
+    const responses = [inScopeBody.response, nonsenseBody.response, metaBody.response];
+    expect(new Set(responses).size).toBe(3);
+
+    // FCL-06 must answer as fecal coliforms lab work, never as the old
+    // hardcoded probe-based physicochemical text.
+    const fclRes = await page.request.post('/api/ai/assistant', {
+      data: { indicatorId: 'FCL-06', question: 'What do I collect for this sample?' },
+    });
+    expect(fclRes.ok()).toBe(true);
+    const fclBody = await fclRes.json();
+    expect(fclBody.response).toContain('Fecal Coliforms');
+    expect(fclBody.response).not.toContain('standardized probes');
 
     // Step 9: client fallback (assistant API unreachable) differentiates scope
     // through the real UI. Aborting the API call forces the component's catch
