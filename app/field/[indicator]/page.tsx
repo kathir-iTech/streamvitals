@@ -48,6 +48,8 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
 
   const stateLabels = indicator?.citizen_state_labels || {};
   const stateKeys = (indicator?.states || []).map((s: any) => s.id);
+  const stateDescriptions: Record<string, string> = {};
+  (indicator?.states || []).forEach((s: any) => { if (s?.id && s?.label) stateDescriptions[s.id] = s.label; });
   const progress = ((currentIndex + 1) / FIELD_INDICATORS.length) * 100;
   const noteQuality = useMemo(
     () => checkNoteQuality(indicatorId, selectedState, notes),
@@ -164,9 +166,9 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
         <p className="text-lg text-[rgba(0,0,0,0.5)] mb-6 max-w-2xl">{indicator.citizen_question}</p>
 
         {indicator.why_this_matters && (
-          <div className="bg-[rgba(13,155,110,0.04)] border border-[rgba(13,155,110,0.12)] rounded-xl p-5 mb-6">
-            <p className="text-sm font-bold text-[#0d9b6e] mb-1.5">Why this matters — One Health</p>
-            <p className="text-sm text-[rgba(0,0,0,0.6)] leading-relaxed">{indicator.why_this_matters}</p>
+          <div className="bg-[rgba(13,155,110,0.07)] border-2 border-[rgba(13,155,110,0.3)] border-l-8 border-l-[#0d9b6e] rounded-xl p-6 mb-6">
+            <p className="text-base font-black text-[#0d9b6e] mb-2">Why this matters — One Health</p>
+            <p className="text-base text-[rgba(0,0,0,0.75)] leading-relaxed">{indicator.why_this_matters}</p>
             {indicator.why_this_matters_source && (
               <p className="text-[11px] text-[rgba(0,0,0,0.35)] mt-2 italic">Source: {indicator.why_this_matters_source}</p>
             )}
@@ -202,22 +204,26 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
             <fieldset className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3" aria-label="Select your observation">
               {stateKeys.map((state) => {
                 const label = stateLabels[state] || state.replace(/_/g, ' ');
+                const description = stateDescriptions[state] || '';
                 const isSelected = selectedState === state;
                 return (
                   <button
                     key={state}
                     type="button"
                     onClick={() => handleStateSelect(state)}
-                    className={`relative px-5 py-4 rounded-xl border-2 font-bold text-sm transition-all cursor-pointer ${
+                    className={`relative px-5 py-5 rounded-xl border-2 font-bold text-sm transition-all cursor-pointer text-left ${
                       isSelected
                         ? 'border-[#0d9b6e] bg-[rgba(13,155,110,0.06)] shadow-sm'
                         : 'border-[rgba(0,0,0,0.08)] bg-white hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.03)] hover:shadow-sm'
                     }`}
                     aria-pressed={isSelected}
                   >
-                    <div className="text-xs font-black mb-1 uppercase tracking-wider text-[rgba(0,0,0,0.35)]">{label}</div>
+                    <div className="text-base font-black text-black leading-snug">{label}</div>
+                    {description && (
+                      <div className="text-xs font-medium text-[rgba(0,0,0,0.5)] mt-1 leading-snug">{description}</div>
+                    )}
                     {isSelected && (
-                      <div className="text-xs font-black mb-1 uppercase tracking-wider text-[#0d9b6e]">Selected</div>
+                      <div className="text-xs font-black mt-2 uppercase tracking-wider text-[#0d9b6e]">Selected</div>
                     )}
                   </button>
                 );
