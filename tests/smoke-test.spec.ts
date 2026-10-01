@@ -190,13 +190,13 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await expect(page.getByText(BMI_NOTES).first()).toBeVisible();
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '05-review.png'), fullPage: true });
 
-    // Step 6: Export triggers download
+    // Step 6: Export triggers download — REQUIRED, not optional. A missing
+    // download must fail the test; this check was previously wrapped in
+    // `if (download)` and could silently pass without a file.
     const downloadPromise = page.waitForEvent('download', { timeout: 15000 });
-    await page.click('button:has-text("Export")');
-    const download = await downloadPromise.catch(() => null);
-    if (download) {
-      expect(download.suggestedFilename()).toMatch(/\.(json|csv)/);
-    }
+    await page.click('button:has-text("Export JSON")');
+    const download = await downloadPromise;
+    expect(download.suggestedFilename()).toMatch(/\.json$/);
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '06-export.png'), fullPage: true });
 
     // Step 7: Field Assistant bounded scope (collapsed by default, opens on toggle)
