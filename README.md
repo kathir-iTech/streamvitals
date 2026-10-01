@@ -112,7 +112,6 @@ npm run build
 
 ## API Routes
 
-- `GET /api/sensors` — Sensor configuration for citizen-observable indicators
 - `POST /api/ai/assistant` — AI assistant (Groq proxy with offline fallback)
 - `GET /api/provenance` — Data provenance metadata
 - `POST /api/export` — Export session data (CSV/JSON/GeoJSON)
