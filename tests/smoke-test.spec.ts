@@ -18,7 +18,7 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     fs.mkdirSync(ARTIFACTS_DIR, { recursive: true });
   });
 
-  test('Steps 1-7: Complete end-to-end flow', async ({ page }) => {
+  test('Steps 1-10: Complete end-to-end flow', async ({ page }) => {
     const consoleErrors: string[] = [];
     page.on('console', (msg) => { if (msg.type() === 'error' && !msg.text().includes('404')) consoleErrors.push(msg.text()); });
     page.on('pageerror', (err) => { consoleErrors.push(err.message); });
