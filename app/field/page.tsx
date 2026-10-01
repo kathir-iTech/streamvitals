@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { createSession, isIndexedDBAvailable, getSession } from '@/lib/field-session';
+import { createSession, isIndexedDBAvailable, getSession, getAllSessions } from '@/lib/field-session';
+import { computeObservationFrequencies, type IndicatorFrequency } from '@/lib/observation-frequencies';
+import { indicators } from '@/data/indicators';
 
 function StreamIllustration() {
   return (
@@ -41,6 +43,7 @@ export default function FieldPage() {
   const [existingSession, setExistingSession] = useState<{ sessionId: string; streamName: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [frequencies, setFrequencies] = useState<IndicatorFrequency[]>([]);
   const hasChecked = useRef(false);
 
   useEffect(() => {
@@ -55,8 +58,16 @@ export default function FieldPage() {
           setExistingSession({ sessionId: session.sessionId, streamName: session.streamName });
         }
       }).catch(() => {});
+      getAllSessions().then((sessions) => {
+        setFrequencies(computeObservationFrequencies(sessions));
+      }).catch(() => {});
     }
   }, []);
+
+  const stateLabel = (indicatorId: string, state: string): string => {
+    const ind = indicators.find((i) => i.id === indicatorId);
+    return ind?.citizen_state_labels?.[state] || state.replace(/_/g, ' ');
+  };
 
   const handleStart = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -190,6 +201,31 @@ export default function FieldPage() {
           <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Hackathon</span>
         </div>
       </div>
+
+      {frequencies.length > 0 && (
+        <section aria-label="Observation frequencies" className="max-w-5xl mx-auto px-6 pb-12">
+          <div className="bg-white border border-[rgba(0,0,0,0.06)] rounded-2xl p-6">
+            <h2 className="text-sm font-bold text-black mb-1">Observation frequencies</h2>
+            <p className="text-xs text-[rgba(0,0,0,0.4)] mb-5">
+              Counts of states recorded in your saved sessions — frequencies of what was observed, not predictions of stream condition.
+            </p>
+            <div className="space-y-4">
+              {frequencies.map((f) => (
+                <div key={f.indicatorId}>
+                  <p className="text-xs font-bold text-[rgba(0,0,0,0.6)] mb-2">{f.indicatorName}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {f.states.map((s) => (
+                      <span key={s.state} className="text-[11px] bg-[#f5faf7] border border-[rgba(13,155,110,0.15)] text-[rgba(0,0,0,0.6)] px-3 py-1.5 rounded-full">
+                        {stateLabel(f.indicatorId, s.state)} <span className="font-bold text-[#0d9b6e]">{s.count}×</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }

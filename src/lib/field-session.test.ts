@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { createSession, getSession, getFullSession, isIndexedDBAvailable, updateSession } from './field-session';
+import { createSession, getSession, getFullSession, isIndexedDBAvailable, updateSession, getAllSessions } from './field-session';
 
 describe('field-session', () => {
   beforeEach(async () => {
@@ -53,8 +53,10 @@ describe('field-session', () => {
 
   it('returns all sessions as an array', async () => {
     if (!isIndexedDBAvailable()) return;
-    const all = await getSession('all');
-    expect(all === undefined || Array.isArray(all) || typeof all === 'object').toBe(true);
+    const all = await getAllSessions();
+    expect(Array.isArray(all)).toBe(true);
+    expect(all.length).toBeGreaterThan(0);
+    expect(all.some((s) => s.sessionId === 'test-session')).toBe(true);
   });
 
   it('getFullSession returns session and photos', async () => {

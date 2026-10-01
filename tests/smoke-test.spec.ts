@@ -282,5 +282,16 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await panel.locator('button[aria-label="Send question"]').click();
     await expect(panel).toContainText('Based on the OneAquaHealth factsheet', { timeout: 15000 });
     await page.unroute('/api/ai/assistant');
+
+    // Step 10: Observation frequencies on /field — counts computed from the
+    // sessions this test saved, explicitly labeled as frequencies of what was
+    // observed, not predictions of stream condition.
+    await page.goto('/field');
+    const freqPanel = page.locator('section[aria-label="Observation frequencies"]');
+    await expect(freqPanel).toBeVisible();
+    await expect(freqPanel).toContainText('Observation frequencies');
+    await expect(freqPanel).toContainText('frequencies of what was observed, not predictions');
+    await expect(freqPanel).toContainText('1×');
+    await page.screenshot({ path: path.join(ARTIFACTS_DIR, '08-observation-frequencies.png'), fullPage: true });
   });
 });

@@ -114,6 +114,21 @@ export async function getSession(sessionId: string): Promise<FieldSession | unde
   }
 }
 
+export async function getAllSessions(): Promise<FieldSession[]> {
+  try {
+    const db = await openDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction('sessions', 'readonly');
+      const store = tx.objectStore('sessions');
+      const request = store.getAll();
+      request.onsuccess = () => resolve((request.result as FieldSession[]) || []);
+      request.onerror = () => { console.error('[IndexedDB] Sessions read error:', txError(request.error)); resolve([]); };
+    });
+  } catch {
+    return [];
+  }
+}
+
 export async function updateSession(sessionId: string, updates: Partial<FieldSession>): Promise<{ success: boolean; error?: string }> {
   try {
     const db = await openDB();
