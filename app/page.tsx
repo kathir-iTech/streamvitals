@@ -83,18 +83,23 @@ export default function HomePage() {
 
       <div className="stats-strip">
         <div className="stat-item">
+          <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">41</span>
+          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Automated tests</span>
+        </div>
+        <div className="stat-divider" />
+        <div className="stat-item">
           <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">5</span>
           <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">OneAquaHealth Indicators</span>
         </div>
         <div className="stat-divider" />
         <div className="stat-item">
-          <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">CC-BY</span>
-          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Factsheet License</span>
+          <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">9</span>
+          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Citizen observation states</span>
         </div>
         <div className="stat-divider" />
         <div className="stat-item">
-          <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">IEEE 2026</span>
-          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Hackathon</span>
+          <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">CC-BY</span>
+          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Factsheet License</span>
         </div>
       </div>
     </main>

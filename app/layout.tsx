@@ -39,12 +39,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="flex items-center gap-6 text-sm font-medium">
               <Link href="/" className="text-[rgba(0,0,0,0.5)] hover:text-black transition-colors">Home</Link>
               <Link href="/field" className="text-[rgba(0,0,0,0.5)] hover:text-black transition-colors">Field Companion</Link>
+              <Link href="/about" className="text-[rgba(0,0,0,0.5)] hover:text-black transition-colors">How it works</Link>
             </div>
           </div>
         </nav>
         <main id="main-content" className="flex-1" role="main">
           {children}
         </main>
+        <footer className="bg-white border-t border-[rgba(0,0,0,0.06)] px-6 py-6">
+          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs text-[rgba(0,0,0,0.45)]">
+            <p>
+              StreamVitals — OneAquaHealth IEEE Global Hackathon 2026, Track 1. No
+              assessment, no tier, no verdict.
+            </p>
+            <nav aria-label="Footer" className="flex items-center gap-5">
+              <Link href="/about" className="hover:text-black transition-colors">How it works</Link>
+              <Link href="/provenance" className="hover:text-black transition-colors">Provenance</Link>
+              <a href="https://doi.org/10.5281/zenodo.20345207" className="hover:text-black transition-colors">Factsheets (DOI)</a>
+              <a href="https://github.com/kathir-iTech/streamvitals" className="hover:text-black transition-colors">GitHub</a>
+            </nav>
+          </div>
+        </footer>
       </body>
     </html>
   );

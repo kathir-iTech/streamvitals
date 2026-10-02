@@ -67,9 +67,12 @@ source of truth. Do not reintroduce `src/app/`.
 ## Pages
 
 1. **`/`** — Home page with 5 indicator cards, each navigates to `/field/[indicator]`
-2. **`/field`** — Session dashboard. Captures stream name, **volunteer name**, date and time, then creates or continues a monitoring session
-3. **`/field/[indicator]`** — Per-indicator observation form. Citizen indicators get state selection, photo capture, and field notes. Lab indicators (FCL-06, DIA-10) get a prominent sample ID to write on the container, one collection protocol, photo capture, and sampling notes.
-4. **`/field/review`** — Review all observations, print a Lab Submission Sheet, export (JSON/CSV/Print), submit session
+2. **`/about`** — How it works: why the product exists, the One Health quote for each indicator, the session pipeline, the published numbers, honest limits, and the roadmap
+3. **`/field`** — Session dashboard. Captures stream name, **volunteer name**, date and time, then creates or continues a monitoring session
+4. **`/field/[indicator]`** — Per-indicator observation form. Citizen indicators get state selection, photo capture, and field notes. Lab indicators (FCL-06, DIA-10) get a prominent sample ID to write on the container, one collection protocol, photo capture, and sampling notes.
+5. **`/field/review`** — Review all observations, print a Lab Submission Sheet, export (JSON/CSV/Print), submit session
+
+The footer links to **`/provenance`** (machine-readable track, DOI, citation, and AI-boundary statement).
 
 ## Constraints
 
@@ -77,7 +80,7 @@ source of truth. Do not reintroduce `src/app/`.
 - No diagnostic assessments
 - Lab-only isolation for FCL-06/DIA-10 indicators
 - Indicator-to-indicator navigation uses the Next.js client router (`router.push`) — no full page reload, so assistant and form state survive Next/Previous. Recovery redirects (missing session) still use full page loads.
-- No React Router, no `<Link>` components from Next.js
+- Navigation links use Next.js `<Link>` (client-side). No React Router anywhere.
 - Case-insensitive indicator lookup
 - Light theme only — no theme toggles, no dark mode
 
@@ -108,13 +111,43 @@ npm run build
 3. **Field**: Per-indicator observation with state selection and optional photo capture
 4. **Review**: Summary of all observations with export and submit
 5. **AI Assistant**: Bounded factsheet-based Q&A sidebar
-6. **API**: Groq proxy for AI, provenance logging, data export
+6. **API**: Groq proxy for the bounded assistant, provenance metadata
 
 ## API Routes
 
 - `POST /api/ai/assistant` — AI assistant (Groq proxy with offline fallback)
 - `GET /api/provenance` — Data provenance metadata
-- `POST /api/export` — Export session data (CSV/JSON/GeoJSON)
+- `GET /provenance` — the same provenance statement as a page-level JSON response
+
+Exports (CSV / JSON / printable summary / Lab Submission Sheet) are generated in the browser from IndexedDB and downloaded directly; there is no server-side export endpoint.
+
+## Published Numbers
+
+Countable from this repository, not estimates:
+
+| Number | What it is |
+|---|---|
+| **41** | Vitest tests across 4 files (session 7, factsheet/assistant 14, note rules 15, frequencies 5) |
+| **9** | Citizen observation states — 3 field indicators × 3 states each |
+| **0** | AI calls in the recording path (state selection, note gate, exports are deterministic) |
+| **~1.9 s** | Median assistant answer, 5 live probes against the deployed app on 2026-10-02 (min 1.4 s, max 4.1 s; moves with the provider) |
+| **20** | Committed screenshots from automated runs under `tests/artifacts/` |
+
+## Screenshots
+
+Captured by the automated smoke test (`npm run e2e`), committed under [`tests/artifacts/`](tests/artifacts/):
+
+| | | |
+|---|---|---|
+| ![Homepage](tests/artifacts/01-homepage.png) | ![BMI-01 state selected](tests/artifacts/03a-bmi-01-state-selected.png) | ![Note quality gate](tests/artifacts/quality-gate-unsupported.png) |
+| ![FCL-06 lab page](tests/artifacts/04-fcl-06-lab-page.png) | ![Assistant](tests/artifacts/07-assistant.png) | ![Review page](tests/artifacts/05-review.png) |
+| ![Export](tests/artifacts/06-export.png) | ![Observation frequencies](tests/artifacts/08-observation-frequencies.png) | ![Quality gate cleared](tests/artifacts/quality-gate-cleared.png) |
+
+## What's Next
+
+1. **Field pilot** — run the companion beside volunteers at OneAquaHealth research-city streams; the comparison we do not yet have is paper sheet versus phone on the same visit.
+2. **Multilingual volunteer labels** — the factsheets are multilingual; the UI currently is not.
+3. **Pipeline hand-off** — CSV/JSON exports already carry indicator IDs, states, notes, and note flags in a fixed schema; the next step is ingesting them into the OneAquaHealth Citizen Science App pipeline.
 
 ## Testing
 
