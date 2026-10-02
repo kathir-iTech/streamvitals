@@ -26,7 +26,10 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
       doi: '10.5281/zenodo.20345207',
       assessmentEngine: ENGINE_VERSION,
       session: { sessionId: session.sessionId, streamName: session.streamName, volunteer: session.volunteer, date: session.date, startedAt: session.startedAt, completedAt: session.completedAt, location: session.location ?? null, gbifBaseline: session.gbifBaseline ?? null },
-      indicators: session.indicators.map((ind) => ({ indicatorId: ind.indicatorId, indicatorName: ind.indicatorName, type: ind.type, state: ind.state, status: ind.status, photos: result.photos.filter((p) => p.indicatorId === ind.indicatorId).map((p) => ({ photoId: p.photoId, timestamp: p.timestamp })), notes: ind.notes, note_flag: ind.note_flag || '', sampleLabel: ind.sampleLabel, labProtocolGuidance: ind.labProtocolGuidance, timestamp: ind.timestamp, assessment: assess(ind.indicatorId, ind.state) })),
+      indicators: session.indicators.map((ind) => {
+        const assessment = assess(ind.indicatorId, ind.state);
+        return { indicatorId: ind.indicatorId, indicatorName: ind.indicatorName, type: ind.type, state: ind.state, status: ind.status, photos: result.photos.filter((p) => p.indicatorId === ind.indicatorId).map((p) => ({ photoId: p.photoId, timestamp: p.timestamp })), notes: ind.notes, note_flag: ind.note_flag || '', sampleLabel: ind.sampleLabel, labProtocolGuidance: ind.labProtocolGuidance, timestamp: ind.timestamp, assessment: ind.state ? { ...assessment, stateLabel: getStateLabel(ind.indicatorId, ind.state) } : assessment };
+      }),
       assessmentSummary: summarizeAssessments(session.indicators.map((ind) => ({ indicatorId: ind.indicatorId, state: ind.state }))),
     };
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
@@ -36,7 +39,7 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
     a.download = `field-session-${session.sessionId}.json`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [sessionId]);
+  }, [sessionId, getStateLabel]);
 
   const generateCSV = useCallback(async () => {
     const result = await getFullSession(sessionId);

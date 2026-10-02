@@ -246,6 +246,19 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await page.click('button:has-text("Export JSON")');
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toMatch(/\.json$/);
+
+    // The downloaded JSON must carry the human-readable state label, not a
+    // duplicate of the raw state ID (caught by the owner's Phase E export).
+    const exportData = JSON.parse(fs.readFileSync(await download.path(), 'utf8'));
+    const citizen = exportData.indicators.find((i: { indicatorId: string }) => i.indicatorId === 'BMI-01');
+    expect(citizen.assessment.band).toBeTruthy();
+    expect(citizen.assessment.stateLabel).toBeTruthy();
+    expect(citizen.assessment.stateLabel).not.toBe(citizen.state);
+    expect(exportData.assessmentSummary.engine).toBe('streamvitals-assessment/1.0.0');
+    expect(exportData.assessmentSummary.worstBand).toBeTruthy();
+    const lab = exportData.indicators.find((i: { indicatorId: string }) => i.indicatorId === 'FCL-06');
+    expect(lab.assessment.stateLabel).toBeNull();
+    expect(lab.assessment.band).toBe('pending_lab');
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '06-export.png'), fullPage: true });
 
     // Step 6b: share across devices — create a link on review, open it in this
