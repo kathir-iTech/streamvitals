@@ -130,8 +130,15 @@ npm run dev
 # Run tests
 npm test
 
+# Lint (clean: 0 errors, 0 warnings)
+npm run lint
+
 # Build for production
 npm run build
+
+# End-to-end tests (one-time browser install first; npm run e2e builds, then runs Playwright)
+npx playwright install --with-deps chromium
+npm run e2e
 ```
 
 ## Data Sources
