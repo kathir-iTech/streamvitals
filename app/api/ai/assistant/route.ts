@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getOfflineAssistantResponse, OUT_OF_SCOPE_RESPONSE } from '@/lib/factsheet-content';
+import {
+  getOfflineAssistantResponse,
+  hasIndicatorVocabulary,
+  isMetaQuestion,
+  OUT_OF_SCOPE_RESPONSE,
+} from '@/lib/factsheet-content';
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 // llama-3.3-70b-versatile was shut down 2026-08-16 (404 model_not_found);
@@ -22,6 +27,22 @@ export async function POST(request: NextRequest) {
 
     if (!indicatorId || !question) {
       return NextResponse.json({ error: 'Missing indicatorId or question' }, { status: 400 });
+    }
+
+    // Scope gate: meta questions and questions without indicator vocabulary
+    // are answered by the tested canned pipeline, with or without a key —
+    // they never reach the model.
+    const meta = isMetaQuestion(question);
+    if (meta || !hasIndicatorVocabulary(question)) {
+      diag('offline-scope-guard', {
+        indicatorId,
+        meta,
+        question: String(question).slice(0, 200),
+      });
+      return NextResponse.json({
+        response: getOfflineAssistantResponse(indicatorId, question),
+        source: 'offline',
+      });
     }
 
     const apiKey = process.env.GROQ_API_KEY;
