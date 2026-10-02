@@ -419,4 +419,32 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await expect(page.locator('footer')).toContainText('Provenance');
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '09-about.png'), fullPage: true });
   });
+
+  test('Try page: labeled sample session stays synthetic and hijacks no pointers', async ({ page }) => {
+    await page.goto('/try');
+    await expect(page.locator('[data-testid="try-page"]')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Try StreamVitals' })).toBeVisible();
+
+    await page.locator('[data-testid="try-load-sample"]').click();
+    await page.waitForURL('**/field/review?session=sample-demo');
+
+    const banner = page.locator('[data-testid="sample-banner"]');
+    await expect(banner).toBeVisible();
+    await expect(banner).toContainText('SYNTHETIC SAMPLE');
+    await expect(page.getByText('SAMPLE STREAM — synthetic demo').first()).toBeVisible();
+
+    // Deterministic bands from the sample's states, labs pending — never a guess.
+    await expect(page.locator('[data-testid="band-chip-BMI-01"]')).toContainText('Favorable');
+    await expect(page.locator('[data-testid="band-chip-FCL-06"]')).toContainText('Awaiting laboratory');
+
+    // The sample must not clobber a pre-existing in-progress session pointer.
+    const pointer = await page.evaluate(() => sessionStorage.getItem('current_session_id'));
+    expect(pointer).toBeNull();
+
+    // Loading it twice replaces the fixed sample record instead of duplicating.
+    await page.goto('/try');
+    await page.locator('[data-testid="try-load-sample"]').click();
+    await page.waitForURL('**/field/review?session=sample-demo');
+    await expect(page.locator('[data-testid="sample-banner"]')).toBeVisible();
+  });
 });

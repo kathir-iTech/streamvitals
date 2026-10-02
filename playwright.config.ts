@@ -9,7 +9,9 @@ export default defineConfig({
   workers: 1,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
+    // Port 3100: 3000 is often occupied by other local apps, which made the
+    // suite fail before it started (reuseExistingServer is deliberately off).
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3100',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     permissions: ['geolocation'],
@@ -21,8 +23,8 @@ export default defineConfig({
   webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
-        command: 'npx next start',
-        url: 'http://localhost:3000',
+        command: 'npx next start -p 3100',
+        url: 'http://localhost:3100',
         timeout: 120000,
         reuseExistingServer: false,
       },
