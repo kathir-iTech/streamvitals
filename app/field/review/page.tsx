@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, X } from 'lucide-react';
 import { indicators } from '@/data/indicators';
 import { getFullSession, type FieldSession } from '@/lib/field-session';
 import { assess, summarizeAssessments, type Band } from '@/lib/assessment/engine';
@@ -25,7 +25,8 @@ const BAND_CHIP: Record<Band, string> = {
 export default function ReviewPage() {
   const router = useRouter();
   const [session, setSession] = useState<FieldSession | null>(null);
-  const [photos, setPhotos] = useState<{ photoId: string; indicatorId: string; timestamp: string }[]>([]);
+  const [photos, setPhotos] = useState<{ photoId: string; indicatorId: string; timestamp: string; dataUrl: string }[]>([]);
+  const [lightbox, setLightbox] = useState<{ dataUrl: string; label: string } | null>(null);
   const [sessionComplete, setSessionComplete] = useState(false);
   const [baseline, setBaseline] = useState<GbifBaseline | null>(null);
   const [baselineState, setBaselineState] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -165,7 +166,8 @@ export default function ReviewPage() {
             {session.indicators.map((ind, i) => {
               const indInfo = getIndicator(ind.indicatorId);
               const isLab = ind.type === 'lab_only';
-              const photoCount = photos.filter((p) => p.indicatorId === ind.indicatorId).length;
+              const indicatorPhotos = photos.filter((p) => p.indicatorId === ind.indicatorId && p.dataUrl.startsWith('data:'));
+              const photoCount = indicatorPhotos.length;
               const band = assess(ind.indicatorId, ind.state);
               return (
                 <div key={ind.indicatorId} className={`rounded-xl border p-5 ${isLab ? 'bg-[rgba(232,93,58,0.04)] border-[rgba(232,93,58,0.1)]' : 'bg-white border-[rgba(0,0,0,0.06)]'}`}>
@@ -196,6 +198,29 @@ export default function ReviewPage() {
                       )}
                     </div>
                   </div>
+                  {indicatorPhotos.length > 0 && (
+                    <div className="flex gap-2 mt-3 ml-6 flex-wrap" data-testid={`review-photos-${ind.indicatorId}`}>
+                      {indicatorPhotos.map((p) => (
+                        <button
+                          key={p.photoId}
+                          type="button"
+                          aria-label={`View photo for ${ind.indicatorName}`}
+                          onClick={() => setLightbox({ dataUrl: p.dataUrl, label: `${ind.indicatorName} — captured ${p.timestamp}` })}
+                          className="rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0a7d58]"
+                        >
+                          <Image
+                            src={p.dataUrl}
+                            alt=""
+                            width={64}
+                            height={64}
+                            unoptimized
+                            data-testid={`review-photo-${p.photoId}`}
+                            className="w-16 h-16 object-cover rounded-lg border border-[rgba(0,0,0,0.08)] hover:opacity-80 transition-opacity"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   {ind.state && !isLab && (
                     <p className="text-sm text-[rgba(0,0,0,0.62)] ml-6 mt-2">{indInfo?.visual_anchor_guide}</p>
                   )}
@@ -419,6 +444,27 @@ export default function ReviewPage() {
           This data is structured for the OneAquaHealth indicator framework (doi:10.5281/zenodo.20345207). Assessment is produced by deterministic rules (streamvitals-assessment/1.0.0) — no AI, no model, no hidden state.
         </p>
       </div>
+
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 bg-[rgba(0,0,0,0.8)] flex items-center justify-center p-4"
+          data-testid="photo-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Photo viewer"
+          onClick={() => setLightbox(null)}
+        >
+          <div className="bg-white rounded-2xl p-4 max-w-3xl max-h-full overflow-auto" onClick={(e) => e.stopPropagation()}>
+            <Image src={lightbox.dataUrl} alt={lightbox.label} width={960} height={720} unoptimized className="max-h-[70vh] w-auto mx-auto rounded-xl" />
+            <div className="flex items-center justify-between mt-3 gap-4">
+              <span className="text-xs text-[rgba(0,0,0,0.55)]">{lightbox.label}</span>
+              <button type="button" onClick={() => setLightbox(null)} aria-label="Close photo" className="text-[rgba(0,0,0,0.55)] hover:text-black transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

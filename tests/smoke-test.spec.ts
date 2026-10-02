@@ -217,6 +217,16 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await expect(photoCountEl).toHaveText(String(EXPECTED_PHOTO_COUNT));
     await expect(page.getByText('1 photo').first()).toBeVisible();
 
+    // The uploaded photo must be VIEWABLE on review: thumbnail renders, opens
+    // in the lightbox, and closes (photos were previously count-only here).
+    const reviewPhoto = page.locator('[data-testid^="review-photo-"]').first();
+    await expect(reviewPhoto).toBeVisible();
+    await reviewPhoto.click();
+    const lightbox = page.locator('[data-testid="photo-lightbox"]');
+    await expect(lightbox).toBeVisible();
+    await page.locator('button[aria-label="Close photo"]').click();
+    await expect(lightbox).not.toBeVisible();
+
     // Notes typed on the indicator page must appear on the review page
     await expect(page.getByText(BMI_NOTES).first()).toBeVisible();
 

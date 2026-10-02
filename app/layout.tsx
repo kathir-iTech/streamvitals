@@ -17,6 +17,22 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "StreamVitals — OneAquaHealth IEEE Global Hackathon 2026",
   description: "Field companion for OneAquaHealth stream monitoring: guided observations with deterministic, auditable assessment. AI may explain — AI never scores.",
+  metadataBase: new URL("https://streamvitals.vercel.app"),
+  openGraph: {
+    title: "StreamVitals — OneAquaHealth IEEE Global Hackathon 2026",
+    description: "Field companion for OneAquaHealth stream monitoring: guided observations with deterministic, auditable assessment. AI may explain — AI never scores.",
+    url: "https://streamvitals.vercel.app",
+    siteName: "StreamVitals",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "StreamVitals field monitoring app" }],
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "StreamVitals — OneAquaHealth IEEE Global Hackathon 2026",
+    description: "Field companion for OneAquaHealth stream monitoring: deterministic, auditable assessment. AI may explain — AI never scores.",
+    images: ["/og.png"],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
