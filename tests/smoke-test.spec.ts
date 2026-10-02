@@ -368,12 +368,10 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await panel.locator('button[aria-label="Send question"]').click();
     await expect(panel).toContainText('Based on the OneAquaHealth factsheet', { timeout: 15000 });
 
-    // The conversation must survive a reload (sessionStorage per indicator).
+    // The conversation and the open panel must survive a reload (sessionStorage).
     await page.reload();
     const reloadedPanel = page.locator('aside[aria-label="Field Assistant panel"]');
-    if (!(await reloadedPanel.isVisible())) {
-      await page.locator('button[aria-label="Open Field Assistant"]').click();
-    }
+    await expect(reloadedPanel).toBeVisible({ timeout: 5000 });
     await expect(reloadedPanel).toContainText('falls outside that scope');
     await expect(reloadedPanel).toContainText('Based on the OneAquaHealth factsheet');
     await page.unroute('/api/ai/assistant');

@@ -108,7 +108,31 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const storageKey = `sv-assistant-chat-${indicatorId}`;
   const restoredRef = useRef(false);
+  const openRestoredRef = useRef(false);
   const content = getIndicatorContent(indicatorId);
+
+  // The panel's open state survives reloads too — otherwise the restored chat
+  // sits behind a collapsed button and looks like it was lost.
+  useEffect(() => {
+    const isRestorePass = !openRestoredRef.current;
+    openRestoredRef.current = true;
+    if (isRestorePass) {
+      const timer = setTimeout(() => {
+        try {
+          if (sessionStorage.getItem('sv-assistant-open') === '1') setOpen(true);
+        } catch {
+          // storage unavailable — panel starts closed
+        }
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+    try {
+      sessionStorage.setItem('sv-assistant-open', open ? '1' : '0');
+    } catch {
+      // storage unavailable — ignore
+    }
+    return undefined;
+  }, [open]);
 
   // The conversation survives reloads and navigation within the tab (the
   // owner's complaint: every reload started a brand-new chat). First effect
