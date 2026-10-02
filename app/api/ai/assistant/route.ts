@@ -6,11 +6,15 @@ import {
   isMetaQuestion,
   OUT_OF_SCOPE_RESPONSE,
 } from '@/lib/factsheet-content';
+import { createRateLimit } from '@/lib/rate-limit';
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 // llama-3.3-70b-versatile was shut down 2026-08-16 (404 model_not_found);
 // openai/gpt-oss-120b is Groq's documented replacement for it.
 const GROQ_MODEL = 'openai/gpt-oss-120b';
+// Per-IP budget for the paid model call (scope-gated/offline answers are free
+// and unlimited). Over budget = offline fallback, still HTTP 200 by design.
+const limitAssistant = createRateLimit(20, 60000);
 
 // Server-side diagnostics. Every Groq failure is answered with HTTP 200 +
 // an offline fallback by design, so without these logs the Network tab can
@@ -61,6 +65,15 @@ export async function POST(request: NextRequest) {
     const factsheet = getFactsheetContent(indicatorId);
     if (!factsheet) {
       diag('offline-no-factsheet', { indicatorId });
+      return NextResponse.json({
+        response: getOfflineAssistantResponse(indicatorId, question),
+        source: 'offline',
+      });
+    }
+
+    const ip = (request.headers.get('x-forwarded-for') || 'unknown').split(',')[0].trim();
+    if (!limitAssistant(`assistant:${ip}`)) {
+      diag('rate-limited', { indicatorId, question: String(question).slice(0, 200) });
       return NextResponse.json({
         response: getOfflineAssistantResponse(indicatorId, question),
         source: 'offline',

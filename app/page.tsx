@@ -79,7 +79,7 @@ export default function HomePage() {
 
       <div className="stats-strip">
         <div className="stat-item">
-          <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">68</span>
+          <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">72</span>
           <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">Automated tests</span>
         </div>
         <div className="stat-divider" />
