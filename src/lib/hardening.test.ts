@@ -1,7 +1,26 @@
 import { describe, it, expect } from 'vitest';
 import { encodeShare, decodeShare, SHARE_QR_MAX_CHARS } from './session-share';
-import { buildSampleSession } from './sample-session';
+import type { FieldSession } from './field-session';
 import { assess } from './assessment/engine';
+
+// Local fixture: keeps the fuzz suite independent of any demo/sample data.
+function fixtureSession(now: string): FieldSession {
+  return {
+    sessionId: 'sess-fixture-1',
+    streamName: 'Fixture Creek',
+    volunteer: 'Test Volunteer',
+    date: now.slice(0, 10),
+    indicators: [
+      { indicatorId: 'BMI-01', indicatorName: 'Benthic Macroinvertebrates', type: 'citizen_observable', state: 'diverse_sensitive', photos: [], notes: 'Base note \u{1F41F}', timestamp: now, status: 'complete' },
+      { indicatorId: 'BIR-04', indicatorName: 'Birds', type: 'citizen_observable', state: 'good_riparian', photos: [], notes: 'Kingfisher spotted', timestamp: now, status: 'complete' },
+      { indicatorId: 'INV-11', indicatorName: 'Invasive Alien Plants of the Riparian Corridor', type: 'citizen_observable', state: 'none_observed', photos: [], notes: 'No IAP on banks', timestamp: now, status: 'complete' },
+      { indicatorId: 'FCL-06', indicatorName: 'Fecal Coliforms', type: 'lab_only', photos: [], notes: '', sampleLabel: 'SMP-20260202-001', timestamp: now, status: 'pending_lab_analysis' },
+      { indicatorId: 'DIA-10', indicatorName: 'Diatoms and Diatom Teratology', type: 'lab_only', photos: [], notes: '', sampleLabel: 'SMP-20260202-002', timestamp: now, status: 'pending_lab_analysis' },
+    ],
+    startedAt: now,
+    location: { lat: 12.9716, lng: 77.5946, accuracyM: 8, capturedAt: now },
+  };
+}
 
 // Deterministic LCG so failures are reproducible (no Math.random in tests).
 function lcg(seed: number): () => number {
@@ -14,7 +33,7 @@ function lcg(seed: number): () => number {
 
 describe('adversarial share payloads (fuzz)', () => {
   it('60 seeded mutations of a valid payload never throw', async () => {
-    const valid = await encodeShare(buildSampleSession('2026-01-01T00:00:00.000Z'));
+    const valid = await encodeShare(fixtureSession('2026-01-01T00:00:00.000Z'));
     const rand = lcg(42);
     const junk = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_!@#$%^&*()[]{}<>?/|.,';
     for (let i = 0; i < 60; i++) {
@@ -51,13 +70,12 @@ describe('adversarial share payloads (fuzz)', () => {
   });
 
   it('round-trips a hostile session: 50k note, CRLF, emoji, prototype-key state', async () => {
-    const session = buildSampleSession('2026-02-02T00:00:00.000Z');
-    session.indicators[0].notes = `[SYNTHETIC SAMPLE] ${'verbose note, with comma '.repeat(2000)}\r\n🐟 done`;
+    const session = fixtureSession('2026-02-02T00:00:00.000Z');
+    session.indicators[0].notes = `${'verbose note, with comma '.repeat(2000)}\r\n🐟 done`;
     const payload = await encodeShare(session);
     const back = await decodeShare(payload);
     expect(back).not.toBeNull();
     expect(back!.indicators[0].notes).toBe(session.indicators[0].notes);
-    expect(back!.isSample).toBe(true);
     // The whole hostile session still fits the QR budget comfortably.
     expect(payload.length).toBeLessThan(SHARE_QR_MAX_CHARS);
   });

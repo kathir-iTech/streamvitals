@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import { createSession, isIndexedDBAvailable, getSession, getAllSessions, type SessionLocation } from '@/lib/field-session';
-import { loadSampleSession, SAMPLE_SESSION_ID } from '@/lib/sample-session';
 import { computeObservationFrequencies, type IndicatorFrequency } from '@/lib/observation-frequencies';
 import { indicators } from '@/data/indicators';
 import { LAB_PROTOCOL_GUIDANCE } from '@/data/lab-protocol-guidance';
@@ -66,9 +65,7 @@ export default function FieldPage() {
         }
       }).catch(() => {});
       getAllSessions().then((sessions) => {
-        // Synthetic sample sessions are excluded — demo data must not count
-        // as observed frequencies.
-        setFrequencies(computeObservationFrequencies(sessions.filter((s) => !s.isSample)));
+        setFrequencies(computeObservationFrequencies(sessions));
       }).catch(() => {});
     }
   }, []);
@@ -151,23 +148,6 @@ export default function FieldPage() {
     }
   };
 
-  const handleLoadSample = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const result = await loadSampleSession();
-      if (result.ok) {
-        router.push(`/field/review?session=${encodeURIComponent(SAMPLE_SESSION_ID)}`);
-      } else {
-        setError(result.error);
-      }
-    } catch {
-      setError('Could not load the sample session');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <main className="min-h-screen bg-[#ffffff]">
       <div className="hero-split">
@@ -241,18 +221,6 @@ export default function FieldPage() {
                 {loading ? 'Starting session...' : 'Start Monitoring Session'}
                 <ArrowRight className="w-4 h-4" />
               </button>
-              <div className="pt-1">
-                <button
-                  type="button"
-                  data-testid="load-sample-session"
-                  onClick={() => void handleLoadSample()}
-                  disabled={loading}
-                  className="btn-pill-outline text-sm"
-                >
-                  Explore a sample session (synthetic)
-                </button>
-                <p className="text-xs text-[rgba(0,0,0,0.55)] mt-2">Clearly-labeled demo data — stored only on this device, nothing is sent anywhere.</p>
-              </div>
               <div className="pt-2">
                 <p className="text-xs text-[rgba(0,0,0,0.55)]">5 official indicators · CC-BY factsheet · DOI:10.5281/zenodo.20345207</p>
               </div>

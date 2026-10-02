@@ -91,8 +91,6 @@ export interface FieldSession {
   completedAt?: string;
   location?: SessionLocation;
   gbifBaseline?: GbifBaseline;
-  /** Built-in demonstration data — labeled synthetic everywhere it renders. */
-  isSample?: boolean;
 }
 
 export async function createSession(session: FieldSession): Promise<{ success: boolean; error?: string }> {

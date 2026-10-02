@@ -9,7 +9,6 @@ const PAGES = [
   '/field',
   '/field/bmi-01',
   '/sync',
-  '/try',
 ];
 
 for (const path of PAGES) {

@@ -57,20 +57,13 @@ export default function ReviewPage() {
     }
   };
 
-  // ?session=<id> opens a specific stored session (used by the synthetic
-  // sample) without clobbering the caller's in-progress session pointer.
-  const resolveSessionId = useCallback((): string => {
-    try {
-      const fromUrl = new URLSearchParams(window.location.search).get('session');
-      if (fromUrl) return fromUrl;
-      return sessionStorage.getItem('current_session_id') || '';
-    } catch {
-      return '';
-    }
-  }, []);
-
   useEffect(() => {
-    const sessionId = resolveSessionId();
+    let sessionId = '';
+    try {
+      sessionId = sessionStorage.getItem('current_session_id') || '';
+    } catch {
+      sessionId = '';
+    }
     if (!sessionId) { router.push('/field'); return; }
     getFullSession(sessionId).then((result) => {
       if (result.session) {
@@ -101,10 +94,15 @@ export default function ReviewPage() {
     }).catch(() => {
       router.push('/field');
     });
-  }, [router, resolveSessionId]);
+  }, [router]);
 
   const handleComplete = useCallback(async () => {
-    const sessionId = resolveSessionId();
+    let sessionId = '';
+    try {
+      sessionId = sessionStorage.getItem('current_session_id') || '';
+    } catch {
+      sessionId = '';
+    }
     if (!sessionId) return;
     try {
       const { updateSession } = await import('@/lib/field-session');
@@ -113,7 +111,7 @@ export default function ReviewPage() {
     } catch {
       setSessionComplete(true);
     }
-  }, [resolveSessionId]);
+  }, []);
 
   const handleContinueLater = useCallback(() => {
     router.push('/field');
@@ -144,12 +142,6 @@ export default function ReviewPage() {
   return (
     <main className="min-h-screen bg-[#ffffff]">
       <div className="max-w-3xl mx-auto px-6 py-12">
-        {session.isSample && (
-          <div data-testid="sample-banner" role="note" className="mb-8 bg-[rgba(232,93,58,0.06)] border border-[rgba(232,93,58,0.25)] rounded-xl p-4 text-center">
-            <p className="text-sm font-bold text-[#c2410c]">SYNTHETIC SAMPLE — demonstration data, not field observations</p>
-            <p className="text-xs text-[rgba(0,0,0,0.6)] mt-1">States, notes, and sample IDs below were generated to show the app. Photos and GPS were not captured.</p>
-          </div>
-        )}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 mb-4 bg-[rgba(13,155,110,0.08)] border border-[rgba(13,155,110,0.15)] px-4 py-2 rounded-full">
             <span className="w-1.5 h-1.5 bg-[#0a7d58] rounded-full" />

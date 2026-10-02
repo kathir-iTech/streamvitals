@@ -26,7 +26,7 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
       framework: 'OneAquaHealth Key Indicators',
       doi: '10.5281/zenodo.20345207',
       assessmentEngine: ENGINE_VERSION,
-      session: { sessionId: session.sessionId, streamName: session.streamName, volunteer: session.volunteer, date: session.date, startedAt: session.startedAt, completedAt: session.completedAt, isSample: session.isSample ?? false, location: session.location ?? null, gbifBaseline: session.gbifBaseline ?? null },
+      session: { sessionId: session.sessionId, streamName: session.streamName, volunteer: session.volunteer, date: session.date, startedAt: session.startedAt, completedAt: session.completedAt, location: session.location ?? null, gbifBaseline: session.gbifBaseline ?? null },
       indicators: session.indicators.map((ind) => {
         const assessment = assess(ind.indicatorId, ind.state);
         return { indicatorId: ind.indicatorId, indicatorName: ind.indicatorName, type: ind.type, state: ind.state, status: ind.status, photos: result.photos.filter((p) => p.indicatorId === ind.indicatorId).map((p) => ({ photoId: p.photoId, timestamp: p.timestamp })), notes: ind.notes, note_flag: ind.note_flag || '', sampleLabel: ind.sampleLabel, labProtocolGuidance: ind.labProtocolGuidance, timestamp: ind.timestamp, assessment: ind.state ? { ...assessment, stateLabel: getStateLabel(ind.indicatorId, ind.state) } : assessment };

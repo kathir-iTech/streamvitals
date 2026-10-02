@@ -106,7 +106,6 @@ source of truth. Do not reintroduce `src/app/`.
 4. **`/field/[indicator]`** — Per-indicator observation form. Citizen indicators get state selection, photo capture, and field notes. Lab indicators (FCL-06, DIA-10) get a prominent sample ID to write on the container, one collection protocol, photo capture, and sampling notes.
 5. **`/field/review`** — Review all observations (including viewable photo thumbnails), session assessment grid, GBIF baseline, share-across-devices link, print a Lab Submission Sheet, export (JSON/CSV/Print), submit session
 6. **`/sync`** — Import a shared session from a `/sync#…` link (QR or paste); validates and previews before writing to this browser
-7. **`/try`** — Five-minute walkthrough for testers: step list, QR to the app, the promises (device-local data, fragment-only share links, rate-limited assistant, error-only telemetry), and a button that opens a clearly-labeled **synthetic sample session** — bannered as non-field data on review, excluded from observation frequencies, and loaded via `?session=` so it never hijacks an in-progress session pointer
 
 The footer links to **`/provenance`** (machine-readable track, DOI, citation, and AI-boundary statement).
 
@@ -173,7 +172,7 @@ Countable from this repository, not estimates:
 
 | Number | What it is |
 |---|---|
-| **100** | Vitest tests across 12 files (session 9, factsheet/assistant 14, note rules 15, frequencies 5, assessment engine 12, GBIF client 6, share links 9, rate limiter 4, telemetry 11, export format 5, sample session 5, adversarial hardening 5) |
+| **95** | Vitest tests across 11 files (session 9, factsheet/assistant 14, note rules 15, frequencies 5, assessment engine 12, GBIF client 6, share links 9, rate limiter 4, telemetry 11, export format 5, adversarial hardening 5) |
 | **9** | Citizen observation states — 3 field indicators × 3 states each |
 | **8** | GBIF baseline taxa queried within 50 km of the session GPS (FCL-06 excluded — laboratory indicator) |
 | **0** | AI calls in the assessment path (state selection, note gate, bands, exports are deterministic) |
@@ -194,7 +193,7 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 
 ## Submission Artifacts
 
-- [`DEVPOST.md`](DEVPOST.md) — the paste-ready Devpost write-up: problem, nine features, the number (100 tests), before/after, removed features, limits, roadmap.
+- [`DEVPOST.md`](DEVPOST.md) — the paste-ready Devpost write-up: problem, nine features, the number (95 tests), before/after, removed features, limits, roadmap.
 - [`VIDEO.md`](VIDEO.md) — the shot-by-shot demo script (~4:15, inside the event's 3–5 minute requirement) with a recording checklist.
 
 ## What's Next
@@ -216,14 +215,13 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 - `src/lib/rate-limit.test.ts` — 4 tests for the assistant's per-IP request budget
 - `src/lib/telemetry.test.ts` — 11 tests for the client-error endpoint (validation, per-IP drop-not-error contract, dedupe, trim, never-throws) via `src/lib/telemetry-server.ts`
 - `src/lib/export-format.test.ts` — 5 tests for RFC 4180 CSV cell quoting (notes verbatim)
-- `src/lib/sample-session.test.ts` — 5 tests for the labeled synthetic sample (engine-valid states, explicit markers, failure surfacing)
-- `src/lib/hardening.test.ts` — 5 tests: seeded fuzz of share payloads, hostile junk inputs, a 50k-note round-trip, and engine prototype-key hardening (100 tests total)
+- `src/lib/hardening.test.ts` — 5 tests: seeded fuzz of share payloads, hostile junk inputs, a 50k-note round-trip, and engine prototype-key hardening (95 tests total)
 
 Run with `npm test` (Vitest, jsdom environment, IndexedDB via `fake-indexeddb`).
 
-`npm run e2e` builds and runs three Playwright specs: the session walkthrough below, an axe-core accessibility scan of six routes that fails on any critical WCAG 2.0/2.1 A/AA violation (currently zero violations at every impact level), and a service-worker test that cuts the network to prove an already-visited page reloads while a never-visited one gets the designed offline screen. GitHub Actions (`.github/workflows/ci.yml`) runs lint (clean: 0 errors, 0 warnings), all 100 unit tests, the build, and the full e2e suite on every push and pull request to `main`.
+`npm run e2e` builds and runs three Playwright specs: the session walkthrough below, an axe-core accessibility scan of five routes that fails on any critical WCAG 2.0/2.1 A/AA violation (currently zero violations at every impact level), and a service-worker test that cuts the network to prove an already-visited page reloads while a never-visited one gets the designed offline screen. GitHub Actions (`.github/workflows/ci.yml`) runs lint (clean: 0 errors, 0 warnings), all 95 unit tests, the build, and the full e2e suite on every push and pull request to `main`.
 
-The end-to-end smoke test (`npm run e2e`) asserts that the stream name, **volunteer name**, date, selected states, notes, sample IDs, and **photo count shown on the review page match what was actually typed and uploaded**, and that the uploaded photo is actually **viewable on review** (thumbnail renders, opens in the lightbox, closes again). It also asserts the deterministic assessment card renders on state selection and on lab pages (`pending_lab`, never a verdict), that the review page shows the session assessment grid with correct per-indicator bands, that the GPS capture round-trips into the review page and the GBIF baseline panel renders (GBIF is intercepted with a deterministic fixture), that a share link created on the review page decodes on `/sync` and imports successfully, that no "Not provided" placeholder appears, that the assistant's in-scope, nonsense, and meta questions receive three distinct correct responses (and that refusals point at the assessment card instead of scoring), and that the observation-frequencies panel on `/field` shows real counts labeled as frequencies rather than predictions. A second e2e test opens `/try`, loads the labeled synthetic sample, and asserts the banner, the deterministic bands, that no session pointer is clobbered, and that repeat loads replace instead of duplicating. This exists because an earlier version of the review page rendered a hardcoded placeholder session, and the previous test suite passed against it. It also exists because `/field` once had no volunteer input at all, so the review page legitimately (but uselessly) showed "Not provided" for every session. If the review page ever shows data the user did not enter, the smoke test now fails.
+The end-to-end smoke test (`npm run e2e`) asserts that the stream name, **volunteer name**, date, selected states, notes, sample IDs, and **photo count shown on the review page match what was actually typed and uploaded**, and that the uploaded photo is actually **viewable on review** (thumbnail renders, opens in the lightbox, closes again). It also asserts the deterministic assessment card renders on state selection and on lab pages (`pending_lab`, never a verdict), that the review page shows the session assessment grid with correct per-indicator bands, that the GPS capture round-trips into the review page and the GBIF baseline panel renders (GBIF is intercepted with a deterministic fixture), that a share link created on the review page decodes on `/sync` and imports successfully, that no "Not provided" placeholder appears, that the assistant's in-scope, nonsense, and meta questions receive three distinct correct responses (and that refusals point at the assessment card instead of scoring), and that the observation-frequencies panel on `/field` shows real counts labeled as frequencies rather than predictions. This exists because an earlier version of the review page rendered a hardcoded placeholder session, and the previous test suite passed against it. It also exists because `/field` once had no volunteer input at all, so the review page legitimately (but uselessly) showed "Not provided" for every session. If the review page ever shows data the user did not enter, the smoke test now fails.
 
 ## Factsheet Provenance
 
