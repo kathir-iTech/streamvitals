@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import Script from "next/script";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import Telemetry from "@/components/Telemetry";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -56,12 +58,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="flex items-center gap-6 text-sm font-medium">
               <Link href="/" className="text-[rgba(0,0,0,0.62)] hover:text-black transition-colors">Home</Link>
               <Link href="/field" className="text-[rgba(0,0,0,0.62)] hover:text-black transition-colors">Field Companion</Link>
+              <Link href="/try" className="text-[rgba(0,0,0,0.62)] hover:text-black transition-colors">Try it</Link>
               <Link href="/about" className="text-[rgba(0,0,0,0.62)] hover:text-black transition-colors">How it works</Link>
             </div>
           </div>
         </nav>
         <main id="main-content" className="flex-1" role="main">
-          {children}
+          <ErrorBoundary>{children}</ErrorBoundary>
         </main>
         <footer className="bg-white border-t border-[rgba(0,0,0,0.06)] px-6 py-6">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs text-[rgba(0,0,0,0.62)]">
@@ -70,6 +73,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               Deterministic assessment (streamvitals-assessment/1.0.0) — AI never scores.
             </p>
             <nav aria-label="Footer" className="flex items-center gap-5">
+              <Link href="/try" className="hover:text-black transition-colors">Try it</Link>
               <Link href="/about" className="hover:text-black transition-colors">How it works</Link>
               <Link href="/provenance" className="hover:text-black transition-colors">Provenance</Link>
               <a href="https://doi.org/10.5281/zenodo.20345207" className="hover:text-black transition-colors">Factsheets (DOI)</a>
@@ -80,6 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script id="sw-register" strategy="afterInteractive">
           {`if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(function () {}); }`}
         </Script>
+        <Telemetry />
       </body>
     </html>
   );
