@@ -1,6 +1,7 @@
 'use client';
 
 import { use, useState, useEffect, useCallback, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Shield, AlertTriangle, FlaskConical } from 'lucide-react';
 import { indicators } from '@/data/indicators';
 import { updateSession, getSession, createSession } from '@/lib/field-session';
@@ -11,6 +12,7 @@ import PhotoCapture from '@/components/PhotoCapture';
 const FIELD_INDICATORS = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
 
 export default function IndicatorPage({ params }: { params: Promise<{ indicator: string }> }) {
+  const router = useRouter();
   const { indicator: rawIndicatorId } = use(params);
   const indicatorId = FIELD_INDICATORS.find((id) => id.toLowerCase() === rawIndicatorId.toLowerCase()) || rawIndicatorId;
   const indicator = indicators.find((i) => i.id === indicatorId);
@@ -32,6 +34,14 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
   }, []);
 
   useEffect(() => {
+    // Client-side navigation keeps this component mounted, so form state must
+    // be cleared when the indicator changes before loading the new record —
+    // a full reload used to do this implicitly.
+    setSelectedState('');
+    setNotes('');
+    setNoteFlag('');
+    setSampleLabel('');
+    setPhotos([]);
     if (!sessionId) return;
     getSession(sessionId).then((session) => {
       if (session && !session.completedAt) {
@@ -118,17 +128,17 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
   const handleNext = useCallback(async () => {
     await handleSaveIndicator();
     if (currentIndex < FIELD_INDICATORS.length - 1) {
-      window.location.href = `/field/${FIELD_INDICATORS[currentIndex + 1].toLowerCase()}`;
+      router.push(`/field/${FIELD_INDICATORS[currentIndex + 1].toLowerCase()}`);
     } else {
-      window.location.href = '/field/review';
+      router.push('/field/review');
     }
-  }, [currentIndex, handleSaveIndicator]);
+  }, [currentIndex, handleSaveIndicator, router]);
 
   const handlePrev = useCallback(() => {
     if (currentIndex > 0) {
-      window.location.href = `/field/${FIELD_INDICATORS[currentIndex - 1].toLowerCase()}`;
+      router.push(`/field/${FIELD_INDICATORS[currentIndex - 1].toLowerCase()}`);
     }
-  }, [currentIndex]);
+  }, [currentIndex, router]);
 
   if (!indicator) {
     return (

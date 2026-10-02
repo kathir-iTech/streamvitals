@@ -76,7 +76,7 @@ source of truth. Do not reintroduce `src/app/`.
 - No tier ratings (T1/T2/T3) anywhere in the UI
 - No diagnostic assessments
 - Lab-only isolation for FCL-06/DIA-10 indicators
-- All navigation via `window.location.href` only
+- Indicator-to-indicator navigation uses the Next.js client router (`router.push`) — no full page reload, so assistant and form state survive Next/Previous. Recovery redirects (missing session) still use full page loads.
 - No React Router, no `<Link>` components from Next.js
 - Case-insensitive indicator lookup
 - Light theme only — no theme toggles, no dark mode

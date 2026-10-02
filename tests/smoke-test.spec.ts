@@ -71,9 +71,14 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await expect(page.url()).not.toContain('?state=');
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '03a-photo-uploaded.png'), fullPage: true });
 
-    // Next navigates to BIR-04
+    // Next must be a client-side route change, not a document reload.
+    // performance.timeOrigin identifies the document: it survives a soft
+    // navigation and changes if the page fully reloads.
+    const timeOriginBefore = await page.evaluate(() => performance.timeOrigin);
     await page.locator('button:has-text("Next Indicator")').click();
     await page.waitForURL('/field/bir-04');
+    const timeOriginAfter = await page.evaluate(() => performance.timeOrigin);
+    expect(timeOriginAfter).toBe(timeOriginBefore);
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '03a-bir-04.png'), fullPage: true });
 
     // Step 3b: BIR-04 — state selection does not change URL or reload
