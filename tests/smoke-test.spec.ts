@@ -248,6 +248,25 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     expect(download.suggestedFilename()).toMatch(/\.json$/);
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '06-export.png'), fullPage: true });
 
+    // Step 6b: share across devices — create a link on review, open it in this
+    // browser, preview, and import. The link payload lives in the URL fragment.
+    await page.locator('[data-testid="create-share-link"]').click();
+    const shareInput = page.locator('[data-testid="share-link-input"]');
+    await expect(shareInput).toBeVisible();
+    const shareUrl = await shareInput.inputValue();
+    expect(shareUrl).toContain('/sync#');
+    await expect(page.locator('[data-testid="share-qr"]')).toBeVisible();
+    await expect(page.locator('[data-testid="share-note"]')).toContainText('Photos');
+    await page.screenshot({ path: path.join(ARTIFACTS_DIR, '10-share-link.png'), fullPage: true });
+
+    await page.goto(shareUrl);
+    await expect(page.locator('[data-testid="sync-preview"]')).toBeVisible();
+    await expect(page.locator('[data-testid="sync-preview"]')).toContainText(STREAM_NAME);
+    await expect(page.locator('[data-testid="sync-preview"]')).toContainText('Not part of share links');
+    await page.locator('[data-testid="sync-import"]').click();
+    await expect(page.locator('[data-testid="sync-success"]')).toBeVisible();
+    await page.screenshot({ path: path.join(ARTIFACTS_DIR, '11-sync-import.png'), fullPage: true });
+
     // Step 7: Field Assistant bounded scope (collapsed by default, opens on toggle)
     await page.goto('/field/bmi-01');
     await expect(page.locator('button[aria-label="Open Field Assistant"]')).toBeVisible();

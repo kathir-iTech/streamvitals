@@ -19,7 +19,7 @@ That word is an assessment smuggled into observation data. Downstream it is wort
 
 StreamVitals closes that gap without adding a second AI problem on top of the first.
 
-### What it does — seven features, all in the live app
+### What it does — eight features, all in the live app
 
 1. **Guided observation.** Five official indicators — BMI-01 Benthic Macroinvertebrates, BIR-04 Birds, INV-11 Invasive Alien Plants, FCL-06 Fecal Coliforms, DIA-10 Diatoms. Three field indicators offer three observation states each (nine states total), photo capture, and a field note; the session persists in IndexedDB and survives a refresh.
 2. **Lab mode that admits what it cannot know.** FCL-06 and DIA-10 cannot be judged in the field, so the app does not pretend: it shows a prominent **sample ID** to write on the container, the factsheet's own collection protocol, photo capture, and sampling notes. Pending lab analysis means pending — the assessment band says `pending_lab`, never a verdict.
@@ -28,6 +28,7 @@ StreamVitals closes that gap without adding a second AI problem on top of the fi
 5. **A bounded Field Assistant.** In-scope protocol questions are answered from the factsheet text itself (Groq, `openai/gpt-oss-120b`, factsheet injected into the prompt). Meta questions and out-of-scope questions never reach a model at all — they are answered locally by a scope gate, and health-judgement questions are pointed at the deterministic card. It never grades, scores, or identifies species beyond the factsheet.
 6. **Review and export you can audit.** The review page shows exactly what the volunteer typed — names, states, notes, sample IDs — plus the session's assessment grid (per-indicator band chips, counts, worst band) — and exports CSV, JSON, a print summary, and a printable Lab Submission Sheet, every one of them carrying the band, the engine version, and the chain rule IDs. The frequencies panel on `/field` shows counts of what was recorded, labelled frequencies, never predictions.
 7. **Session location + GBIF baseline.** Optional GPS capture at session start (browser Geolocation API) — coordinates live in the session record on the device and its exports, never on a server of ours. With a location present, the review page fetches a baseline from `api.gbif.org/v1` browser-side (no key, no proxy): 8 taxa — EPT orders (BMI-01), Aves (BIR-04), the factsheet's three abbreviated IAP examples expanded to full binomials (INV-11), Bacillariophyta (DIA-10); FCL-06 is stated as "no taxon group — laboratory indicator". Counts within 50 km, timestamped, stored with the session, and labelled "presence data for context only, not a water-quality assessment — absence of records is not absence of species".
+8. **Share across devices — no accounts, no server.** "Create share link" on the review page encodes the session (states, notes, flags, sample IDs, GPS, baseline) as a versioned base64url payload in the **URL fragment** of `/sync#…` — fragments never reach any server. A QR code (zero-dependency `qrcode-generator`) hands the link to a phone; `/sync` validates the payload (garbage, truncation, wrong versions are rejected), previews it, and imports it into local storage. Photos deliberately stay on the capturing device and the UI says so. Server-side sync is on the roadmap, not faked.
 
 ### How it works
 
@@ -37,11 +38,11 @@ StreamVitals closes that gap without adding a second AI problem on top of the fi
 4. The deterministic engine assesses the state — band, chain of evidence, caveats — on the card, at view and export time.
 5. The note check runs on every note and warns without blocking.
 6. Ask the Field Assistant — factsheet answers only; the scope gate handles everything else, and judgements point back at the card.
-7. Review and export — session assessment grid, GBIF baseline (if GPS captured), CSV, JSON, print, Lab Submission Sheet.
+7. Review and export — session assessment grid, GBIF baseline (if GPS captured), CSV, JSON, print, Lab Submission Sheet, share link + QR for a second device.
 
 ### The number
 
-**61 automated tests** (Vitest: 9 session + 14 factsheet/assistant + 15 note rules + 5 frequencies + 12 assessment engine + 6 GBIF client), plus an end-to-end Playwright walkthrough of the entire session that fails if the review page ever shows data the volunteer did not enter or if the assessment card/chips/location/baseline don't render. **0 AI calls in the assessment path.** The assistant's median answer time is ~1.9 s (5 live probes against the deployed app, 2026-10-02, min 1.4 s / max 4.1 s).
+**68 automated tests** (Vitest: 9 session + 14 factsheet/assistant + 15 note rules + 5 frequencies + 12 assessment engine + 6 GBIF client + 7 share links), plus an end-to-end Playwright walkthrough of the entire session that fails if the review page ever shows data the volunteer did not enter or if the assessment card/chips/location/baseline/share-import don't render. **0 AI calls in the assessment path.** The assistant's median answer time is ~1.9 s (5 live probes against the deployed app, 2026-10-02, min 1.4 s / max 4.1 s).
 
 ### Before / after — the same note, two datasets
 
@@ -64,10 +65,11 @@ We also corrected two live claims before submission: the provenance endpoint no 
 1. **Field pilot** — run the companion beside volunteers at OneAquaHealth research-city streams; the comparison we do not yet have is paper sheet versus phone on the same visit.
 2. **Multilingual volunteer labels** — the factsheets are multilingual; the volunteer-facing UI currently is not.
 3. **Pipeline hand-off** — CSV/JSON exports already carry indicator IDs, states, notes, and note flags in a fixed schema; the next step is ingesting them into the OneAquaHealth Citizen Science App pipeline instead of manual review.
+4. **Server-side sync** — share links handle hand-off today; a provisioned datastore with conflict handling is the next architectural step and is deliberately not claimed in this build.
 
 ### Built with
 
-Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS 4 · IndexedDB persistence · deterministic assessment engine (`streamvitals-assessment/1.0.0`, pure TypeScript — no network, no clock, no model) · GBIF baseline via `api.gbif.org/v1` (browser-direct) · Groq (`openai/gpt-oss-120b`) for the bounded assistant only · Vitest (61 tests) + Playwright (end-to-end smoke test) · Vercel.
+Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS 4 · IndexedDB persistence · deterministic assessment engine (`streamvitals-assessment/1.0.0`, pure TypeScript — no network, no clock, no model) · GBIF baseline via `api.gbif.org/v1` (browser-direct) · share-link sync (URL fragments, `qrcode-generator`) · Groq (`openai/gpt-oss-120b`) for the bounded assistant only · Vitest (68 tests) + Playwright (end-to-end smoke test) · Vercel.
 
 ### Sources
 
@@ -81,3 +83,4 @@ OneAquaHealth Key Indicators Factsheets Collection — Schmeller et al. (2026), 
 - The automated end-to-end test runs in desktop Chromium; real-camera, real-sunlight readability testing on physical phones is pending.
 - Lab indicators produce no band in the field — a sample ID is not a measurement, so the rules return `pending_lab` rather than grade what was not measured.
 - Citizen bands are tolerance/extent **proxies** grounded in the factsheet's measurement principles — not BMWP/IBD/IPS indices, which require taxon-level laboratory identification.
+- Sync is share-link based (URL fragment + QR): no server-side datastore is provisioned, so "sync" means hand-off, not background replication — and the roadmap says exactly that.

@@ -43,6 +43,14 @@ When the review page opens with a location present, it fetches a **GBIF baseline
 
 Exports: JSON carries `session.location` and `session.gbifBaseline`; CSV carries `session_latitude`, `session_longitude`, `location_accuracy_m` columns. The GBIF client lives in `src/lib/gbif.ts` with an injectable fetcher and 6 tests covering URL shape, no-match, and network-failure behaviour.
 
+## Multi-Device Sync (Share Links)
+
+Sessions move between devices with **no accounts and no server storage**: the review page's "Create share link" builds a versioned, base64url payload of the session (states, notes, flags, sample IDs, GPS, GBIF baseline) and puts it in the **URL fragment** of `/sync#…` — fragments are never sent to any server. The page also renders a QR code (zero-dependency `qrcode-generator`) so a phone can open the link by camera; payloads too long for the 2953-byte QR budget fall back to copy/paste honestly.
+
+`/sync` decodes, validates (version + required fields — garbage, truncation, and wrong versions are rejected), previews the session, and imports it into the local IndexedDB store (same session ID replaces the existing record). Deliberately excluded and stated in the UI: **photos stay on the device that captured them**; static lab protocol text and GBIF attribution/labels are re-derived from source constants on import, not carried in the link. `src/lib/session-share.ts` holds encode/decode with 7 tests, including a QR-budget guard test so payload bloat fails the suite.
+
+Server-side sync (a real datastore) is **not** claimed: the deployed project has no storage backend provisioned, and the roadmap says so instead of faking it.
+
 ## The Note Check Is Rule-Based, Not AI
 
 `src/lib/note-quality.ts` is a **deterministic keyword and contradiction rule set**. It contains no model, no API call, and no inference. It does two things:
@@ -93,7 +101,8 @@ source of truth. Do not reintroduce `src/app/`.
 2. **`/about`** — How it works: why the product exists, the One Health quote for each indicator, the session pipeline, the published numbers, honest limits, and the roadmap
 3. **`/field`** — Session dashboard. Captures stream name, **volunteer name**, date and time (plus optional GPS location), then creates or continues a monitoring session
 4. **`/field/[indicator]`** — Per-indicator observation form. Citizen indicators get state selection, photo capture, and field notes. Lab indicators (FCL-06, DIA-10) get a prominent sample ID to write on the container, one collection protocol, photo capture, and sampling notes.
-5. **`/field/review`** — Review all observations, print a Lab Submission Sheet, export (JSON/CSV/Print), submit session
+5. **`/field/review`** — Review all observations, session assessment grid, GBIF baseline, share-across-devices link, print a Lab Submission Sheet, export (JSON/CSV/Print), submit session
+6. **`/sync`** — Import a shared session from a `/sync#…` link (QR or paste); validates and previews before writing to this browser
 
 The footer links to **`/provenance`** (machine-readable track, DOI, citation, and AI-boundary statement).
 
@@ -152,13 +161,13 @@ Countable from this repository, not estimates:
 
 | Number | What it is |
 |---|---|
-| **61** | Vitest tests across 6 files (session 9, factsheet/assistant 14, note rules 15, frequencies 5, assessment engine 12, GBIF client 6) |
+| **68** | Vitest tests across 7 files (session 9, factsheet/assistant 14, note rules 15, frequencies 5, assessment engine 12, GBIF client 6, share links 7) |
 | **9** | Citizen observation states — 3 field indicators × 3 states each |
 | **8** | GBIF baseline taxa queried within 50 km of the session GPS (FCL-06 excluded — laboratory indicator) |
 | **0** | AI calls in the assessment path (state selection, note gate, bands, exports are deterministic) |
 | **1** | Deterministic assessment engine (`streamvitals-assessment/1.0.0`) — same state, same band, every time |
 | **~1.9 s** | Median assistant answer, 5 live probes against the deployed app on 2026-10-02 (min 1.4 s, max 4.1 s; moves with the provider) |
-| **21** | Committed screenshots from automated runs under `tests/artifacts/` |
+| **23** | Committed screenshots from automated runs under `tests/artifacts/` |
 
 ## Screenshots
 
@@ -169,11 +178,11 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 | ![Homepage](tests/artifacts/01-homepage.png) | ![BMI-01 state selected](tests/artifacts/03a-bmi-01-state-selected.png) | ![Note quality gate](tests/artifacts/quality-gate-unsupported.png) |
 | ![FCL-06 lab page](tests/artifacts/04-fcl-06-lab-page.png) | ![Assistant](tests/artifacts/07-assistant.png) | ![Review page](tests/artifacts/05-review.png) |
 | ![Export](tests/artifacts/06-export.png) | ![Observation frequencies](tests/artifacts/08-observation-frequencies.png) | ![Quality gate cleared](tests/artifacts/quality-gate-cleared.png) |
-| ![How it works page](tests/artifacts/09-about.png) | | |
+| ![How it works page](tests/artifacts/09-about.png) | ![Share link + QR](tests/artifacts/10-share-link.png) | ![Sync import](tests/artifacts/11-sync-import.png) |
 
 ## Submission Artifacts
 
-- [`DEVPOST.md`](DEVPOST.md) — the paste-ready Devpost write-up: problem, seven features, the number (61 tests), before/after, removed features, limits, roadmap.
+- [`DEVPOST.md`](DEVPOST.md) — the paste-ready Devpost write-up: problem, eight features, the number (68 tests), before/after, removed features, limits, roadmap.
 - [`VIDEO.md`](VIDEO.md) — the shot-by-shot demo script (~4:15, inside the event's 3–5 minute requirement) with a recording checklist.
 
 ## What's Next
@@ -181,6 +190,7 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 1. **Field pilot** — run the companion beside volunteers at OneAquaHealth research-city streams; the comparison we do not yet have is paper sheet versus phone on the same visit.
 2. **Multilingual volunteer labels** — the factsheets are multilingual; the UI currently is not.
 3. **Pipeline hand-off** — CSV/JSON exports already carry indicator IDs, states, notes, and note flags in a fixed schema; the next step is ingesting them into the OneAquaHealth Citizen Science App pipeline.
+4. **Server-side sync** — share links cover device-to-device hand-off today; a real datastore (provisioned storage + conflict handling) is the next step and is not claimed in the current build.
 
 ## Testing
 
@@ -189,11 +199,12 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 - `src/lib/note-quality.test.ts` — 15 tests, including 12 realistic notes (6 must not flag, 6 must)
 - `src/lib/observation-frequencies.test.ts` — 5 tests for the observation-frequencies counts
 - `src/lib/assessment/engine.test.ts` — 12 tests for bands, chains, session summary, and the source guard that fails if the engine ever touches a model, the network, or the clock
-- `src/lib/gbif.test.ts` — 6 tests for GBIF URL shape, counts, no-match, and network-failure handling via an injected fetcher (61 tests total)
+- `src/lib/gbif.test.ts` — 6 tests for GBIF URL shape, counts, no-match, and network-failure handling via an injected fetcher
+- `src/lib/session-share.test.ts` — 7 tests for share-link round-trips, payload validation, and the QR-budget guard (68 tests total)
 
 Run with `npm test` (Vitest, jsdom environment, IndexedDB via `fake-indexeddb`).
 
-The end-to-end smoke test (`npm run e2e`) asserts that the stream name, **volunteer name**, date, selected states, notes, sample IDs, and **photo count shown on the review page match what was actually typed and uploaded**. It also asserts the deterministic assessment card renders on state selection and on lab pages (`pending_lab`, never a verdict), that the review page shows the session assessment grid with correct per-indicator bands, that the GPS capture round-trips into the review page and the GBIF baseline panel renders (GBIF is intercepted with a deterministic fixture), that no "Not provided" placeholder appears, that the assistant's in-scope, nonsense, and meta questions receive three distinct correct responses (and that refusals point at the assessment card instead of scoring), and that the observation-frequencies panel on `/field` shows real counts labeled as frequencies rather than predictions. This exists because an earlier version of the review page rendered a hardcoded placeholder session, and the previous test suite passed against it. It also exists because `/field` once had no volunteer input at all, so the review page legitimately (but uselessly) showed "Not provided" for every session. If the review page ever shows data the user did not enter, the smoke test now fails.
+The end-to-end smoke test (`npm run e2e`) asserts that the stream name, **volunteer name**, date, selected states, notes, sample IDs, and **photo count shown on the review page match what was actually typed and uploaded**. It also asserts the deterministic assessment card renders on state selection and on lab pages (`pending_lab`, never a verdict), that the review page shows the session assessment grid with correct per-indicator bands, that the GPS capture round-trips into the review page and the GBIF baseline panel renders (GBIF is intercepted with a deterministic fixture), that a share link created on the review page decodes on `/sync` and imports successfully, that no "Not provided" placeholder appears, that the assistant's in-scope, nonsense, and meta questions receive three distinct correct responses (and that refusals point at the assessment card instead of scoring), and that the observation-frequencies panel on `/field` shows real counts labeled as frequencies rather than predictions. This exists because an earlier version of the review page rendered a hardcoded placeholder session, and the previous test suite passed against it. It also exists because `/field` once had no volunteer input at all, so the review page legitimately (but uselessly) showed "Not provided" for every session. If the review page ever shows data the user did not enter, the smoke test now fails.
 
 ## Factsheet Provenance
 

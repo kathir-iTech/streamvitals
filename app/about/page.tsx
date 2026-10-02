@@ -34,7 +34,7 @@ const pipeline = [
   },
   {
     title: "Review and export",
-    body: "The review page shows exactly what was typed — names, states, notes, sample IDs — plus the session's assessment bands and, when a GPS location was captured, a GBIF baseline of records within 50 km (context only, labelled as such). Exports (CSV, JSON, print, Lab Submission Sheet) carry the bands, the engine version, the chain rule IDs, and the GPS coordinates.",
+    body: "The review page shows exactly what was typed — names, states, notes, sample IDs — plus the session's assessment bands and, when a GPS location was captured, a GBIF baseline of records within 50 km (context only, labelled as such). Exports (CSV, JSON, print, Lab Submission Sheet) carry the bands, the engine version, the chain rule IDs, and the GPS coordinates. A share link (URL fragment + QR) moves the session to another device with no account — photos stay on the device that captured them.",
   },
 ];
 
@@ -58,7 +58,11 @@ const roadmap = [
   },
   {
     title: "Pipeline hand-off",
-    body: "CSV and JSON exports already carry indicator IDs, states, notes, and note flags in a fixed schema. The next step is ingesting them into the OneAquaHealth Citizen Science App data pipeline instead of manual review.",
+    body: "CSV/JSON exports already carry indicator IDs, states, notes, note flags, GPS, bands, and rule IDs in a fixed schema; the next step is ingesting them into the OneAquaHealth Citizen Science App pipeline instead of manual review.",
+  },
+  {
+    title: "Server-side sync",
+    body: "Share links cover device-to-device hand-off today (URL fragment + QR, no account). A real datastore with background replication and conflict handling is the next step — not claimed in this build.",
   },
 ];
 
@@ -198,7 +202,7 @@ export default function AboutPage() {
         </div>
         <div className="stats-strip">
           <div className="stat-item">
-            <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">61</span>
+            <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">68</span>
             <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">
               Automated tests (Vitest)
             </span>
@@ -292,7 +296,7 @@ export default function AboutPage() {
               github.com/kathir-iTech/streamvitals
             </a>{" "}
             <span className="text-[rgba(0,0,0,0.5)]">
-              — run <code className="text-[#0d9b6e]">npm test</code> for the 61 tests,
+              — run <code className="text-[#0d9b6e]">npm test</code> for the 68 tests,
               <code className="text-[#0d9b6e]"> npm run e2e</code> for the full session walkthrough
             </span>
           </li>

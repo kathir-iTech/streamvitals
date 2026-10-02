@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react';
 import { createSession, isIndexedDBAvailable, getSession, getAllSessions, type SessionLocation } from '@/lib/field-session';
 import { computeObservationFrequencies, type IndicatorFrequency } from '@/lib/observation-frequencies';
 import { indicators } from '@/data/indicators';
+import { LAB_PROTOCOL_GUIDANCE } from '@/data/lab-protocol-guidance';
 
 function StreamIllustration() {
   return (
@@ -118,8 +119,8 @@ export default function FieldPage() {
           { indicatorId: 'BMI-01', indicatorName: 'Benthic Macroinvertebrates', type: 'citizen_observable' as const, photos: [], notes: '', timestamp: now, status: 'complete' as const },
           { indicatorId: 'BIR-04', indicatorName: 'Birds', type: 'citizen_observable' as const, photos: [], notes: '', timestamp: now, status: 'complete' as const },
           { indicatorId: 'INV-11', indicatorName: 'Invasive Alien Plants of the Riparian Corridor', type: 'citizen_observable' as const, photos: [], notes: '', timestamp: now, status: 'complete' as const },
-          { indicatorId: 'FCL-06', indicatorName: 'Fecal Coliforms', type: 'lab_only' as const, photos: [], notes: '', sampleLabel: `SMP-${date.replace(/-/g, '')}-001`, labProtocolGuidance: 'Water samples collected and analyzed using complementary methods. Culture-based testing: filter known volume of water, place filter on selective growth medium, incubate at warm temperatures, count colonies as CFU/100mL. Enzyme-substrate tests use color changes or fluorescence. qPCR detects specific DNA sequences. Metabarcoding confirms presence of indicator bacteria.', status: 'pending_lab_analysis' as const, timestamp: now },
-          { indicatorId: 'DIA-10', indicatorName: 'Diatoms and Diatom Teratology', type: 'lab_only' as const, photos: [], notes: '', sampleLabel: `SMP-${date.replace(/-/g, '')}-002`, labProtocolGuidance: 'Periphytic diatoms scraped from surface of submerged stones/substrate. Cleaned in lab using nitric acid and potassium dichromate at room temperature for 24h. Permanent slides prepared using Naphrax®. About 400 diatom valves identified and counted per sample under stereomicroscope.', status: 'pending_lab_analysis' as const, timestamp: now },
+          { indicatorId: 'FCL-06', indicatorName: 'Fecal Coliforms', type: 'lab_only' as const, photos: [], notes: '', sampleLabel: `SMP-${date.replace(/-/g, '')}-001`, labProtocolGuidance: LAB_PROTOCOL_GUIDANCE['FCL-06'], status: 'pending_lab_analysis' as const, timestamp: now },
+          { indicatorId: 'DIA-10', indicatorName: 'Diatoms and Diatom Teratology', type: 'lab_only' as const, photos: [], notes: '', sampleLabel: `SMP-${date.replace(/-/g, '')}-002`, labProtocolGuidance: LAB_PROTOCOL_GUIDANCE['DIA-10'], status: 'pending_lab_analysis' as const, timestamp: now },
         ],
         startedAt: now,
         ...(location ? { location } : {}),

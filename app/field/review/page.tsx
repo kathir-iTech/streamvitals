@@ -3,9 +3,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { indicators } from '@/data/indicators';
-import { getFullSession, type SessionLocation } from '@/lib/field-session';
+import { getFullSession, type SessionLocation, type FieldSession } from '@/lib/field-session';
 import { assess, summarizeAssessments, type Band } from '@/lib/assessment/engine';
 import { fetchGbifBaseline, GBIF_DEFAULT_RADIUS_KM, type GbifBaseline } from '@/lib/gbif';
+import { encodeShare, buildShareUrl, SHARE_QR_MAX_CHARS } from '@/lib/session-share';
+import qrcode from 'qrcode-generator';
 import ExportButton from '@/components/ExportButton';
 
 const FIELD_INDICATORS = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
@@ -24,6 +26,32 @@ export default function ReviewPage() {
   const [sessionComplete, setSessionComplete] = useState(false);
   const [baseline, setBaseline] = useState<GbifBaseline | null>(null);
   const [baselineState, setBaselineState] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [shareUrl, setShareUrl] = useState('');
+  const [shareQr, setShareQr] = useState('');
+  const [shareError, setShareError] = useState('');
+
+  const handleCreateShare = () => {
+    if (!session) return;
+    try {
+      const payload = encodeShare(session as unknown as FieldSession);
+      setShareUrl(buildShareUrl(window.location.origin, payload));
+      setShareError('');
+      if (payload.length <= SHARE_QR_MAX_CHARS) {
+        try {
+          const qr = qrcode(0, 'L');
+          qr.addData(payload);
+          qr.make();
+          setShareQr(qr.createDataURL(6, 8));
+        } catch {
+          setShareQr('');
+        }
+      } else {
+        setShareQr('');
+      }
+    } catch {
+      setShareError('Could not create a share link for this session.');
+    }
+  };
 
   useEffect(() => {
     let sessionId = '';
@@ -269,6 +297,47 @@ export default function ReviewPage() {
             </div>
           )}
         </section>
+
+        <div className="bg-[#f5faf7] border border-[rgba(0,0,0,0.06)] rounded-2xl p-8 mb-8">
+          <h2 className="text-xl font-black tracking-tighter mb-2 text-black">Share across devices</h2>
+          <p className="text-sm text-[rgba(0,0,0,0.55)] leading-relaxed mb-4">
+            Move this session to a phone or laptop without an account: the share link carries the session data in its URL fragment, which browsers never send to any server. Photos stay on this device.
+          </p>
+          {!shareUrl ? (
+            <button type="button" data-testid="create-share-link" onClick={handleCreateShare} className="btn-pill-outline text-sm">
+              Create share link
+            </button>
+          ) : (
+            <div className="space-y-3">
+              <input
+                data-testid="share-link-input"
+                readOnly
+                value={shareUrl}
+                aria-label="Session share link"
+                onFocus={(e) => e.target.select()}
+                className="w-full px-4 py-3 bg-white border border-[rgba(0,0,0,0.08)] rounded-xl text-black font-mono text-xs focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none"
+              />
+              <div className="flex items-start gap-5 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => navigator.clipboard?.writeText(shareUrl)}
+                  className="btn-pill-outline text-sm"
+                >
+                  Copy link
+                </button>
+                {shareQr ? (
+                  <img data-testid="share-qr" src={shareQr} alt="QR code encoding the session share link" width={124} height={124} className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl" />
+                ) : (
+                  <p className="text-xs text-[rgba(0,0,0,0.4)] max-w-xs">This session is too large for a QR code — open the link directly or copy and paste it on the other device.</p>
+                )}
+              </div>
+              <p className="text-xs text-[rgba(0,0,0,0.4)] leading-relaxed" data-testid="share-note">
+                Treat this link like a password: anyone who has it can read and import the session. Photos and photo counts are not part of share links.
+              </p>
+            </div>
+          )}
+          {shareError && <p className="text-sm text-red-500 font-medium mt-2">{shareError}</p>}
+        </div>
 
         <div className="bg-[#f5faf7] border border-[rgba(0,0,0,0.06)] rounded-2xl p-8 mb-8">
           <h2 className="text-xl font-black tracking-tighter mb-6 text-black">Human-Readable Summary</h2>

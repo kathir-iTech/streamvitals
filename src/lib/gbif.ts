@@ -6,6 +6,9 @@
 export const GBIF_API = 'https://api.gbif.org/v1';
 export const GBIF_DEFAULT_RADIUS_KM = 50;
 
+export const GBIF_ATTRIBUTION =
+  'GBIF.org occurrence records near the session location — presence data for context only, not a water-quality assessment. Absence of records is not absence of species.';
+
 export interface GbifTaxonQuery {
   indicatorId: string;
   label: string;
@@ -94,7 +97,6 @@ export async function fetchGbifBaseline(
     lng,
     capturedAt: new Date().toISOString(),
     rows,
-    attribution:
-      'GBIF.org occurrence records near the session location — presence data for context only, not a water-quality assessment. Absence of records is not absence of species.',
+    attribution: GBIF_ATTRIBUTION,
   };
 }
