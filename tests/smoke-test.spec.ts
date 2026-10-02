@@ -18,7 +18,7 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     fs.mkdirSync(ARTIFACTS_DIR, { recursive: true });
   });
 
-  test('Steps 1-10: Complete end-to-end flow', async ({ page }) => {
+  test('Steps 1-11: Complete end-to-end flow', async ({ page }) => {
     const consoleErrors: string[] = [];
     page.on('console', (msg) => { if (msg.type() === 'error' && !msg.text().includes('404')) consoleErrors.push(msg.text()); });
     page.on('pageerror', (err) => { consoleErrors.push(err.message); });
@@ -298,5 +298,17 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await expect(freqPanel).toContainText('frequencies of what was observed, not predictions');
     await expect(freqPanel).toContainText('1×');
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '08-observation-frequencies.png'), fullPage: true });
+
+    // Step 11: /about — the explainer page carries the published numbers,
+    // the One Health quotes, the honest limits, and the roadmap. This exists
+    // because the page was missing entirely while the README implied one.
+    await page.goto('/about');
+    await expect(page.getByRole('heading', { name: 'Why it exists' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Published numbers' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Honest limits' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'What comes next' })).toBeVisible();
+    await expect(page.locator('text=AI may interpret input. AI may not adjudicate.')).toBeVisible();
+    await expect(page.locator('footer')).toContainText('Provenance');
+    await page.screenshot({ path: path.join(ARTIFACTS_DIR, '09-about.png'), fullPage: true });
   });
 });

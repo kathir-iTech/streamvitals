@@ -131,7 +131,7 @@ Countable from this repository, not estimates:
 | **9** | Citizen observation states — 3 field indicators × 3 states each |
 | **0** | AI calls in the recording path (state selection, note gate, exports are deterministic) |
 | **~1.9 s** | Median assistant answer, 5 live probes against the deployed app on 2026-10-02 (min 1.4 s, max 4.1 s; moves with the provider) |
-| **20** | Committed screenshots from automated runs under `tests/artifacts/` |
+| **21** | Committed screenshots from automated runs under `tests/artifacts/` |
 
 ## Screenshots
 
@@ -142,6 +142,12 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 | ![Homepage](tests/artifacts/01-homepage.png) | ![BMI-01 state selected](tests/artifacts/03a-bmi-01-state-selected.png) | ![Note quality gate](tests/artifacts/quality-gate-unsupported.png) |
 | ![FCL-06 lab page](tests/artifacts/04-fcl-06-lab-page.png) | ![Assistant](tests/artifacts/07-assistant.png) | ![Review page](tests/artifacts/05-review.png) |
 | ![Export](tests/artifacts/06-export.png) | ![Observation frequencies](tests/artifacts/08-observation-frequencies.png) | ![Quality gate cleared](tests/artifacts/quality-gate-cleared.png) |
+| ![How it works page](tests/artifacts/09-about.png) | | |
+
+## Submission Artifacts
+
+- [`DEVPOST.md`](DEVPOST.md) — the paste-ready Devpost write-up: problem, five features, the number (41 tests), before/after, removed features, limits, roadmap.
+- [`VIDEO.md`](VIDEO.md) — the shot-by-shot demo script (~4:15, inside the event's 3–5 minute requirement) with a recording checklist.
 
 ## What's Next
 

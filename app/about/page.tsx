@@ -148,7 +148,7 @@ export default function AboutPage() {
                 Source:{" "}
                 {(ind.why_this_matters_source || "").replace(
                   "(factsheet_text.txt)",
-                  "OneAquaHealth Key Indicators Factsheets, doi:10.5281/zenodo.20345207"
+                  "— OneAquaHealth Key Indicators Factsheets, doi:10.5281/zenodo.20345207"
                 )}
               </p>
             </div>
