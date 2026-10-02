@@ -202,7 +202,7 @@ export default function AboutPage() {
         </div>
         <div className="stats-strip">
           <div className="stat-item">
-            <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">72</span>
+            <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">74</span>
             <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">
               Automated tests (Vitest)
             </span>
@@ -300,7 +300,7 @@ export default function AboutPage() {
               github.com/kathir-iTech/streamvitals
             </a>{" "}
             <span className="text-[rgba(0,0,0,0.62)]">
-              — run <code className="text-[#0a7d58]">npm test</code> for the 72 tests,
+              — run <code className="text-[#0a7d58]">npm test</code> for the 74 tests,
               <code className="text-[#0a7d58]"> npm run e2e</code> for the full session walkthrough
             </span>
           </li>

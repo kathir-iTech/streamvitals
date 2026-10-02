@@ -53,8 +53,7 @@ interface SharePayload {
   };
 }
 
-function toBase64Url(text: string): string {
-  const bytes = new TextEncoder().encode(text);
+function bytesToBase64Url(bytes: Uint8Array): string {
   let binary = '';
   for (const b of bytes) binary += String.fromCharCode(b);
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -68,7 +67,76 @@ function fromBase64Url(encoded: string): string {
   return new TextDecoder().decode(bytes);
 }
 
-export function encodeShare(session: FieldSession): string {
+function fromBase64UrlBytes(encoded: string): Uint8Array {
+  const b64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = b64 + '='.repeat((4 - (b64.length % 4)) % 4);
+  const binary = atob(padded);
+  return Uint8Array.from(binary, (ch) => ch.charCodeAt(0));
+}
+
+async function readAllBytes(readable: ReadableStream<Uint8Array>): Promise<Uint8Array> {
+  const reader = readable.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (value) {
+      chunks.push(value);
+      total += value.length;
+    }
+  }
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    out.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return out;
+}
+
+// Transport encoding: deflate-raw so a real session (5 notes + GPS + GBIF
+// baseline = ~2.6 KB JSON) still fits the 2900-byte QR budget. Links created
+// before compression (plain base64url JSON) keep decoding via the fallback in
+// decodeShare. Streams are read/written directly (no Blob/Response) so the
+// helpers work in jsdom test environments too, and BOTH sides of the transform
+// are always awaited — otherwise a failed decompress leaves the read promise
+// unhandled (Node emits an unhandled rejection on garbage/legacy payloads).
+async function transformBytes(
+  input: Uint8Array,
+  makeStream: () => TransformStream,
+): Promise<Uint8Array> {
+  const stream = makeStream();
+  const outPromise = readAllBytes(stream.readable);
+  const writer = stream.writable.getWriter();
+  let failure: unknown = null;
+  try {
+    await writer.write(input);
+    await writer.close();
+  } catch (err) {
+    failure = err;
+  }
+  let out: Uint8Array | null = null;
+  try {
+    out = await outPromise;
+  } catch (err) {
+    failure = failure ?? err;
+  }
+  if (failure) throw failure;
+  return out as Uint8Array;
+}
+
+async function compressToBase64Url(text: string): Promise<string> {
+  const bytes = await transformBytes(new TextEncoder().encode(text), () => new CompressionStream('deflate-raw'));
+  return bytesToBase64Url(bytes);
+}
+
+async function decompressFromBase64Url(encoded: string): Promise<string> {
+  const bytes = await transformBytes(fromBase64UrlBytes(encoded), () => new DecompressionStream('deflate-raw'));
+  return new TextDecoder().decode(bytes);
+}
+
+export async function encodeShare(session: FieldSession): Promise<string> {
   if (!session.sessionId || !session.streamName || !session.startedAt) {
     throw new Error('Session is missing the fields required for sharing.');
   }
@@ -108,7 +176,7 @@ export function encodeShare(session: FieldSession): string {
         }
       : {}),
   };
-  return toBase64Url(JSON.stringify(payload));
+  return compressToBase64Url(JSON.stringify(payload));
 }
 
 function isValidPartial(value: unknown): value is SharePayload {
@@ -132,13 +200,29 @@ function isValidPartial(value: unknown): value is SharePayload {
   );
 }
 
-export function decodeShare(input: string): FieldSession | null {
-  try {
-    const encoded = input.startsWith('#') ? input.slice(1) : input;
-    if (!encoded || encoded.length > 20000) return null;
-    const parsed: unknown = JSON.parse(fromBase64Url(encoded));
-    if (!isValidPartial(parsed)) return null;
+export async function decodeShare(input: string): Promise<FieldSession | null> {
+  const encoded = input.startsWith('#') ? input.slice(1) : input;
+  if (!encoded || encoded.length > 20000) return null;
 
+  let parsed: SharePayload | null = null;
+  try {
+    const roundTrip: unknown = JSON.parse(await decompressFromBase64Url(encoded));
+    if (isValidPartial(roundTrip)) parsed = roundTrip;
+  } catch {
+    parsed = null;
+  }
+  if (!parsed) {
+    // Legacy transport: plain base64url JSON (links created before compression).
+    try {
+      const legacy: unknown = JSON.parse(fromBase64Url(encoded));
+      if (!isValidPartial(legacy)) return null;
+      parsed = legacy;
+    } catch {
+      return null;
+    }
+  }
+
+  try {
     const indicatorsOut: FieldIndicatorRecord[] = parsed.indicators.map((ind) => {
       const def = indicators.find((i) => i.id === ind.indicatorId);
       const isLab = Boolean(def?.lab_only);

@@ -357,6 +357,9 @@ test.describe.serial('StreamVitals Smoke Test', () => {
       await page.locator('button[aria-label="Open Field Assistant"]').click();
     }
     await expect(panel).toBeVisible();
+    // The chat persists across reloads now, so clear the restored history first
+    // — otherwise later assertions could pass against stale messages.
+    await page.locator('button[aria-label="Clear assistant history"]').click();
     const askInput = panel.locator('input[placeholder*="Ask"]');
     await askInput.fill('What is the purpose of this work?');
     await panel.locator('button[aria-label="Send question"]').click();
@@ -364,6 +367,15 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await askInput.fill('What equipment do I need for this sample?');
     await panel.locator('button[aria-label="Send question"]').click();
     await expect(panel).toContainText('Based on the OneAquaHealth factsheet', { timeout: 15000 });
+
+    // The conversation must survive a reload (sessionStorage per indicator).
+    await page.reload();
+    const reloadedPanel = page.locator('aside[aria-label="Field Assistant panel"]');
+    if (!(await reloadedPanel.isVisible())) {
+      await page.locator('button[aria-label="Open Field Assistant"]').click();
+    }
+    await expect(reloadedPanel).toContainText('falls outside that scope');
+    await expect(reloadedPanel).toContainText('Based on the OneAquaHealth factsheet');
     await page.unroute('/api/ai/assistant');
 
     // Step 10: Observation frequencies on /field — counts computed from the

@@ -17,9 +17,10 @@ export default function SyncPage() {
     const timer = setTimeout(() => {
       const hash = window.location.hash.replace(/^#/, '');
       if (!hash) return;
-      const decoded = decodeShare(hash);
-      if (decoded) setPreview(decoded);
-      else setLinkError('This share link is invalid or was truncated. Ask for a fresh link, or paste the payload below.');
+      void decodeShare(hash).then((decoded) => {
+        if (decoded) setPreview(decoded);
+        else setLinkError('This share link is invalid or was truncated. Ask for a fresh link, or paste the payload below.');
+      });
     }, 0);
     return () => clearTimeout(timer);
   }, []);
@@ -28,14 +29,15 @@ export default function SyncPage() {
     const value = pasted.trim();
     if (!value) return;
     const fragment = value.includes('#') ? value.slice(value.indexOf('#') + 1) : value;
-    const decoded = decodeShare(fragment);
-    if (decoded) {
-      setPreview(decoded);
-      setLinkError('');
-      setImportError('');
-    } else {
-      setLinkError('That does not decode to a valid session. Paste the full link or the whole share payload.');
-    }
+    void decodeShare(fragment).then((decoded) => {
+      if (decoded) {
+        setPreview(decoded);
+        setLinkError('');
+        setImportError('');
+      } else {
+        setLinkError('That does not decode to a valid session. Paste the full link or the whole share payload.');
+      }
+    });
   };
 
   const handleImport = async () => {

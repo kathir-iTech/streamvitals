@@ -43,7 +43,7 @@ StreamVitals closes that gap without adding a second AI problem on top of the fi
 
 ### The number
 
-**72 automated tests** (Vitest: 9 session + 14 factsheet/assistant + 15 note rules + 5 frequencies + 12 assessment engine + 6 GBIF client + 7 share links + 4 rate limiter), plus an end-to-end Playwright walkthrough of the entire session that fails if the review page ever shows data the volunteer did not enter or if the assessment card/chips/location/baseline/share-import don't render, an axe-core accessibility scan of five routes (zero WCAG A/AA violations at every impact level), and a service-worker offline-reload test that cuts the network. **0 AI calls in the assessment path.** The assistant's median answer time is ~1.9 s (5 live probes against the deployed app, 2026-10-02, min 1.4 s / max 4.1 s).
+**74 automated tests** (Vitest: 9 session + 14 factsheet/assistant + 15 note rules + 5 frequencies + 12 assessment engine + 6 GBIF client + 9 share links + 4 rate limiter), plus an end-to-end Playwright walkthrough of the entire session that fails if the review page ever shows data the volunteer did not enter or if the assessment card/chips/location/baseline/share-import don't render, an axe-core accessibility scan of five routes (zero WCAG A/AA violations at every impact level), and a service-worker offline-reload test that cuts the network. **0 AI calls in the assessment path.** The assistant's median answer time is ~1.9 s (5 live probes against the deployed app, 2026-10-02, min 1.4 s / max 4.1 s).
 
 ### Before / after — the same note, two datasets
 
@@ -70,7 +70,7 @@ We also corrected two live claims before submission: the provenance endpoint no 
 
 ### Built with
 
-Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS 4 · IndexedDB persistence · deterministic assessment engine (`streamvitals-assessment/1.0.0`, pure TypeScript — no network, no clock, no model) · GBIF baseline via `api.gbif.org/v1` (browser-direct) · share-link sync (URL fragments, `qrcode-generator`) · Groq (`openai/gpt-oss-120b`) for the bounded assistant only · service worker for tested offline reload · Vitest (72 tests) + Playwright (smoke, axe-core a11y, offline) + GitHub Actions CI · Vercel.
+Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS 4 · IndexedDB persistence · deterministic assessment engine (`streamvitals-assessment/1.0.0`, pure TypeScript — no network, no clock, no model) · GBIF baseline via `api.gbif.org/v1` (browser-direct) · share-link sync (URL fragments, `qrcode-generator`) · Groq (`openai/gpt-oss-120b`) for the bounded assistant only · service worker for tested offline reload · Vitest (74 tests) + Playwright (smoke, axe-core a11y, offline) + GitHub Actions CI · Vercel.
 
 ### Sources
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { Bot, Shield, WifiOff, Loader2, X, Send } from 'lucide-react';
 import { indicators } from '@/data/indicators';
 import { getOfflineAssistantResponse, OUT_OF_SCOPE_RESPONSE } from '@/lib/factsheet-content';
@@ -8,7 +9,7 @@ import { getOfflineAssistantResponse, OUT_OF_SCOPE_RESPONSE } from '@/lib/factsh
 interface AssistantMessage {
   role: 'user' | 'assistant';
   content: string;
-  timestamp: Date;
+  timestamp: string;
   source: 'factsheet' | 'groq' | 'offline';
 }
 
@@ -31,6 +32,73 @@ function getOfflineResponse(indicatorId: string, question: string): string {
   return getOfflineAssistantResponse(indicatorId, question);
 }
 
+function renderInline(text: string, baseKey: string): ReactNode[] {
+  return text
+    .split(/(\*\*[^*]+\*\*|\*[^*\n]+\*)/g)
+    .map((part, idx) => {
+      if (part.length > 4 && part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={`${baseKey}-${idx}`}>{part.slice(2, -2)}</strong>;
+      }
+      if (part.length > 2 && part.startsWith('*') && part.endsWith('*')) {
+        return <em key={`${baseKey}-${idx}`}>{part.slice(1, -1)}</em>;
+      }
+      return <span key={`${baseKey}-${idx}`}>{part}</span>;
+    });
+}
+
+// Minimal rich text: bullet/numbered lists, bold, italic, paragraphs. Groq
+// answers arrive as markdown; raw asterisks in the chat looked broken.
+function RichText({ text }: { text: string }) {
+  const lines = text.split('\n');
+  const blocks: ReactNode[] = [];
+  let i = 0;
+  let key = 0;
+  while (i < lines.length) {
+    const ordered = lines[i].match(/^\s*\d+\.\s+(.*)$/);
+    const bullet = lines[i].match(/^\s*[-*]\s+(.*)$/);
+    if (ordered) {
+      const items: string[] = [];
+      while (i < lines.length) {
+        const m = lines[i].match(/^\s*\d+\.\s+(.*)$/);
+        if (!m) break;
+        items.push(m[1]);
+        i++;
+      }
+      const listKey = key++;
+      blocks.push(
+        <ol key={listKey} className="list-decimal pl-4 space-y-0.5 my-1">
+          {items.map((t, j) => (
+            <li key={j}>{renderInline(t, `${listKey}-${j}`)}</li>
+          ))}
+        </ol>,
+      );
+    } else if (bullet) {
+      const items: string[] = [];
+      while (i < lines.length) {
+        const m = lines[i].match(/^\s*[-*]\s+(.*)$/);
+        if (!m) break;
+        items.push(m[1]);
+        i++;
+      }
+      const listKey = key++;
+      blocks.push(
+        <ul key={listKey} className="list-disc pl-4 space-y-0.5 my-1">
+          {items.map((t, j) => (
+            <li key={j}>{renderInline(t, `${listKey}-${j}`)}</li>
+          ))}
+        </ul>,
+      );
+    } else {
+      if (lines[i].trim()) {
+        const pKey = key++;
+        blocks.push(<p key={pKey} className="my-0.5">{renderInline(lines[i].trim(), String(pKey))}</p>);
+      }
+      i++;
+    }
+  }
+  return <div>{blocks}</div>;
+}
+
 export default function BoundedAssistant({ indicatorId }: { indicatorId: string }) {
   const [messages, setMessages] = useState<AssistantMessage[]>([]);
   const [input, setInput] = useState('');
@@ -38,7 +106,38 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
   const [isOnline, setIsOnline] = useState(true);
   const [open, setOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const storageKey = `sv-assistant-chat-${indicatorId}`;
+  const restoredRef = useRef(false);
   const content = getIndicatorContent(indicatorId);
+
+  // The conversation survives reloads and navigation within the tab (the
+  // owner's complaint: every reload started a brand-new chat). First effect
+  // pass restores; later passes persist. sessionStorage, so closing the tab
+  // still discards it.
+  useEffect(() => {
+    const isRestorePass = !restoredRef.current;
+    restoredRef.current = true;
+    if (isRestorePass) {
+      const timer = setTimeout(() => {
+        try {
+          const raw = sessionStorage.getItem(storageKey);
+          if (raw) {
+            const saved: unknown = JSON.parse(raw);
+            if (Array.isArray(saved)) setMessages(saved as AssistantMessage[]);
+          }
+        } catch {
+          // storage unavailable (private mode) — chat stays in-memory only
+        }
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+    try {
+      sessionStorage.setItem(storageKey, JSON.stringify(messages));
+    } catch {
+      // storage unavailable — ignore
+    }
+    return undefined;
+  }, [messages, storageKey]);
 
   useEffect(() => {
     const onlineTimer = setTimeout(() => setIsOnline(navigator.onLine), 0);
@@ -60,21 +159,21 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
   const handleSend = useCallback(async (overrideText?: string) => {
     const text = (overrideText ?? input).trim();
     if (!text || loading) return;
-    const userMessage: AssistantMessage = { role: 'user', content: text, timestamp: new Date(), source: 'factsheet' };
+    const userMessage: AssistantMessage = { role: 'user', content: text, timestamp: new Date().toISOString(), source: 'factsheet' };
     setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setLoading(true);
     try {
       if (!isOnline) {
         const response = getOfflineResponse(indicatorId, text);
-        setMessages((prev) => [...prev, { role: 'assistant', content: response, timestamp: new Date(), source: 'offline' }]);
+        setMessages((prev) => [...prev, { role: 'assistant', content: response, timestamp: new Date().toISOString(), source: 'offline' }]);
       } else {
         const groqResponse = await callGroq(indicatorId, text);
-        setMessages((prev) => [...prev, { role: 'assistant', content: groqResponse, timestamp: new Date(), source: 'groq' }]);
+        setMessages((prev) => [...prev, { role: 'assistant', content: groqResponse, timestamp: new Date().toISOString(), source: 'groq' }]);
       }
     } catch {
       const response = getOfflineResponse(indicatorId, text);
-      setMessages((prev) => [...prev, { role: 'assistant', content: response, timestamp: new Date(), source: 'offline' }]);
+      setMessages((prev) => [...prev, { role: 'assistant', content: response, timestamp: new Date().toISOString(), source: 'offline' }]);
     } finally {
       setLoading(false);
     }
@@ -142,10 +241,26 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
               </div>
             )}
             <div className={`max-w-[200px] rounded-lg p-2.5 text-xs ${msg.role === 'user' ? 'bg-[rgba(13,155,110,0.08)] text-black ml-auto' : 'bg-white text-[rgba(0,0,0,0.6)] border border-[rgba(0,0,0,0.06)]'}`}>
-              <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+              {msg.role === 'assistant' ? (
+                <div className="leading-relaxed">
+                  <RichText text={msg.content} />
+                </div>
+              ) : (
+                <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+              )}
             </div>
           </div>
         ))}
+        {loading && (
+          <div className="flex gap-2" data-testid="assistant-pending">
+            <div className="w-5 h-5 rounded-full bg-[rgba(13,155,110,0.08)] flex items-center justify-center flex-shrink-0 mt-1">
+              <Bot className="w-3 h-3 text-[#0a7d58]" />
+            </div>
+            <div className="max-w-[200px] rounded-lg p-2.5 text-xs bg-white text-[rgba(0,0,0,0.6)] border border-[rgba(0,0,0,0.06)]">
+              <span className="animate-pulse">Checking the factsheet…</span>
+            </div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -157,10 +272,9 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask about this indicator..."
-                  disabled={loading}
+                  placeholder={loading ? 'Checking the factsheet…' : 'Ask about this indicator...'}
                   suppressHydrationWarning
-                  className="flex-1 px-3 py-2 bg-white border border-[rgba(0,0,0,0.08)] rounded-full text-xs text-black placeholder-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none disabled:opacity-40"
+                  className="flex-1 px-3 py-2 bg-white border border-[rgba(0,0,0,0.08)] rounded-full text-xs text-black placeholder-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none"
                 />
             <button onClick={() => void handleSend()} disabled={loading || !input.trim()} aria-label="Send question" className="px-3 py-2 bg-[#0a7d58] text-white rounded-full hover:bg-[#0a7d58] disabled:opacity-40 transition-all">
               {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}

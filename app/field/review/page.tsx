@@ -33,10 +33,10 @@ export default function ReviewPage() {
   const [shareQr, setShareQr] = useState('');
   const [shareError, setShareError] = useState('');
 
-  const handleCreateShare = () => {
+  const handleCreateShare = async () => {
     if (!session) return;
     try {
-      const payload = encodeShare(session);
+      const payload = await encodeShare(session);
       setShareUrl(buildShareUrl(window.location.origin, payload));
       setShareError('');
       if (payload.length <= SHARE_QR_MAX_CHARS) {
@@ -307,7 +307,7 @@ export default function ReviewPage() {
             Move this session to a phone or laptop without an account: the share link carries the session data in its URL fragment, which browsers never send to any server. Photos stay on this device.
           </p>
           {!shareUrl ? (
-            <button type="button" data-testid="create-share-link" onClick={handleCreateShare} className="btn-pill-outline text-sm">
+            <button type="button" data-testid="create-share-link" onClick={() => void handleCreateShare()} className="btn-pill-outline text-sm">
               Create share link
             </button>
           ) : (
