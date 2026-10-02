@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
+  getFactsheetContent,
   getOfflineAssistantResponse,
   hasIndicatorVocabulary,
   isMetaQuestion,
@@ -54,6 +55,18 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Ground the model: the prompt must carry the factsheet text itself, or
+    // "answer only from the factsheets" is unenforceable and the model fills
+    // gaps with invented details (it once answered FCL-06 with fish sampling).
+    const factsheet = getFactsheetContent(indicatorId);
+    if (!factsheet) {
+      diag('offline-no-factsheet', { indicatorId });
+      return NextResponse.json({
+        response: getOfflineAssistantResponse(indicatorId, question),
+        source: 'offline',
+      });
+    }
+
     diag('groq-request', {
       hasKey: true,
       keyLength: apiKey.length,
@@ -61,10 +74,22 @@ export async function POST(request: NextRequest) {
       question: String(question).slice(0, 200),
     });
 
-    const systemPrompt = `You are the OneAquaHealth Field Companion AI assistant. Answer ONLY from the OneAquaHealth Key Indicators factsheets (doi:10.5281/zenodo.20345207).
+    const stateLabels = Object.entries(factsheet.citizen_state_labels)
+      .map(([key, label]) => `${key}: ${label}`)
+      .join('; ');
+    const systemPrompt = `You are the OneAquaHealth Field Companion AI assistant. Answer ONLY from the factsheet text below (doi:10.5281/zenodo.20345207).
+
+Factsheet for this indicator:
+- Indicator: ${factsheet.id} — ${factsheet.name}
+- Source: ${factsheet.source}
+- Protocol question: ${factsheet.citizen_question}
+- Visual anchor / how to observe: ${factsheet.visual_anchor_guide}
+- Citizen state definitions: ${stateLabels || 'none'}
+- Field determination: ${factsheet.lab_only ? 'laboratory-only — cannot be determined in the field' : 'citizen-observable in the field'}
 
 Rules:
-- Only answer using factsheet content about the requested indicator
+- Answer ONLY from the factsheet text above. Never invent equipment, volumes, distances, durations, species, or steps that are not stated there
+- If the factsheet text does not cover the question, say so and mention what it does cover
 - Never identify species beyond what's in the factsheet
 - Never give opinions on water quality, health, or assessment
 - Never assign tiers, scores, or severity levels
