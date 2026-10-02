@@ -41,7 +41,7 @@ Each indicator page carries a "Why this matters" line quoting the factsheet's ow
 ## How It's Built
 
 - **Frontend**: Next.js 16 (App Router), TypeScript (strict), Tailwind CSS 4
-- **AI Layer**: Groq (`llama-3.3-70b-versatile`) — bounded assistant only, never adjudication
+- **AI Layer**: Groq (`openai/gpt-oss-120b`) — bounded assistant only, never adjudication
 - **Persistence**: IndexedDB in the browser, session state in sessionStorage
 - **Styling**: Light theme only (#f8f9fc background, #0d9b6e accent, #ffffff cards)
 - **Testing**: Vitest with jsdom environment (IndexedDB provided by `fake-indexeddb`)

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getOfflineAssistantResponse, OUT_OF_SCOPE_RESPONSE } from '@/lib/factsheet-content';
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+// llama-3.3-70b-versatile was shut down 2026-08-16 (404 model_not_found);
+// openai/gpt-oss-120b is Groq's documented replacement for it.
+const GROQ_MODEL = 'openai/gpt-oss-120b';
 
 // Server-side diagnostics. Every Groq failure is answered with HTTP 200 +
 // an offline fallback by design, so without these logs the Network tab can
@@ -54,7 +57,7 @@ Rules:
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: GROQ_MODEL,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Indicator: ${indicatorId}. Question: ${question}` },
@@ -76,7 +79,7 @@ Rules:
 
     const data = await response.json();
     const text = data.choices?.[0]?.message?.content || 'No response from assistant.';
-    diag('groq-success', { model: 'llama-3.3-70b-versatile', replyChars: text.length, indicatorId });
+    diag('groq-success', { model: GROQ_MODEL, replyChars: text.length, indicatorId });
 
     return NextResponse.json({ response: text, source: 'groq' });
   } catch (error) {

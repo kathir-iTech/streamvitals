@@ -34,7 +34,7 @@ We also corrected two live claims before submission: the provenance endpoint no 
 
 ### Built with
 
-Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS 4 · IndexedDB persistence · Groq (`llama-3.3-70b-versatile`) for the bounded assistant only · Vitest (41 tests) + Playwright (end-to-end smoke test, mobile emulation on Pixel 7/Chromium and iPhone 14/WebKit) · Vercel.
+Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS 4 · IndexedDB persistence · Groq (`openai/gpt-oss-120b`) for the bounded assistant only · Vitest (41 tests) + Playwright (end-to-end smoke test) · Vercel.
 
 ### Sources
 
