@@ -42,7 +42,7 @@
   border-radius: 9999px;
   font-weight: 700;
   font-size: 0.875rem;
-  background: #0d9b6e;
+  background: #0a7d58;
   color: #ffffff;
   border: none;
   cursor: pointer;
@@ -51,7 +51,7 @@
 }
 
 .btn-pill:hover {
-  background: #0a7d58;
+  background: #075d44;
   opacity: 0.9;
 }
 

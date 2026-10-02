@@ -14,11 +14,14 @@ export default function SyncPage() {
   const [imported, setImported] = useState(false);
 
   useEffect(() => {
-    const hash = window.location.hash.replace(/^#/, '');
-    if (!hash) return;
-    const decoded = decodeShare(hash);
-    if (decoded) setPreview(decoded);
-    else setLinkError('This share link is invalid or was truncated. Ask for a fresh link, or paste the payload below.');
+    const timer = setTimeout(() => {
+      const hash = window.location.hash.replace(/^#/, '');
+      if (!hash) return;
+      const decoded = decodeShare(hash);
+      if (decoded) setPreview(decoded);
+      else setLinkError('This share link is invalid or was truncated. Ask for a fresh link, or paste the payload below.');
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleLoadPasted = () => {
@@ -57,11 +60,11 @@ export default function SyncPage() {
       <div className="max-w-2xl mx-auto px-6 py-12">
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 mb-4 bg-[rgba(13,155,110,0.08)] border border-[rgba(13,155,110,0.15)] px-4 py-2 rounded-full">
-            <span className="w-1.5 h-1.5 bg-[#0d9b6e] rounded-full" />
-            <span className="text-xs font-semibold text-[#0d9b6e] tracking-wide uppercase">Cross-device sync</span>
+            <span className="w-1.5 h-1.5 bg-[#0a7d58] rounded-full" />
+            <span className="text-xs font-semibold text-[#075d44] tracking-wide uppercase">Cross-device sync</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-3 text-black leading-[1.05]">Import a shared session</h1>
-          <p className="text-lg text-[rgba(0,0,0,0.5)]">
+          <p className="text-lg text-[rgba(0,0,0,0.62)]">
             Share links carry the session in the URL fragment — no account, no server storage.
           </p>
         </div>
@@ -69,8 +72,8 @@ export default function SyncPage() {
         {!preview && (
           <div className="bg-[#f5faf7] border border-[rgba(0,0,0,0.06)] rounded-2xl p-8 mb-8">
             <h2 className="text-lg font-black text-black mb-2">Paste a share payload</h2>
-            <p className="text-sm text-[rgba(0,0,0,0.5)] mb-4">
-              Open <strong>Create share link</strong> on the other device&rsquo;s review page, then paste the full link (or just the part after <code className="text-[#0d9b6e]">#</code>) here.
+            <p className="text-sm text-[rgba(0,0,0,0.62)] mb-4">
+              Open <strong>Create share link</strong> on the other device&rsquo;s review page, then paste the full link (or just the part after <code className="text-[#0a7d58]">#</code>) here.
             </p>
             <textarea
               data-testid="sync-paste"
@@ -95,13 +98,13 @@ export default function SyncPage() {
           <div className="bg-[#f5faf7] border border-[rgba(0,0,0,0.06)] rounded-2xl p-8 mb-8" data-testid="sync-preview">
             <h2 className="text-lg font-black text-black mb-4">Session preview</h2>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Stream:</span><span className="font-bold text-black">{preview.streamName}</span></div>
-              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Volunteer:</span><span className="font-bold text-black">{preview.volunteer || 'Not provided'}</span></div>
-              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Date:</span><span className="font-bold text-black">{preview.date}</span></div>
-              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Indicators:</span><span className="font-bold text-black">{preview.indicators.length}</span></div>
-              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">GPS:</span><span className="font-bold text-black">{preview.location ? `${preview.location.lat.toFixed(5)}, ${preview.location.lng.toFixed(5)}` : 'Not captured'}</span></div>
-              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">GBIF baseline:</span><span className="font-bold text-black">{preview.gbifBaseline ? `${preview.gbifBaseline.rows.length} taxa` : 'None'}</span></div>
-              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Photos:</span><span className="font-bold text-[rgba(0,0,0,0.5)]">Not part of share links — stay on the original device</span></div>
+              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.62)]">Stream:</span><span className="font-bold text-black">{preview.streamName}</span></div>
+              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.62)]">Volunteer:</span><span className="font-bold text-black">{preview.volunteer || 'Not provided'}</span></div>
+              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.62)]">Date:</span><span className="font-bold text-black">{preview.date}</span></div>
+              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.62)]">Indicators:</span><span className="font-bold text-black">{preview.indicators.length}</span></div>
+              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.62)]">GPS:</span><span className="font-bold text-black">{preview.location ? `${preview.location.lat.toFixed(5)}, ${preview.location.lng.toFixed(5)}` : 'Not captured'}</span></div>
+              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.62)]">GBIF baseline:</span><span className="font-bold text-black">{preview.gbifBaseline ? `${preview.gbifBaseline.rows.length} taxa` : 'None'}</span></div>
+              <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.62)]">Photos:</span><span className="font-bold text-[rgba(0,0,0,0.62)]">Not part of share links — stay on the original device</span></div>
             </div>
             {!imported ? (
               <>
@@ -112,25 +115,25 @@ export default function SyncPage() {
               </>
             ) : (
               <div className="mt-6 bg-[rgba(13,155,110,0.06)] border border-[rgba(13,155,110,0.15)] rounded-xl p-5 text-center" data-testid="sync-success">
-                <p className="text-[#0d9b6e] font-bold">Session imported into this browser.</p>
+                <p className="text-[#0a7d58] font-bold">Session imported into this browser.</p>
                 <div className="flex gap-3 justify-center mt-3">
                   <Link href="/field/review" className="btn-pill-accent text-sm">Open review</Link>
                   <Link href="/field" className="btn-pill-outline text-sm">Back to /field</Link>
                 </div>
               </div>
             )}
-            <p className="text-xs text-[rgba(0,0,0,0.35)] mt-4 leading-relaxed">
+            <p className="text-xs text-[rgba(0,0,0,0.55)] mt-4 leading-relaxed">
               Importing writes the session into this browser&rsquo;s local store (IndexedDB); if a session with the same ID exists here, it is replaced.
             </p>
           </div>
         )}
 
-        <p className="text-center text-xs text-[rgba(0,0,0,0.2)]">
+        <p className="text-center text-xs text-[rgba(0,0,0,0.55)]">
           Sync via share links — no accounts, no server storage. Server-side sync is on the roadmap.
         </p>
 
         <div className="mt-8 text-center">
-          <Link href="/field" className="inline-flex items-center gap-2 text-sm text-[rgba(0,0,0,0.4)] hover:text-[#0d9b6e] font-semibold">
+          <Link href="/field" className="inline-flex items-center gap-2 text-sm text-[rgba(0,0,0,0.62)] hover:text-[#0a7d58] font-semibold">
             <ArrowLeft className="w-4 h-4" /> Back to /field
           </Link>
         </div>

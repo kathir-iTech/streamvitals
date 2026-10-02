@@ -181,7 +181,7 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
             <FlaskConical className="w-4 h-4" /> Lab Submission Sheet
           </button>
       </div>
-      <p className="text-xs text-[rgba(0,0,0,0.25)]">Export structured data aligned with the OneAquaHealth indicator framework.</p>
+      <p className="text-xs text-[rgba(0,0,0,0.55)]">Export structured data aligned with the OneAquaHealth indicator framework.</p>
     </div>
   );
 }

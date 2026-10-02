@@ -41,20 +41,21 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
   const content = getIndicatorContent(indicatorId);
 
   useEffect(() => {
-    setIsOnline(navigator.onLine);
+    const onlineTimer = setTimeout(() => setIsOnline(navigator.onLine), 0);
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
     return () => {
+      clearTimeout(onlineTimer);
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
 
-  useEffect(() => { scrollToBottom(); }, [messages]);
-
-  const scrollToBottom = () => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); };
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const handleSend = useCallback(async (overrideText?: string) => {
     const text = (overrideText ?? input).trim();
@@ -88,7 +89,7 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
       <button
         onClick={() => setOpen(true)}
         aria-label="Open Field Assistant"
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-5 py-3 bg-[#0d9b6e] text-white rounded-full shadow-lg hover:bg-[#0a7d58] transition-all text-sm font-bold"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-5 py-3 bg-[#0a7d58] text-white rounded-full shadow-lg hover:bg-[#0a7d58] transition-all text-sm font-bold"
       >
         <Bot className="w-4 h-4" /> Field Assistant
       </button>
@@ -99,18 +100,18 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
     <aside className="fixed right-0 top-0 h-full w-80 max-w-[90vw] z-40 bg-[#f5faf7] border-l border-[rgba(0,0,0,0.06)] flex flex-col shadow-xl" aria-label="Field Assistant panel">
       <div className="p-4 border-b border-[rgba(0,0,0,0.06)]">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-black flex items-center gap-2"><Bot className="w-4 h-4 text-[#0d9b6e]" /> Field Assistant</h3>
+          <h3 className="text-sm font-bold text-black flex items-center gap-2"><Bot className="w-4 h-4 text-[#0a7d58]" /> Field Assistant</h3>
           <div className="flex items-center gap-2">
-            <button onClick={handleClear} aria-label="Clear assistant history" className="text-[rgba(0,0,0,0.2)] hover:text-black transition-colors text-[10px] font-bold px-2 py-1">Clear</button>
-            <button onClick={() => setOpen(false)} aria-label="Close Field Assistant" className="text-[rgba(0,0,0,0.2)] hover:text-black transition-colors"><X className="w-4 h-4" /></button>
+            <button onClick={handleClear} aria-label="Clear assistant history" className="text-[rgba(0,0,0,0.55)] hover:text-black transition-colors text-[10px] font-bold px-2 py-1">Clear</button>
+            <button onClick={() => setOpen(false)} aria-label="Close Field Assistant" className="text-[rgba(0,0,0,0.55)] hover:text-black transition-colors"><X className="w-4 h-4" /></button>
           </div>
         </div>
         <div className="bg-white rounded-lg p-2.5 border border-[rgba(0,0,0,0.06)]">
           <div className="flex items-start gap-2">
-            <Shield className="w-3 h-3 text-[#0d9b6e] flex-shrink-0 mt-0.5" />
+            <Shield className="w-3 h-3 text-[#0a7d58] flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-[10px] text-[#0d9b6e] font-bold">Bounded Scope</p>
-              <p className="text-[10px] text-[rgba(0,0,0,0.35)] leading-tight">Answers from OneAquaHealth factsheets only. Never identifies species and never scores — assessment comes from the deterministic rules on this page.</p>
+              <p className="text-[10px] text-[#0a7d58] font-bold">Bounded Scope</p>
+              <p className="text-[10px] text-[rgba(0,0,0,0.55)] leading-tight">Answers from OneAquaHealth factsheets only. Never identifies species and never scores — assessment comes from the deterministic rules on this page.</p>
             </div>
           </div>
         </div>
@@ -119,15 +120,15 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
         {messages.length === 0 && (
           <div className="bg-white rounded-lg p-3 border border-[rgba(0,0,0,0.06)]">
-            <p className="text-[11px] text-[rgba(0,0,0,0.4)] mb-2">Click a question below or type your own:</p>
+            <p className="text-[11px] text-[rgba(0,0,0,0.62)] mb-2">Click a question below or type your own:</p>
             <div className="space-y-1.5">
-              <button onClick={() => handleQuickQuestion(content ? content.citizen_question : 'Explain this indicator')} className="w-full text-left bg-[#f5faf7] rounded p-2.5 border border-[rgba(0,0,0,0.06)] hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.03)] text-[11px] text-[rgba(0,0,0,0.5)] transition-all">
+              <button onClick={() => handleQuickQuestion(content ? content.citizen_question : 'Explain this indicator')} className="w-full text-left bg-[#f5faf7] rounded p-2.5 border border-[rgba(0,0,0,0.06)] hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.03)] text-[11px] text-[rgba(0,0,0,0.62)] transition-all">
                 What does this indicator measure?
               </button>
-              <button onClick={() => handleQuickQuestion('What should I do during sampling?')} className="w-full text-left bg-[#f5faf7] rounded p-2.5 border border-[rgba(0,0,0,0.06)] hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.03)] text-[11px] text-[rgba(0,0,0,0.5)] transition-all">
+              <button onClick={() => handleQuickQuestion('What should I do during sampling?')} className="w-full text-left bg-[#f5faf7] rounded p-2.5 border border-[rgba(0,0,0,0.06)] hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.03)] text-[11px] text-[rgba(0,0,0,0.62)] transition-all">
                 Sampling procedure guidance
               </button>
-              <button onClick={() => handleQuickQuestion('What equipment do I need?')} className="w-full text-left bg-[#f5faf7] rounded p-2.5 border border-[rgba(0,0,0,0.06)] hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.03)] text-[11px] text-[rgba(0,0,0,0.5)] transition-all">
+              <button onClick={() => handleQuickQuestion('What equipment do I need?')} className="w-full text-left bg-[#f5faf7] rounded p-2.5 border border-[rgba(0,0,0,0.06)] hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.03)] text-[11px] text-[rgba(0,0,0,0.62)] transition-all">
                 Required equipment
               </button>
             </div>
@@ -137,7 +138,7 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
           <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : ''}`}>
             {msg.role === 'assistant' && (
               <div className="w-5 h-5 rounded-full bg-[rgba(13,155,110,0.08)] flex items-center justify-center flex-shrink-0 mt-1">
-                <Bot className="w-3 h-3 text-[#0d9b6e]" />
+                <Bot className="w-3 h-3 text-[#0a7d58]" />
               </div>
             )}
             <div className={`max-w-[200px] rounded-lg p-2.5 text-xs ${msg.role === 'user' ? 'bg-[rgba(13,155,110,0.08)] text-black ml-auto' : 'bg-white text-[rgba(0,0,0,0.6)] border border-[rgba(0,0,0,0.06)]'}`}>
@@ -161,7 +162,7 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
                   suppressHydrationWarning
                   className="flex-1 px-3 py-2 bg-white border border-[rgba(0,0,0,0.08)] rounded-full text-xs text-black placeholder-[rgba(0,0,0,0.25)] focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none disabled:opacity-40"
                 />
-            <button onClick={() => void handleSend()} disabled={loading || !input.trim()} aria-label="Send question" className="px-3 py-2 bg-[#0d9b6e] text-white rounded-full hover:bg-[#0a7d58] disabled:opacity-40 transition-all">
+            <button onClick={() => void handleSend()} disabled={loading || !input.trim()} aria-label="Send question" className="px-3 py-2 bg-[#0a7d58] text-white rounded-full hover:bg-[#0a7d58] disabled:opacity-40 transition-all">
               {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
             </button>
           </div>
@@ -171,10 +172,10 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
       {!isOnline && (
         <div className="border-t border-[rgba(0,0,0,0.06)] p-3">
           <div className="flex items-center gap-2 mb-2">
-            <WifiOff className="w-3 h-3 text-[#e85d3a]" />
-            <span className="text-[10px] text-[#e85d3a] font-medium">Offline — showing factsheet reference</span>
+            <WifiOff className="w-3 h-3 text-[#c2410c]" />
+            <span className="text-[10px] text-[#c2410c] font-medium">Offline — showing factsheet reference</span>
           </div>
-          <button onClick={handleClear} className="w-full py-1.5 bg-white border border-[rgba(0,0,0,0.08)] rounded-full text-[10px] text-[rgba(0,0,0,0.4)] hover:text-black transition-all">Clear history</button>
+          <button onClick={handleClear} className="w-full py-1.5 bg-white border border-[rgba(0,0,0,0.08)] rounded-full text-[10px] text-[rgba(0,0,0,0.62)] hover:text-black transition-all">Clear history</button>
         </div>
       )}
     </aside>

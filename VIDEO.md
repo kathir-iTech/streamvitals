@@ -53,15 +53,15 @@
 2. Browser: open `streamvitals.vercel.app/provenance` → show track, DOI, citation, AI-boundary statement.
 
 **Narration:**
-"Sixty-eight automated tests — session storage, the assistant's three-answer contract, the note rules, the frequencies panel, the assessment engine with its source guard, the GBIF client, and share links — plus an end-to-end walkthrough that fails if the review page ever shows data the volunteer did not enter. Zero AI calls in the assessment path: states, bands, note rules, and exports are deterministic. The provenance endpoint publishes the track, the DOI, and the AI boundary as machine-readable JSON."
+"Sixty-eight automated tests — session storage, the assistant's three-answer contract, the note rules, the frequencies panel, the assessment engine with its source guard, the GBIF client, and share links — plus an end-to-end walkthrough that fails if the review page ever shows data the volunteer did not enter, an accessibility scan, and an offline-reload test that cuts the network. Zero AI calls in the assessment path: states, bands, note rules, and exports are deterministic. The provenance endpoint publishes the track, the DOI, and the AI boundary as machine-readable JSON."
 
 ## 3:40 — Honest limits (screen: static card, readable for 12 s)
 
 **On-screen text (read aloud):**
 - Track 3 — deterministic assessment with chains; the assistant never scores.
-- **The app interface is English only.** No service worker: an open session keeps working offline; loading a new page does not.
+- **The app interface is English only.** Offline is modest, not offline-first: a service worker keeps already-visited pages available without connection; a first visit and the assistant need one.
 - The note-check rules and their tests were written by the same author — self-consistency, not accuracy.
-- We removed four scaffolded features we couldn't back: a fabricated sensors endpoint, an AI-analyze route, a fake monitoring map, and an 'offline-first' PWA claim.
+- We removed four scaffolded features we couldn't back: a fabricated sensors endpoint, an AI-analyze route, a fake monitoring map, and an 'offline-first' PWA claim — the last one replaced by a small, tested service worker, never by a promise.
 - Sources: OneAquaHealth factsheets, doi:10.5281/zenodo.20345207 (CC-BY 4.0).
 
 **Narration:**

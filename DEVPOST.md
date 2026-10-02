@@ -19,7 +19,7 @@ That word is an assessment smuggled into observation data. Downstream it is wort
 
 StreamVitals closes that gap without adding a second AI problem on top of the first.
 
-### What it does — eight features, all in the live app
+### What it does — nine features, all in the live app
 
 1. **Guided observation.** Five official indicators — BMI-01 Benthic Macroinvertebrates, BIR-04 Birds, INV-11 Invasive Alien Plants, FCL-06 Fecal Coliforms, DIA-10 Diatoms. Three field indicators offer three observation states each (nine states total), photo capture, and a field note; the session persists in IndexedDB and survives a refresh.
 2. **Lab mode that admits what it cannot know.** FCL-06 and DIA-10 cannot be judged in the field, so the app does not pretend: it shows a prominent **sample ID** to write on the container, the factsheet's own collection protocol, photo capture, and sampling notes. Pending lab analysis means pending — the assessment band says `pending_lab`, never a verdict.
@@ -29,6 +29,7 @@ StreamVitals closes that gap without adding a second AI problem on top of the fi
 6. **Review and export you can audit.** The review page shows exactly what the volunteer typed — names, states, notes, sample IDs — plus the session's assessment grid (per-indicator band chips, counts, worst band) — and exports CSV, JSON, a print summary, and a printable Lab Submission Sheet, every one of them carrying the band, the engine version, and the chain rule IDs. The frequencies panel on `/field` shows counts of what was recorded, labelled frequencies, never predictions.
 7. **Session location + GBIF baseline.** Optional GPS capture at session start (browser Geolocation API) — coordinates live in the session record on the device and its exports, never on a server of ours. With a location present, the review page fetches a baseline from `api.gbif.org/v1` browser-side (no key, no proxy): 8 taxa — EPT orders (BMI-01), Aves (BIR-04), the factsheet's three abbreviated IAP examples expanded to full binomials (INV-11), Bacillariophyta (DIA-10); FCL-06 is stated as "no taxon group — laboratory indicator". Counts within 50 km, timestamped, stored with the session, and labelled "presence data for context only, not a water-quality assessment — absence of records is not absence of species".
 8. **Share across devices — no accounts, no server.** "Create share link" on the review page encodes the session (states, notes, flags, sample IDs, GPS, baseline) as a versioned base64url payload in the **URL fragment** of `/sync#…` — fragments never reach any server. A QR code (zero-dependency `qrcode-generator`) hands the link to a phone; `/sync` validates the payload (garbage, truncation, wrong versions are rejected), previews it, and imports it into local storage. Photos deliberately stay on the capturing device and the UI says so. Server-side sync is on the roadmap, not faked.
+9. **Offline reload that is tested, not claimed.** A small service worker (`public/sw.js`) network-first caches pages you have already visited; an end-to-end test visits a page, cuts the device's network, reloads it, and asserts it still renders, then asserts a never-visited page gets a designed offline screen. First visits, the assistant, and anything uncached still require a connection — no background sync, no precached app shell, and no "offline-first" claim anywhere.
 
 ### How it works
 
@@ -42,7 +43,7 @@ StreamVitals closes that gap without adding a second AI problem on top of the fi
 
 ### The number
 
-**68 automated tests** (Vitest: 9 session + 14 factsheet/assistant + 15 note rules + 5 frequencies + 12 assessment engine + 6 GBIF client + 7 share links), plus an end-to-end Playwright walkthrough of the entire session that fails if the review page ever shows data the volunteer did not enter or if the assessment card/chips/location/baseline/share-import don't render. **0 AI calls in the assessment path.** The assistant's median answer time is ~1.9 s (5 live probes against the deployed app, 2026-10-02, min 1.4 s / max 4.1 s).
+**68 automated tests** (Vitest: 9 session + 14 factsheet/assistant + 15 note rules + 5 frequencies + 12 assessment engine + 6 GBIF client + 7 share links), plus an end-to-end Playwright walkthrough of the entire session that fails if the review page ever shows data the volunteer did not enter or if the assessment card/chips/location/baseline/share-import don't render, an axe-core accessibility scan of five routes (zero WCAG A/AA violations at every impact level), and a service-worker offline-reload test that cuts the network. **0 AI calls in the assessment path.** The assistant's median answer time is ~1.9 s (5 live probes against the deployed app, 2026-10-02, min 1.4 s / max 4.1 s).
 
 ### Before / after — the same note, two datasets
 
@@ -56,7 +57,7 @@ Most hackathon entries list what they built. This section is the part we're prou
 1. **A fabricated `/api/sensors` endpoint** — it returned invented sensor readings for a project that has no sensors. Removed and called out as fabricated in the commit that deleted it; the stale README entry is gone too.
 2. **An `/api/analyze` route** — an AI-analysis endpoint that would have scored observations with a model, contradicting the shipped boundary (deterministic rules assess; AI explains, never scores). Removed.
 3. **A monitoring map page** — 219 lines implying a live, crowd-sourced stream map that never existed. Removed.
-4. **An offline-first PWA** — service worker and manifest deleted; we kept only what's actually true: data entry survives a dropped connection on an already-open session, loading a new page does not, and the README says exactly that. No "offline-first" claim.
+4. **An offline-first PWA** — the scaffold's service worker and manifest went with its fabricated claim, and the README said exactly what was true instead. What shipped later is modest and real: a small service worker that network-first caches pages you have already visited (asserted by an e2e test that reloads with the network off), a designed offline screen for pages you have not, and still no "offline-first" claim anywhere.
 
 We also corrected two live claims before submission: the provenance endpoint no longer advertises a FHIR R4 export that doesn't exist, and its track statement now matches the track we actually enter — Track 3, with the boundary stated precisely (assessment is deterministic; the assistant never scores).
 
@@ -69,7 +70,7 @@ We also corrected two live claims before submission: the provenance endpoint no 
 
 ### Built with
 
-Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS 4 · IndexedDB persistence · deterministic assessment engine (`streamvitals-assessment/1.0.0`, pure TypeScript — no network, no clock, no model) · GBIF baseline via `api.gbif.org/v1` (browser-direct) · share-link sync (URL fragments, `qrcode-generator`) · Groq (`openai/gpt-oss-120b`) for the bounded assistant only · Vitest (68 tests) + Playwright (end-to-end smoke test) · Vercel.
+Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS 4 · IndexedDB persistence · deterministic assessment engine (`streamvitals-assessment/1.0.0`, pure TypeScript — no network, no clock, no model) · GBIF baseline via `api.gbif.org/v1` (browser-direct) · share-link sync (URL fragments, `qrcode-generator`) · Groq (`openai/gpt-oss-120b`) for the bounded assistant only · service worker for tested offline reload · Vitest (68 tests) + Playwright (smoke, axe-core a11y, offline) + GitHub Actions CI · Vercel.
 
 ### Sources
 
@@ -78,7 +79,7 @@ OneAquaHealth Key Indicators Factsheets Collection — Schmeller et al. (2026), 
 ### Honest limits
 
 - English-only UI; no multilingual label set was built.
-- No service worker: works without connectivity for data entry on an already-open session; requires a connection to load a new page and to reach the AI assistant.
+- Offline is modest, not offline-first: a service worker lets already-visited pages reload without connectivity; a first visit to any page and the AI assistant both require a connection, and an already-open session accepts data regardless.
 - The note-check rules and their tests were written by the same author, so the suite demonstrates self-consistency, not accuracy against a labelled corpus.
 - The automated end-to-end test runs in desktop Chromium; real-camera, real-sunlight readability testing on physical phones is pending.
 - Lab indicators produce no band in the field — a sample ID is not a measurement, so the rules return `pending_lab` rather than grade what was not measured.

@@ -41,7 +41,7 @@ const pipeline = [
 const limits = [
   "Assessment is deterministic and auditable — but citizen states are tolerance/extent proxies, not laboratory indices: BMWP, IBD and IPS all require taxon-level lab identification (factsheet §§I, II).",
   "English-only UI. The factsheets are multilingual; the interface is not yet.",
-  "No service worker: an already-open session keeps accepting data without connectivity; loading a new page or reaching the assistant requires a connection.",
+  "Offline support is deliberately modest: a service worker lets already-visited pages reload without connectivity (asserted in the end-to-end suite) and shows a designed offline screen for pages that were never visited; the assistant and a first visit to any page still require a connection.",
   "The note-check rules and their tests were written by the same author, so the suite demonstrates self-consistency, not accuracy against a labelled corpus.",
   "Real-camera, real-sunlight readability testing on physical phones is pending; the end-to-end test runs in headless Chromium.",
   "Lab indicators produce no band in the field — a sample ID is not a measurement, and the rules refuse to grade what was not measured.",
@@ -71,15 +71,15 @@ export default function AboutPage() {
     <main className="min-h-screen bg-[#f8f9fc]">
       <div className="max-w-4xl mx-auto px-6 pt-16 pb-12">
         <div className="inline-flex items-center gap-2 mb-6 bg-[rgba(13,155,110,0.08)] border border-[rgba(13,155,110,0.15)] px-4 py-2 rounded-full">
-          <span className="w-1.5 h-1.5 bg-[#0d9b6e] rounded-full" />
-          <span className="text-xs font-semibold text-[#0d9b6e] tracking-wide uppercase">How it works</span>
+          <span className="w-1.5 h-1.5 bg-[#0a7d58] rounded-full" />
+          <span className="text-xs font-semibold text-[#075d44] tracking-wide uppercase">How it works</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 text-black leading-[1.05]">
           Record what was seen.
           <br />
           Never what should be concluded.
         </h1>
-        <p className="text-lg text-[rgba(0,0,0,0.5)] leading-relaxed max-w-2xl mb-6">
+        <p className="text-lg text-[rgba(0,0,0,0.62)] leading-relaxed max-w-2xl mb-6">
           StreamVitals is the Field Companion submitted to the OneAquaHealth IEEE Global
           Hackathon 2026, Track 3. It walks a volunteer through the five official Key
           Indicators, keeps the observation structured, assesses it with deterministic
@@ -125,10 +125,10 @@ export default function AboutPage() {
         <h2 className="text-3xl font-black tracking-tighter mb-2 text-black">
           Every indicator is a health indicator
         </h2>
-        <p className="text-sm text-[rgba(0,0,0,0.5)] mb-8 leading-relaxed">
+        <p className="text-sm text-[rgba(0,0,0,0.62)] mb-8 leading-relaxed">
           Each card quotes the factsheet&apos;s own <em>Importance of indicator</em>{" "}
-          section, carried verbatim in <code className="text-[#0d9b6e]">indicators.json</code>{" "}
-          as <code className="text-[#0d9b6e]">why_this_matters</code> with its source
+          section, carried verbatim in <code className="text-[#0a7d58]">indicators.json</code>{" "}
+          as <code className="text-[#0a7d58]">why_this_matters</code> with its source
           section named. Nothing was paraphrased or invented.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -141,13 +141,13 @@ export default function AboutPage() {
                 <span
                   className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
                     ind.lab_only
-                      ? "bg-[rgba(232,93,58,0.1)] text-[#e85d3a]"
-                      : "bg-[rgba(13,155,110,0.08)] text-[#0d9b6e]"
+                      ? "bg-[rgba(232,93,58,0.1)] text-[#c2410c]"
+                      : "bg-[rgba(13,155,110,0.08)] text-[#0a7d58]"
                   }`}
                 >
                   {ind.id}
                 </span>
-                <span className="text-xs text-[rgba(0,0,0,0.35)]">
+                <span className="text-xs text-[rgba(0,0,0,0.55)]">
                   {ind.lab_only ? "Lab-only" : "Field-observable"}
                 </span>
               </div>
@@ -155,7 +155,7 @@ export default function AboutPage() {
               <p className="text-sm text-[rgba(0,0,0,0.55)] leading-relaxed mb-3">
                 &ldquo;{ind.why_this_matters}&rdquo;
               </p>
-              <p className="text-xs text-[rgba(0,0,0,0.3)]">
+              <p className="text-xs text-[rgba(0,0,0,0.55)]">
                 Source:{" "}
                 {(ind.why_this_matters_source || "").replace(
                   "(factsheet_text.txt)",
@@ -196,48 +196,52 @@ export default function AboutPage() {
           <h2 className="text-3xl font-black tracking-tighter mb-2 text-black">
             Published numbers
           </h2>
-          <p className="text-sm text-[rgba(0,0,0,0.5)]">
+          <p className="text-sm text-[rgba(0,0,0,0.62)]">
             Countable from the repository, not marketing estimates.
           </p>
         </div>
         <div className="stats-strip">
           <div className="stat-item">
-            <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">68</span>
-            <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">
+            <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">68</span>
+            <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">
               Automated tests (Vitest)
             </span>
           </div>
           <div className="stat-divider" />
           <div className="stat-item">
-            <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">9</span>
-            <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">
+            <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">9</span>
+            <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">
               Citizen observation states
             </span>
           </div>
           <div className="stat-divider" />
           <div className="stat-item">
-            <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">0</span>
-            <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">
+            <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">0</span>
+            <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">
               AI calls in the assessment path
             </span>
           </div>
           <div className="stat-divider" />
           <div className="stat-item">
-            <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">
+            <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">
               ~1.9 s
             </span>
-            <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">
+            <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">
               Median assistant answer (n=5)
             </span>
           </div>
         </div>
-        <div className="max-w-4xl mx-auto px-6 pt-8 text-sm text-[rgba(0,0,0,0.5)] leading-relaxed space-y-3">
+        <div className="max-w-4xl mx-auto px-6 pt-8 text-sm text-[rgba(0,0,0,0.62)] leading-relaxed space-y-3">
           <p>
             The end-to-end smoke test (Playwright) walks the entire session — states,
             note gate, sample IDs, assistant, export, frequencies — and fails if the
             review page ever shows data the volunteer did not enter. Screenshots from
             every run are committed under{" "}
-            <code className="text-[#0d9b6e]">tests/artifacts/</code>. The ~1.9 s figure
+            <code className="text-[#0a7d58]">tests/artifacts/</code>. A second spec
+            scans five routes with axe-core and fails on any critical WCAG A/AA
+            violation (currently zero violations at every impact level); a third cuts
+            the network to prove already-visited pages reload from the service worker
+            while uncached pages get the designed offline screen. The ~1.9 s figure
             is the median of five live probes against the deployed app on 2 October 2026
             (min 1.4 s, max 4.1 s); latency moves with the model provider.
           </p>
@@ -251,7 +255,7 @@ export default function AboutPage() {
         <ul className="space-y-3">
           {limits.map((limit) => (
             <li key={limit} className="flex gap-3 text-sm text-[rgba(0,0,0,0.6)] leading-relaxed">
-              <span className="text-[#e85d3a] font-bold shrink-0">×</span>
+              <span className="text-[#c2410c] font-bold shrink-0">×</span>
               <span>{limit}</span>
             </li>
           ))}
@@ -264,45 +268,45 @@ export default function AboutPage() {
         </h2>
         <ul className="space-y-3 text-sm leading-relaxed">
           <li>
-            <a className="text-[#0d9b6e] font-semibold hover:underline" href="https://streamvitals.vercel.app">
+            <a className="text-[#0a7d58] font-semibold hover:underline" href="https://streamvitals.vercel.app">
               streamvitals.vercel.app
             </a>{" "}
-            <span className="text-[rgba(0,0,0,0.5)]">— the deployed app you are reading this from</span>
+            <span className="text-[rgba(0,0,0,0.62)]">— the deployed app you are reading this from</span>
           </li>
           <li>
-            <a className="text-[#0d9b6e] font-semibold hover:underline" href="/provenance">
+            <a className="text-[#0a7d58] font-semibold hover:underline" href="/provenance">
               /provenance
             </a>{" "}
-            <span className="text-[rgba(0,0,0,0.5)]">
+            <span className="text-[rgba(0,0,0,0.62)]">
               — machine-readable track, DOI, citation, and AI-boundary statement
             </span>
           </li>
           <li>
             <a
-              className="text-[#0d9b6e] font-semibold hover:underline"
+              className="text-[#0a7d58] font-semibold hover:underline"
               href="https://doi.org/10.5281/zenodo.20345207"
             >
               doi:10.5281/zenodo.20345207
             </a>{" "}
-            <span className="text-[rgba(0,0,0,0.5)]">
+            <span className="text-[rgba(0,0,0,0.62)]">
               — the source factsheets (CC-BY 4.0), 14 authors
             </span>
           </li>
           <li>
             <a
-              className="text-[#0d9b6e] font-semibold hover:underline"
+              className="text-[#0a7d58] font-semibold hover:underline"
               href="https://github.com/kathir-iTech/streamvitals"
             >
               github.com/kathir-iTech/streamvitals
             </a>{" "}
-            <span className="text-[rgba(0,0,0,0.5)]">
-              — run <code className="text-[#0d9b6e]">npm test</code> for the 68 tests,
-              <code className="text-[#0d9b6e]"> npm run e2e</code> for the full session walkthrough
+            <span className="text-[rgba(0,0,0,0.62)]">
+              — run <code className="text-[#0a7d58]">npm test</code> for the 68 tests,
+              <code className="text-[#0a7d58]"> npm run e2e</code> for the full session walkthrough
             </span>
           </li>
           <li>
-            <code className="text-[#0d9b6e]">src/lib/assessment/engine.ts</code>{" "}
-            <span className="text-[rgba(0,0,0,0.5)]">
+            <code className="text-[#0a7d58]">src/lib/assessment/engine.ts</code>{" "}
+            <span className="text-[rgba(0,0,0,0.62)]">
               — the whole assessment: rules, chains, caveats. Its test suite reads the
               source and fails if it ever imports a model, calls the network, or reads
               the clock.
@@ -318,7 +322,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {roadmap.map((item, index) => (
             <div key={item.title} className="step-card">
-              <span className="text-xs font-bold text-[#0d9b6e] uppercase tracking-wider">
+              <span className="text-xs font-bold text-[#0a7d58] uppercase tracking-wider">
                 {index + 1} of {roadmap.length}
               </span>
               <h3 className="text-base font-bold text-black mt-2 mb-2">{item.title}</h3>

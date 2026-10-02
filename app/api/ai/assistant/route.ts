@@ -21,9 +21,9 @@ function diag(event: string, detail: Record<string, unknown>) {
 }
 
 export async function POST(request: NextRequest) {
-  let body: any;
+  let body: { indicatorId?: string; question?: string } = {};
   try {
-    body = await request.json();
+    body = (await request.json()) as { indicatorId?: string; question?: string };
     const { indicatorId, question } = body;
 
     if (!indicatorId || !question) {

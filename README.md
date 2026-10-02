@@ -16,7 +16,7 @@ A citizen answers guided questions about an urban stream across five official On
 
 The citizen selects observation states, optionally captures photos, and adds field notes. Once a state is selected (or a lab sample ID exists), the deterministic assessment card renders: band label, the rule that fired, the factsheet passage behind it, and the honesty caveats. All data is stored persistently in IndexedDB and exported via CSV, JSON, or a printable **Lab Submission Sheet** — every export carries the band, the engine version, and the chain rule IDs.
 
-Offline boundary: data entry keeps working without connectivity on an already-open session, but loading a new page and reaching the AI assistant both require a connection. There is no service worker, so this is a documented fallback, not offline-first.
+Offline boundary: a small service worker (network-first) caches pages you have already visited, so they reload without connectivity and never-visited pages get a designed offline screen; data entry keeps working without connectivity on an already-open session. The AI assistant and a first visit to any page still require a connection — the offline reload is asserted in the e2e suite, but this is not offline-first (no background sync, no precached app shell).
 
 A bounded **AI Field Assistant** answers questions using only the OneAquaHealth Key Indicators factsheets (doi:10.5281/zenodo.20345207). It never identifies species beyond what's in the factsheet, never gives opinions on water quality or health, and never assigns tiers, scores, or severity levels — for health judgements it points back at the deterministic assessment card on the page.
 
@@ -85,7 +85,7 @@ app/                 <- the ONLY Next.js app directory (routes, layout, global C
 src/components/      <- shared React components
 src/data/            <- indicator definitions and factsheet content
 src/lib/         <- session storage, note-quality rules, factsheet lookup, deterministic assessment engine
-tests/               <- Playwright smoke test + screenshot artifacts
+tests/               <- Playwright specs (smoke, a11y, offline) + screenshot artifacts
 research/            <- source factsheet text used for provenance checks
 ```
 
@@ -182,7 +182,7 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 
 ## Submission Artifacts
 
-- [`DEVPOST.md`](DEVPOST.md) — the paste-ready Devpost write-up: problem, eight features, the number (68 tests), before/after, removed features, limits, roadmap.
+- [`DEVPOST.md`](DEVPOST.md) — the paste-ready Devpost write-up: problem, nine features, the number (68 tests), before/after, removed features, limits, roadmap.
 - [`VIDEO.md`](VIDEO.md) — the shot-by-shot demo script (~4:15, inside the event's 3–5 minute requirement) with a recording checklist.
 
 ## What's Next
@@ -203,6 +203,8 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 - `src/lib/session-share.test.ts` — 7 tests for share-link round-trips, payload validation, and the QR-budget guard (68 tests total)
 
 Run with `npm test` (Vitest, jsdom environment, IndexedDB via `fake-indexeddb`).
+
+`npm run e2e` builds and runs three Playwright specs: the session walkthrough below, an axe-core accessibility scan of five routes that fails on any critical WCAG 2.0/2.1 A/AA violation (currently zero violations at every impact level), and a service-worker test that cuts the network to prove an already-visited page reloads while a never-visited one gets the designed offline screen. GitHub Actions (`.github/workflows/ci.yml`) runs lint, all 68 unit tests, the build, and the full e2e suite on every push and pull request to `main`.
 
 The end-to-end smoke test (`npm run e2e`) asserts that the stream name, **volunteer name**, date, selected states, notes, sample IDs, and **photo count shown on the review page match what was actually typed and uploaded**. It also asserts the deterministic assessment card renders on state selection and on lab pages (`pending_lab`, never a verdict), that the review page shows the session assessment grid with correct per-indicator bands, that the GPS capture round-trips into the review page and the GBIF baseline panel renders (GBIF is intercepted with a deterministic fixture), that a share link created on the review page decodes on `/sync` and imports successfully, that no "Not provided" placeholder appears, that the assistant's in-scope, nonsense, and meta questions receive three distinct correct responses (and that refusals point at the assessment card instead of scoring), and that the observation-frequencies panel on `/field` shows real counts labeled as frequencies rather than predictions. This exists because an earlier version of the review page rendered a hardcoded placeholder session, and the previous test suite passed against it. It also exists because `/field` once had no volunteer input at all, so the review page legitimately (but uselessly) showed "Not provided" for every session. If the review page ever shows data the user did not enter, the smoke test now fails.
 

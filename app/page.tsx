@@ -1,31 +1,27 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { indicators } from '@/data/indicators';
 import { ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => { setMounted(true); }, []);
-
   return (
     <main className="min-h-screen bg-[#f8f9fc]">
       <div className="hero-split">
         <div className="animate-fadeInUp">
           <div className="inline-flex items-center gap-2 mb-6 bg-[rgba(13,155,110,0.08)] border border-[rgba(13,155,110,0.15)] px-4 py-2 rounded-full">
-            <span className="w-1.5 h-1.5 bg-[#0d9b6e] rounded-full" />
-            <span className="text-xs font-semibold text-[#0d9b6e] tracking-wide uppercase">OneAquaHealth IEEE 2026</span>
+            <span className="w-1.5 h-1.5 bg-[#0a7d58] rounded-full" />
+            <span className="text-xs font-semibold text-[#075d44] tracking-wide uppercase">OneAquaHealth IEEE 2026</span>
           </div>
           <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 text-black leading-[1.05]">
             Take the<br />stream&rsquo;s vitals
           </h1>
-          <p className="text-lg text-[rgba(0,0,0,0.5)] leading-relaxed max-w-md mb-10">
+          <p className="text-lg text-[rgba(0,0,0,0.62)] leading-relaxed max-w-md mb-10">
             Collect real field data across five official OneAquaHealth indicators, then see a deterministic assessment with its full chain of evidence. AI may explain — AI never scores.
           </p>
-          <a href="/field" className="btn-pill-accent text-lg">
+          <Link href="/field" className="btn-pill-accent text-lg">
             Start Monitoring <ArrowRight className="w-4 h-4 ml-2" />
-          </a>
+          </Link>
         </div>
         <div className="hero-right">
           <StreamIllustration />
@@ -34,72 +30,72 @@ export default function HomePage() {
 
       <div className="max-w-5xl mx-auto px-6 py-16">
         <h2 className="text-3xl font-black tracking-tighter mb-8 text-black">Five Official Indicators</h2>
-        <h3 className="text-sm font-bold uppercase tracking-wider text-[#0d9b6e] mb-4">Field-observable (3)</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider text-[#0a7d58] mb-4">Field-observable (3)</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
           {indicators.filter((ind) => ind.citizen_observable && !ind.lab_only).map((ind) => (
-            <a
+            <Link
               key={ind.id}
               href={`/field/${ind.id}`}
               className="bg-white border border-[rgba(0,0,0,0.06)] rounded-xl p-6 hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.03)] transition-all cursor-pointer group"
             >
               <div className="flex items-center justify-between mb-3">
-                <span className="inline-block px-3 py-1 rounded-full bg-[rgba(13,155,110,0.08)] text-[#0d9b6e] text-xs font-bold uppercase tracking-wider">
+                <span className="inline-block px-3 py-1 rounded-full bg-[rgba(13,155,110,0.08)] text-[#0a7d58] text-xs font-bold uppercase tracking-wider">
                   {ind.id}
                 </span>
               </div>
-              <h3 className="text-lg font-bold text-black mb-2 group-hover:text-[#0d9b6e] transition-colors">{ind.name}</h3>
-              <p className="text-sm text-[rgba(0,0,0,0.4)] mb-3">{ind.category}</p>
-              <p className="text-xs text-[rgba(0,0,0,0.3)]">{ind.citizen_question.substring(0, 80)}...</p>
-              <div className="mt-4 flex items-center text-[#0d9b6e] text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+              <h3 className="text-lg font-bold text-black mb-2 group-hover:text-[#0a7d58] transition-colors">{ind.name}</h3>
+              <p className="text-sm text-[rgba(0,0,0,0.62)] mb-3">{ind.category}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.55)]">{ind.citizen_question.substring(0, 80)}...</p>
+              <div className="mt-4 flex items-center text-[#0a7d58] text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
                 Select indicator <ArrowRight className="w-4 h-4 ml-1" />
               </div>
-            </a>
+            </Link>
           ))}
         </div>
-        <h3 className="text-sm font-bold uppercase tracking-wider text-[#e85d3a] mb-4">Lab samples (2)</h3>
+        <h3 className="text-sm font-bold uppercase tracking-wider text-[#c2410c] mb-4">Lab samples (2)</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {indicators.filter((ind) => ind.lab_only).map((ind) => (
-            <a
+            <Link
               key={ind.id}
               href={`/field/${ind.id}`}
               className="bg-white border border-[rgba(0,0,0,0.06)] rounded-xl p-6 hover:border-[#e85d3a] hover:bg-[rgba(232,93,58,0.03)] transition-all cursor-pointer group"
             >
               <div className="flex items-center justify-between mb-3">
-                <span className="inline-block px-3 py-1 rounded-full bg-[rgba(13,155,110,0.08)] text-[#0d9b6e] text-xs font-bold uppercase tracking-wider">
+                <span className="inline-block px-3 py-1 rounded-full bg-[rgba(13,155,110,0.08)] text-[#0a7d58] text-xs font-bold uppercase tracking-wider">
                   {ind.id}
                 </span>
-                <span className="text-[10px] bg-[rgba(232,93,58,0.1)] text-[#e85d3a] px-3 py-1 rounded-full font-bold">Lab Required</span>
+                <span className="text-[10px] bg-[rgba(232,93,58,0.1)] text-[#c2410c] px-3 py-1 rounded-full font-bold">Lab Required</span>
               </div>
-              <h3 className="text-lg font-bold text-black mb-2 group-hover:text-[#e85d3a] transition-colors">{ind.name}</h3>
-              <p className="text-sm text-[rgba(0,0,0,0.4)] mb-3">{ind.category}</p>
-              <p className="text-xs text-[rgba(0,0,0,0.3)]">{ind.citizen_question.substring(0, 80)}...</p>
-              <div className="mt-4 flex items-center text-[#e85d3a] text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+              <h3 className="text-lg font-bold text-black mb-2 group-hover:text-[#c2410c] transition-colors">{ind.name}</h3>
+              <p className="text-sm text-[rgba(0,0,0,0.62)] mb-3">{ind.category}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.55)]">{ind.citizen_question.substring(0, 80)}...</p>
+              <div className="mt-4 flex items-center text-[#c2410c] text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
                 Select indicator <ArrowRight className="w-4 h-4 ml-1" />
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
 
       <div className="stats-strip">
         <div className="stat-item">
-          <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">68</span>
-          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Automated tests</span>
+          <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">68</span>
+          <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">Automated tests</span>
         </div>
         <div className="stat-divider" />
         <div className="stat-item">
-          <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">5</span>
-          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">OneAquaHealth Indicators</span>
+          <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">5</span>
+          <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">OneAquaHealth Indicators</span>
         </div>
         <div className="stat-divider" />
         <div className="stat-item">
-          <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">9</span>
-          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Citizen observation states</span>
+          <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">9</span>
+          <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">Citizen observation states</span>
         </div>
         <div className="stat-divider" />
         <div className="stat-item">
-          <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">CC-BY</span>
-          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Factsheet License</span>
+          <span className="text-3xl font-black tracking-tighter text-[#0a7d58]">CC-BY</span>
+          <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">Factsheet License</span>
         </div>
       </div>
     </main>

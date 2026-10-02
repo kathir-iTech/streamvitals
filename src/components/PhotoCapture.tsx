@@ -16,6 +16,10 @@ export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3, on
   const [capturing, setCapturing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const notifyChange = useCallback((newPhotos: { photoId: string; url: string; timestamp: string }[]) => {
+    onPhotosChange?.(newPhotos.map((p) => p.photoId));
+  }, [onPhotosChange]);
+
   useEffect(() => {
     if (!sessionId) return;
     getSessionPhotos(sessionId).then((savedPhotos) => {
@@ -27,11 +31,7 @@ export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3, on
         notifyChange(indicatorPhotos);
       }
     });
-  }, [sessionId, indicatorId]);
-
-  const notifyChange = useCallback((newPhotos: { photoId: string; url: string; timestamp: string }[]) => {
-    onPhotosChange?.(newPhotos.map((p) => p.photoId));
-  }, [onPhotosChange]);
+  }, [sessionId, indicatorId, notifyChange]);
 
   const handleCapture = useCallback(async () => {
     setPhotos((currentPhotos) => {
@@ -99,8 +99,8 @@ export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3, on
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-bold text-[rgba(0,0,0,0.5)]">Photos</label>
-        <span className="text-xs text-[rgba(0,0,0,0.3)]">{photos.length}/{maxPhotos}</span>
+        <label className="text-sm font-bold text-[rgba(0,0,0,0.62)]">Photos</label>
+        <span className="text-xs text-[rgba(0,0,0,0.55)]">{photos.length}/{maxPhotos}</span>
       </div>
       <div className="flex gap-3 flex-wrap">
         {photos.map((p) => (
@@ -113,14 +113,14 @@ export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3, on
         ))}
         {photos.length < maxPhotos && (
           <>
-            <button onClick={handleCapture} className="w-20 h-20 rounded-xl border-2 border-dashed border-[rgba(0,0,0,0.1)] flex flex-col items-center justify-center gap-1 hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.04)] transition-all" aria-label="Capture photo">
-              <Camera className="w-5 h-5 text-[#0d9b6e]/40" />
-              <span className="text-[10px] text-[#0d9b6e]/40">Capture</span>
+            <button onClick={handleCapture} disabled={capturing} className="w-20 h-20 rounded-xl border-2 border-dashed border-[rgba(0,0,0,0.1)] flex flex-col items-center justify-center gap-1 hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.04)] transition-all" aria-label="Capture photo">
+              <Camera className="w-5 h-5 text-[#0a7d58]" />
+              <span className="text-[10px] text-[#0a7d58]">Capture</span>
             </button>
             <input ref={fileInputRef} type="file" accept="image/*" capture="environment" onChange={handleFileUpload} className="hidden" suppressHydrationWarning />
             <button onClick={() => fileInputRef.current?.click()} className="w-20 h-20 rounded-xl border-2 border-dashed border-[rgba(0,0,0,0.1)] flex flex-col items-center justify-center gap-1 hover:border-[#0d9b6e] hover:bg-[rgba(13,155,110,0.04)] transition-all" aria-label="Upload photo">
-              <ImageIcon className="w-5 h-5 text-[#0d9b6e]/40" />
-              <span className="text-[10px] text-[#0d9b6e]/40">Upload</span>
+              <ImageIcon className="w-5 h-5 text-[#0a7d58]" />
+              <span className="text-[10px] text-[#0a7d58]">Upload</span>
             </button>
           </>
         )}

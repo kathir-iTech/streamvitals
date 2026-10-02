@@ -1,10 +1,11 @@
 'use client';
 
-import { use, useState, useEffect, useCallback, useMemo } from 'react';
+import { use, useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Shield, AlertTriangle, FlaskConical } from 'lucide-react';
-import { indicators } from '@/data/indicators';
-import { updateSession, getSession, createSession } from '@/lib/field-session';
+import { indicators, type IndicatorState } from '@/data/indicators';
+import { updateSession, getSession, createSession, type FieldIndicatorRecord } from '@/lib/field-session';
 import { checkNoteQuality } from '@/lib/note-quality';
 import { assess, type Band } from '@/lib/assessment/engine';
 import BoundedAssistant from '@/components/BoundedAssistant';
@@ -16,7 +17,7 @@ const BAND_STYLES: Record<Band, { card: string; chip: string; dot: string }> = {
   favorable: {
     card: 'border-[rgba(13,155,110,0.35)] bg-[rgba(13,155,110,0.05)]',
     chip: 'bg-[rgba(13,155,110,0.12)] text-[#0a7d58]',
-    dot: 'bg-[#0d9b6e]',
+    dot: 'bg-[#0a7d58]',
   },
   moderate: {
     card: 'border-[rgba(180,83,9,0.35)] bg-[rgba(180,83,9,0.05)]',
@@ -25,7 +26,7 @@ const BAND_STYLES: Record<Band, { card: string; chip: string; dot: string }> = {
   },
   degraded: {
     card: 'border-[rgba(232,93,58,0.4)] bg-[rgba(232,93,58,0.05)]',
-    chip: 'bg-[rgba(232,93,58,0.12)] text-[#e85d3a]',
+    chip: 'bg-[rgba(232,93,58,0.12)] text-[#c2410c]',
     dot: 'bg-[#e85d3a]',
   },
   pending_lab: {
@@ -35,7 +36,7 @@ const BAND_STYLES: Record<Band, { card: string; chip: string; dot: string }> = {
   },
   unassessable: {
     card: 'border-[rgba(0,0,0,0.08)] bg-white',
-    chip: 'bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.4)]',
+    chip: 'bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.62)]',
     dot: 'bg-[rgba(0,0,0,0.2)]',
   },
 };
@@ -59,36 +60,45 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
 
   useEffect(() => {
     const id = sessionStorage.getItem('current_session_id');
-    if (id) setSessionId(id);
+    if (!id) return;
+    const timer = setTimeout(() => setSessionId(id), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     // Client-side navigation keeps this component mounted, so form state must
     // be cleared when the indicator changes before loading the new record —
-    // a full reload used to do this implicitly.
-    setSelectedState('');
-    setNotes('');
-    setNoteFlag('');
-    setSampleLabel('');
-    setPhotos([]);
-    if (!sessionId) return;
-    getSession(sessionId).then((session) => {
-      if (session && !session.completedAt) {
-        const indicatorRecord = session.indicators.find((ind: any) => ind.indicatorId === indicatorId);
+    // a full reload used to do this implicitly. Reset + load run in one timer
+    // tick so the load can never race ahead of the reset.
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      setSelectedState('');
+      setNotes('');
+      setNoteFlag('');
+      setSampleLabel('');
+      setPhotos([]);
+      if (!sessionId) return;
+      getSession(sessionId).then((session) => {
+        if (cancelled || !session || session.completedAt) return;
+        const indicatorRecord = session.indicators.find((ind) => ind.indicatorId === indicatorId);
         if (indicatorRecord) {
           setSelectedState(indicatorRecord.state || '');
           setNotes(indicatorRecord.notes || '');
           setNoteFlag(indicatorRecord.note_flag || '');
           if (indicatorRecord.sampleLabel) setSampleLabel(indicatorRecord.sampleLabel);
         }
-      }
-    }).catch(() => {});
+      }).catch(() => {});
+    }, 0);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, [sessionId, indicatorId]);
 
   const stateLabels = indicator?.citizen_state_labels || {};
-  const stateKeys = (indicator?.states || []).map((s: any) => s.id);
+  const stateKeys = (indicator?.states || []).map((s: IndicatorState) => s.id);
   const stateDescriptions: Record<string, string> = {};
-  (indicator?.states || []).forEach((s: any) => { if (s?.id && s?.label) stateDescriptions[s.id] = s.label; });
+  (indicator?.states || []).forEach((s: IndicatorState) => { if (s?.id && s?.label) stateDescriptions[s.id] = s.label; });
   const progress = ((currentIndex + 1) / FIELD_INDICATORS.length) * 100;
   const noteQuality = useMemo(
     () => checkNoteQuality(indicatorId, selectedState, notes),
@@ -107,17 +117,17 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
     ? noteQuality.issues.map((i) => i.kind).join(';')
     : '';
 
-  const handleStateSelect = useCallback((state: string) => {
+  const handleStateSelect = (state: string) => {
     setSelectedState(state);
-  }, []);
+  };
 
-  const handleSaveIndicator = useCallback(async () => {
+  const handleSaveIndicator = async () => {
     if (!sessionId) return;
     setSaving(true);
     try {
       const result = await getSession(sessionId);
       if (result) {
-        const updatedIndicators = result.indicators.map((ind: any) => {
+        const updatedIndicators = result.indicators.map((ind: FieldIndicatorRecord) => {
           if (ind.indicatorId === indicatorId) {
             return {
               ...ind,
@@ -158,29 +168,29 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
     } finally {
       setSaving(false);
     }
-  }, [sessionId, indicatorId, selectedState, notes, photos, indicator, isCitizen, noteFlag, pendingFlag]);
+  };
 
-  const handleNext = useCallback(async () => {
+  const handleNext = async () => {
     await handleSaveIndicator();
     if (currentIndex < FIELD_INDICATORS.length - 1) {
       router.push(`/field/${FIELD_INDICATORS[currentIndex + 1].toLowerCase()}`);
     } else {
       router.push('/field/review');
     }
-  }, [currentIndex, handleSaveIndicator, router]);
+  };
 
-  const handlePrev = useCallback(() => {
+  const handlePrev = () => {
     if (currentIndex > 0) {
       router.push(`/field/${FIELD_INDICATORS[currentIndex - 1].toLowerCase()}`);
     }
-  }, [currentIndex, router]);
+  };
 
   if (!indicator) {
     return (
       <main className="min-h-screen bg-[#ffffff] flex items-center justify-center p-6">
         <div className="text-center max-w-md">
           <h1 className="text-3xl font-black tracking-tighter mb-4 text-black">Indicator not found</h1>
-          <a href="/field" className="btn-pill">Return to Field Companion</a>
+          <Link href="/field" className="btn-pill">Return to Field Companion</Link>
         </div>
       </main>
     );
@@ -191,14 +201,14 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
       <div className="max-w-4xl mx-auto px-6 lg:px-8 py-8">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="inline-block px-5 py-2 rounded-full bg-[rgba(13,155,110,0.08)] border border-[rgba(13,155,110,0.15)] text-[#0d9b6e] text-sm font-bold uppercase tracking-wider">
+            <span className="inline-block px-5 py-2 rounded-full bg-[rgba(13,155,110,0.08)] border border-[rgba(13,155,110,0.15)] text-[#0a7d58] text-sm font-bold uppercase tracking-wider">
               {indicator.id}
             </span>
             {isLabOnly && (
-              <span className="inline-block px-5 py-2 rounded-full bg-[rgba(232,93,58,0.08)] border border-[rgba(232,93,58,0.15)] text-[#e85d3a] text-sm font-bold">Pending Lab Analysis</span>
+              <span className="inline-block px-5 py-2 rounded-full bg-[rgba(232,93,58,0.08)] border border-[rgba(232,93,58,0.15)] text-[#c2410c] text-sm font-bold">Pending Lab Analysis</span>
             )}
           </div>
-          <span className="text-sm text-[rgba(0,0,0,0.3)] font-medium">{currentIndex + 1} / {FIELD_INDICATORS.length}</span>
+          <span className="text-sm text-[rgba(0,0,0,0.55)] font-medium">{currentIndex + 1} / {FIELD_INDICATORS.length}</span>
         </div>
 
         <div className="mb-8">
@@ -208,21 +218,21 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
         </div>
 
         <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-3 text-black leading-[1.05]">{indicator.name}</h1>
-        <p className="text-lg text-[rgba(0,0,0,0.5)] mb-6 max-w-2xl">{indicator.citizen_question}</p>
+        <p className="text-lg text-[rgba(0,0,0,0.62)] mb-6 max-w-2xl">{indicator.citizen_question}</p>
 
         {indicator.why_this_matters && (
           <div className="bg-[rgba(13,155,110,0.07)] border-2 border-[rgba(13,155,110,0.3)] border-l-8 border-l-[#0d9b6e] rounded-xl p-6 mb-6">
-            <p className="text-base font-black text-[#0d9b6e] mb-2">Why this matters — One Health</p>
+            <p className="text-base font-black text-[#0a7d58] mb-2">Why this matters — One Health</p>
             <p className="text-base text-[rgba(0,0,0,0.75)] leading-relaxed">{indicator.why_this_matters}</p>
             {indicator.why_this_matters_source && (
-              <p className="text-[11px] text-[rgba(0,0,0,0.35)] mt-2 italic">Source: {indicator.why_this_matters_source}</p>
+              <p className="text-[11px] text-[rgba(0,0,0,0.55)] mt-2 italic">Source: {indicator.why_this_matters_source}</p>
             )}
           </div>
         )}
 
         <div className="step-card mb-8" suppressHydrationWarning>
           {isLabOnly && sampleLabel && (
-            <div className="bg-[#0d9b6e] text-white rounded-xl p-6 mb-6" data-testid="sample-id-card">
+            <div className="bg-[#0a7d58] text-white rounded-xl p-6 mb-6" data-testid="sample-id-card">
               <p className="text-[11px] font-bold uppercase tracking-wider text-white/70 mb-2">Write this ID on the container</p>
               <p className="text-4xl font-black tracking-tighter font-mono" data-testid="sample-id-value">{sampleLabel}</p>
               <p className="text-xs text-white/80 mt-2">Write this exact ID on the bottle or container before it goes to the lab.</p>
@@ -230,18 +240,18 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
           )}
 
           <div className="flex items-start gap-3 mb-6">
-            <Shield className="w-5 h-5 text-[#0d9b6e] flex-shrink-0 mt-0.5" />
+            <Shield className="w-5 h-5 text-[#0a7d58] flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-bold text-[#0d9b6e]">{isLabOnly ? 'Collection Protocol' : 'Visual Anchor'}</p>
-              <p className="text-sm text-[rgba(0,0,0,0.5)] mt-1">{indicator.visual_anchor_guide}</p>
+              <p className="text-sm font-bold text-[#0a7d58]">{isLabOnly ? 'Collection Protocol' : 'Visual Anchor'}</p>
+              <p className="text-sm text-[rgba(0,0,0,0.62)] mt-1">{indicator.visual_anchor_guide}</p>
             </div>
           </div>
 
           {isLabOnly && (
             <div className="mt-4 bg-[rgba(232,93,58,0.04)] border border-[rgba(232,93,58,0.12)] rounded-xl p-5">
-              <p className="text-[#e85d3a] text-sm font-bold mb-2 flex items-center gap-2"><FlaskConical className="w-4 h-4" /> Laboratory Protocol Required</p>
+              <p className="text-[#c2410c] text-sm font-bold mb-2 flex items-center gap-2"><FlaskConical className="w-4 h-4" /> Laboratory Protocol Required</p>
               <p className="text-[rgba(0,0,0,0.6)] text-sm leading-relaxed">{indicator.lab_guidance || indicator.protocol_question}</p>
-              <p className="text-[#e85d3a] text-sm mt-3 font-medium">You cannot determine the result in the field.</p>
+              <p className="text-[#c2410c] text-sm mt-3 font-medium">You cannot determine the result in the field.</p>
             </div>
           )}
 
@@ -265,10 +275,10 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
                   >
                     <div className="text-base font-black text-black leading-snug">{label}</div>
                     {description && (
-                      <div className="text-xs font-medium text-[rgba(0,0,0,0.5)] mt-1 leading-snug">{description}</div>
+                      <div className="text-xs font-medium text-[rgba(0,0,0,0.62)] mt-1 leading-snug">{description}</div>
                     )}
                     {isSelected && (
-                      <div className="text-xs font-black mt-2 uppercase tracking-wider text-[#0d9b6e]">Selected</div>
+                      <div className="text-xs font-black mt-2 uppercase tracking-wider text-[#0a7d58]">Selected</div>
                     )}
                   </button>
                 );
@@ -282,7 +292,7 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
               className={`mt-6 rounded-xl border-2 p-5 ${bandStyle.card}`}
             >
               <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
-                <p className="text-[11px] font-black uppercase tracking-wider text-[rgba(0,0,0,0.45)]">
+                <p className="text-[11px] font-black uppercase tracking-wider text-[rgba(0,0,0,0.62)]">
                   Deterministic assessment
                 </p>
                 <span
@@ -297,12 +307,12 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
               <ol className="space-y-2 mb-3" aria-label="Chain of evidence">
                 {assessment.chain.map((step) => (
                   <li key={step.ruleId} className="flex gap-3 text-xs leading-relaxed">
-                    <span className="shrink-0 font-black text-[rgba(0,0,0,0.35)] w-16 pt-0.5">
+                    <span className="shrink-0 font-black text-[rgba(0,0,0,0.55)] w-16 pt-0.5">
                       {step.step}
                     </span>
                     <span className="text-[rgba(0,0,0,0.6)]">
                       {step.basis}
-                      <code className="block text-[10px] text-[#0d9b6e] mt-0.5">{step.ruleId}</code>
+                      <code className="block text-[10px] text-[#0a7d58] mt-0.5">{step.ruleId}</code>
                     </span>
                   </li>
                 ))}
@@ -310,23 +320,23 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
 
               <ul className="space-y-1 mb-3">
                 {assessment.caveats.map((caveat) => (
-                  <li key={caveat} className="text-[11px] text-[rgba(0,0,0,0.45)] leading-relaxed flex gap-2">
+                  <li key={caveat} className="text-[11px] text-[rgba(0,0,0,0.62)] leading-relaxed flex gap-2">
                     <span className="text-[#b45309] font-bold shrink-0">!</span>
                     <span>{caveat}</span>
                   </li>
                 ))}
               </ul>
 
-              <p className="text-[10px] font-semibold text-[rgba(0,0,0,0.35)] font-mono">
+              <p className="text-[10px] font-semibold text-[rgba(0,0,0,0.55)] font-mono">
                 {assessment.scoredBy}
               </p>
             </div>
           )}
 
           <div className="mt-6 space-y-4" suppressHydrationWarning>
-            <PhotoCapture sessionId={sessionId} indicatorId={indicatorId} onPhotosChange={(ids) => setPhotos(ids)} />
+            <PhotoCapture sessionId={sessionId} indicatorId={indicatorId} onPhotosChange={setPhotos} />
             <div>
-              <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor={`notes-${indicatorId}`}>
+              <label className="block text-sm font-medium text-[rgba(0,0,0,0.62)] mb-1.5" htmlFor={`notes-${indicatorId}`}>
                 {isLabOnly ? 'Sampling Notes' : 'Field Notes'}
               </label>
               <textarea
@@ -342,7 +352,7 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
               />
               {noteBlocked && (
                 <div data-testid="note-quality-warning" role="alert" className="mt-2 bg-[rgba(232,93,58,0.06)] border border-[rgba(232,93,58,0.2)] rounded-xl p-4">
-                  <p className="text-sm font-bold text-[#e85d3a] flex items-center gap-2">
+                  <p className="text-sm font-bold text-[#c2410c] flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4" /> Check your note before continuing
                   </p>
                   <ul className="mt-2 space-y-1">
@@ -350,7 +360,7 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
                       <li key={i} className="text-sm text-[rgba(0,0,0,0.6)]">• {issue.message}</li>
                     ))}
                   </ul>
-                  <p className="text-xs text-[rgba(0,0,0,0.4)] mt-2">This is a rule-based wording check, not AI. It only looks for assessment words and notes that contradict your selection. Assessment itself comes from the deterministic rule card above — this check never scores anything.</p>
+                  <p className="text-xs text-[rgba(0,0,0,0.62)] mt-2">This is a rule-based wording check, not AI. It only looks for assessment words and notes that contradict your selection. Assessment itself comes from the deterministic rule card above — this check never scores anything.</p>
                   <button
                     onClick={() => setNoteFlag(pendingFlag)}
                     data-testid="keep-note-override"
@@ -362,11 +372,11 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
               )}
               {noteFlag && (
                 <div data-testid="note-flag-recorded" className="mt-2 bg-[rgba(13,155,110,0.06)] border border-[rgba(13,155,110,0.2)] rounded-xl p-3 flex items-center justify-between gap-3 flex-wrap">
-                  <p className="text-xs text-[#0d9b6e] font-medium">Note kept, with a recorded flag ({noteFlag}). It will be marked in the export.</p>
+                  <p className="text-xs text-[#0a7d58] font-medium">Note kept, with a recorded flag ({noteFlag}). It will be marked in the export.</p>
                   <button
                     onClick={() => { setNoteFlag(''); setNotes(''); }}
                     data-testid="clear-note-override"
-                    className="text-xs text-[rgba(0,0,0,0.4)] underline hover:text-black"
+                    className="text-xs text-[rgba(0,0,0,0.62)] underline hover:text-black"
                   >
                     Clear and rewrite
                   </button>

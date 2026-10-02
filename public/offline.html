@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>You are offline — StreamVitals</title>
+    <style>
+      body { font-family: system-ui, sans-serif; background: #f8f9fc; color: #1a1a2e; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+      .card { max-width: 28rem; padding: 2rem; text-align: center; }
+      .dot { width: 0.75rem; height: 0.75rem; background: #0a7d58; border-radius: 9999px; display: inline-block; margin-bottom: 1rem; }
+      h1 { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.03em; margin: 0 0 0.75rem; }
+      p { color: rgba(0, 0, 0, 0.62); line-height: 1.6; margin: 0 0 1.5rem; }
+      a { display: inline-block; padding: 0.75rem 2rem; border-radius: 9999px; background: #0a7d58; color: #fff; font-weight: 700; font-size: 0.875rem; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <main class="card" data-testid="offline-page">
+      <span class="dot"></span>
+      <h1>You are offline</h1>
+      <p>
+        This page has not been visited yet in this browser, so it is not cached.
+        Pages you have already opened keep working without a connection, and an
+        open session keeps accepting data.
+      </p>
+      <a href="/">Back to StreamVitals</a>
+    </main>
+  </body>
+</html>

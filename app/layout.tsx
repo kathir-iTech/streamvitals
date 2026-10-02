@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#f8f9fc]">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#0d9b6e] focus:text-white focus:rounded">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#0a7d58] focus:text-white focus:rounded">
           Skip to main content
         </a>
         <nav className="bg-white border-b border-[rgba(0,0,0,0.06)] px-6 py-3" aria-label="Main navigation">
@@ -37,9 +38,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <span className="text-lg font-bold text-black tracking-tight font-['Space_Grotesk']">StreamVitals</span>
             </Link>
             <div className="flex items-center gap-6 text-sm font-medium">
-              <Link href="/" className="text-[rgba(0,0,0,0.5)] hover:text-black transition-colors">Home</Link>
-              <Link href="/field" className="text-[rgba(0,0,0,0.5)] hover:text-black transition-colors">Field Companion</Link>
-              <Link href="/about" className="text-[rgba(0,0,0,0.5)] hover:text-black transition-colors">How it works</Link>
+              <Link href="/" className="text-[rgba(0,0,0,0.62)] hover:text-black transition-colors">Home</Link>
+              <Link href="/field" className="text-[rgba(0,0,0,0.62)] hover:text-black transition-colors">Field Companion</Link>
+              <Link href="/about" className="text-[rgba(0,0,0,0.62)] hover:text-black transition-colors">How it works</Link>
             </div>
           </div>
         </nav>
@@ -47,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <footer className="bg-white border-t border-[rgba(0,0,0,0.06)] px-6 py-6">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs text-[rgba(0,0,0,0.45)]">
+          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs text-[rgba(0,0,0,0.62)]">
             <p>
               StreamVitals — OneAquaHealth IEEE Global Hackathon 2026, Track 3.
               Deterministic assessment (streamvitals-assessment/1.0.0) — AI never scores.
@@ -60,6 +61,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </nav>
           </div>
         </footer>
+        <Script id="sw-register" strategy="afterInteractive">
+          {`if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(function () {}); }`}
+        </Script>
       </body>
     </html>
   );

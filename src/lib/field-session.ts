@@ -2,6 +2,14 @@ import type { GbifBaseline } from './gbif';
 
 const DB_NAME = 'streamvitals-field';
 const DB_VERSION = 1;
+
+// Legacy photo rows: older records hold a Blob in `data`, newer ones a dataURL.
+interface StoredPhotoRecord {
+  photoId: string;
+  indicatorId: string;
+  timestamp: string;
+  data: string | Blob | ArrayBuffer;
+}
 let dbInstance: IDBDatabase | null = null;
 
 function openDB(): Promise<IDBDatabase> {
@@ -9,7 +17,8 @@ function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     try {
       const request = indexedDB.open(DB_NAME, DB_VERSION);
-      const timeout = setTimeout(() => { (request as any).abort(); reject(new Error('IndexedDB timeout')); }, 3000);
+      // MDN documents IDBOpenDBRequest.abort(); TypeScript's lib.dom omits it.
+      const timeout = setTimeout(() => { (request as IDBOpenDBRequest & { abort(): void }).abort(); reject(new Error('IndexedDB timeout')); }, 3000);
       request.onupgradeneeded = (event) => {
         clearTimeout(timeout);
         const db = (event.target as IDBOpenDBRequest).result;
@@ -194,7 +203,7 @@ export async function getSessionPhotos(sessionId: string): Promise<{ photoId: st
       const request = index.getAll(sessionId);
       request.onsuccess = async () => {
         const results = request.result || [];
-        const photosWithData = await Promise.all(results.map(async (p: any) => {
+        const photosWithData = await Promise.all(results.map(async (p: StoredPhotoRecord) => {
           try {
             // New records store dataURLs directly; old records hold Blobs.
             if (typeof p.data === 'string' && p.data.startsWith('data:')) {
@@ -251,7 +260,7 @@ export async function clearSession(sessionId: string): Promise<{ success: boolea
       const index = photoStore.index('by-session');
       const getAllReq = index.getAll(sessionId);
       getAllReq.onsuccess = () => {
-        (getAllReq.result || []).forEach((p: any) => photoStore.delete(p.photoId));
+        (getAllReq.result || []).forEach((p: { photoId: string }) => photoStore.delete(p.photoId));
       };
       tx.oncomplete = () => resolve({ success: true });
       tx.onerror = () => resolve({ success: false, error: txError(tx.error) });

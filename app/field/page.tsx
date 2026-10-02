@@ -152,18 +152,18 @@ export default function FieldPage() {
         <div className="hero-left">
           <div className="animate-fadeInUp">
             <div className="inline-flex items-center gap-2 mb-6 bg-[rgba(13,155,110,0.08)] border border-[rgba(13,155,110,0.15)] px-4 py-2 rounded-full">
-              <span className="w-1.5 h-1.5 bg-[#0d9b6e] rounded-full" />
-              <span className="text-xs font-semibold text-[#0d9b6e] tracking-wide uppercase">OneAquaHealth IEEE 2026</span>
+              <span className="w-1.5 h-1.5 bg-[#0a7d58] rounded-full" />
+              <span className="text-xs font-semibold text-[#075d44] tracking-wide uppercase">OneAquaHealth IEEE 2026</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 text-black leading-[1.05]">
               Take the<br />stream&rsquo;s vitals
             </h1>
-            <p className="text-lg text-[rgba(0,0,0,0.5)] leading-relaxed max-w-md mb-10">
+            <p className="text-lg text-[rgba(0,0,0,0.62)] leading-relaxed max-w-md mb-10">
               Collect real field data across five official OneAquaHealth indicators, then see a deterministic assessment with its full chain of evidence. AI may explain — AI never scores.
             </p>
             <form onSubmit={handleStart} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor="stream-name">Stream Name / Location</label>
+                <label className="block text-sm font-medium text-[rgba(0,0,0,0.62)] mb-1.5" htmlFor="stream-name">Stream Name / Location</label>
                 <input
                   id="stream-name"
                   type="text"
@@ -176,7 +176,7 @@ export default function FieldPage() {
               </div>
               <div className="flex gap-3">
                 <div className="flex-1">
-                  <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor="volunteer-name">Volunteer Name</label>
+                  <label className="block text-sm font-medium text-[rgba(0,0,0,0.62)] mb-1.5" htmlFor="volunteer-name">Volunteer Name</label>
                   <input
                     id="volunteer-name"
                     type="text"
@@ -189,23 +189,23 @@ export default function FieldPage() {
               </div>
               <div className="flex gap-3">
                 <div className="flex-1">
-                  <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor="session-date">Date</label>
+                  <label className="block text-sm font-medium text-[rgba(0,0,0,0.62)] mb-1.5" htmlFor="session-date">Date</label>
                   <input id="session-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full px-4 py-3 bg-[#f5faf7] border border-[rgba(0,0,0,0.08)] rounded-full text-black focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none text-sm font-medium" />
                 </div>
                 <div className="flex-1">
-                  <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor="session-time">Time</label>
+                  <label className="block text-sm font-medium text-[rgba(0,0,0,0.62)] mb-1.5" htmlFor="session-time">Time</label>
                   <input id="session-time" type="time" value={time} onChange={(e) => setTime(e.target.value)} className="w-full px-4 py-3 bg-[#f5faf7] border border-[rgba(0,0,0,0.08)] rounded-full text-black focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none text-sm font-medium" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5">Session location (optional, stays on your device)</label>
+                <label className="block text-sm font-medium text-[rgba(0,0,0,0.62)] mb-1.5">Session location (optional, stays on your device)</label>
                 {location ? (
                   <div data-testid="session-location" className="w-full max-w-sm px-4 py-3 bg-[#f5faf7] border border-[rgba(13,155,110,0.25)] rounded-full text-sm font-medium flex items-center justify-between gap-3">
                     <span className="text-black">
                       {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
-                      {location.accuracyM !== null && <span className="text-[rgba(0,0,0,0.45)]"> (±{Math.round(location.accuracyM)} m)</span>}
+                      {location.accuracyM !== null && <span className="text-[rgba(0,0,0,0.62)]"> (±{Math.round(location.accuracyM)} m)</span>}
                     </span>
-                    <button type="button" onClick={() => setLocation(null)} className="text-xs text-[rgba(0,0,0,0.4)] hover:text-red-500 font-semibold">Remove</button>
+                    <button type="button" onClick={() => setLocation(null)} className="text-xs text-[rgba(0,0,0,0.62)] hover:text-red-500 font-semibold">Remove</button>
                   </div>
                 ) : (
                   <button type="button" data-testid="capture-location" onClick={handleCaptureLocation} disabled={locating} className="btn-pill-outline text-sm">
@@ -220,12 +220,12 @@ export default function FieldPage() {
                 <ArrowRight className="w-4 h-4" />
               </button>
               <div className="pt-2">
-                <p className="text-xs text-[rgba(0,0,0,0.3)]">5 official indicators · CC-BY factsheet · DOI:10.5281/zenodo.20345207</p>
+                <p className="text-xs text-[rgba(0,0,0,0.55)]">5 official indicators · CC-BY factsheet · DOI:10.5281/zenodo.20345207</p>
               </div>
             </form>
             {existingSession && (
               <div className="mt-8 p-5 bg-[#f5faf7] border border-[rgba(13,155,110,0.15)] rounded-2xl animate-fadeInScale">
-                <p className="text-sm text-[rgba(0,0,0,0.6)] font-medium">Continue session for <span className="text-[#0d9b6e] font-bold">{existingSession.streamName}</span></p>
+                <p className="text-sm text-[rgba(0,0,0,0.6)] font-medium">Continue session for <span className="text-[#0a7d58] font-bold">{existingSession.streamName}</span></p>
                 <button onClick={handleContinue} className="mt-3 btn-pill-outline text-sm">Continue Monitoring <ArrowRight className="w-3 h-3 ml-1" /></button>
               </div>
             )}
@@ -239,17 +239,17 @@ export default function FieldPage() {
       <div className="stats-strip">
         <div className="stat-item">
           <span className="text-3xl font-black tracking-tighter">5</span>
-          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">OneAquaHealth Indicators</span>
+          <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">OneAquaHealth Indicators</span>
         </div>
         <div className="stat-divider" />
         <div className="stat-item">
           <span className="text-3xl font-black tracking-tighter">CC-BY</span>
-          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Factsheet License</span>
+          <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">Factsheet License</span>
         </div>
         <div className="stat-divider" />
         <div className="stat-item">
           <span className="text-3xl font-black tracking-tighter">IEEE 2026</span>
-          <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Hackathon</span>
+          <span className="text-xs text-[rgba(0,0,0,0.62)] font-medium">Hackathon</span>
         </div>
       </div>
 
@@ -257,7 +257,7 @@ export default function FieldPage() {
         <section aria-label="Observation frequencies" className="max-w-5xl mx-auto px-6 pb-12">
           <div className="bg-white border border-[rgba(0,0,0,0.06)] rounded-2xl p-6">
             <h2 className="text-sm font-bold text-black mb-1">Observation frequencies</h2>
-            <p className="text-xs text-[rgba(0,0,0,0.4)] mb-5">
+            <p className="text-xs text-[rgba(0,0,0,0.62)] mb-5">
               Counts of states recorded in your saved sessions — frequencies of what was observed, not predictions of stream condition.
             </p>
             <div className="space-y-4">
@@ -267,7 +267,7 @@ export default function FieldPage() {
                   <div className="flex flex-wrap gap-2">
                     {f.states.map((s) => (
                       <span key={s.state} className="text-[11px] bg-[#f5faf7] border border-[rgba(13,155,110,0.15)] text-[rgba(0,0,0,0.6)] px-3 py-1.5 rounded-full">
-                        {stateLabel(f.indicatorId, s.state)} <span className="font-bold text-[#0d9b6e]">{s.count}×</span>
+                        {stateLabel(f.indicatorId, s.state)} <span className="font-bold text-[#0a7d58]">{s.count}×</span>
                       </span>
                     ))}
                   </div>
