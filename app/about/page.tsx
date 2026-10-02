@@ -4,7 +4,7 @@ import { indicators } from "@/data/indicators";
 export const metadata = {
   title: "How it works — StreamVitals",
   description:
-    "Why StreamVitals exists, how a monitoring session runs, the published numbers behind it, its honest limits, and what comes next.",
+    "Why StreamVitals exists, how a monitoring session is assessed by deterministic rules, the published numbers, its honest limits, and what comes next.",
 };
 
 const pipeline = [
@@ -22,25 +22,29 @@ const pipeline = [
   },
   {
     title: "The note check runs — deterministic, not AI",
-    body: "Keyword and contradiction rules in src/lib/note-quality.ts flag assessment language ('healthy', 'tier 1', 'score') and notes that contradict the selected state. It warns, never blocks. 'Keep my note anyway' writes a note_flag that travels into the JSON and CSV exports instead of being hidden.",
+    body: "Keyword and contradiction rules in src/lib/note-quality.ts flag assessment language ('healthy', 'tier 1', 'score') and notes that contradict the selected state. It warns, never blocks. 'Keep my note anyway' writes a note_flag that travels into the JSON and CSV exports instead of being hidden. Your note stays an observation; the assessment comes from the next step.",
+  },
+  {
+    title: "The deterministic assessment runs — rules, not a model",
+    body: "streamvitals-assessment/1.0.0 maps the observation state to a band (favorable / moderate / degraded, or pending for lab indicators) and attaches the chain of evidence: the rule that fired, the factsheet passage behind it, and the honesty caveats. The same state always produces the same band. The module never touches the network, the clock, or any AI — tests read its source and fail if it ever does.",
   },
   {
     title: "Ask the bounded Field Assistant",
-    body: "In-scope protocol questions are answered from the OneAquaHealth factsheet text (Groq, openai/gpt-oss-120b, factsheet injected into the prompt). Meta questions and out-of-scope questions are answered locally with no model call at all. The assistant never grades, scores, or identifies species beyond the factsheet.",
+    body: "In-scope protocol questions are answered from the OneAquaHealth factsheet text (Groq, openai/gpt-oss-120b, factsheet injected into the prompt). Meta questions and out-of-scope questions are answered locally with no model call at all. The assistant never scores — for health judgements it points back at the deterministic card.",
   },
   {
     title: "Review and export",
-    body: "The review page shows exactly what was typed — names, states, notes, sample IDs — and exports CSV, JSON, a print summary, and a printable Lab Submission Sheet. The frequencies panel on /field shows counts of what was recorded, labelled as frequencies, never as predictions.",
+    body: "The review page shows exactly what was typed — names, states, notes, sample IDs — plus the session's assessment bands, and exports CSV, JSON, a print summary, and a printable Lab Submission Sheet. Every export carries the band, the engine version, and the chain rule IDs.",
   },
 ];
 
 const limits = [
-  "No assessment, no tier, no score — by design. The product is a data-collection tool, not an evaluator.",
+  "Assessment is deterministic and auditable — but citizen states are tolerance/extent proxies, not laboratory indices: BMWP, IBD and IPS all require taxon-level lab identification (factsheet §§I, II).",
   "English-only UI. The factsheets are multilingual; the interface is not yet.",
   "No service worker: an already-open session keeps accepting data without connectivity; loading a new page or reaching the assistant requires a connection.",
   "The note-check rules and their tests were written by the same author, so the suite demonstrates self-consistency, not accuracy against a labelled corpus.",
   "Real-camera, real-sunlight readability testing on physical phones is pending; the end-to-end test runs in headless Chromium.",
-  "Lab indicators produce no result in this app — a sample ID is not a measurement.",
+  "Lab indicators produce no band in the field — a sample ID is not a measurement, and the rules refuse to grade what was not measured.",
 ];
 
 const roadmap = [
@@ -73,10 +77,11 @@ export default function AboutPage() {
         </h1>
         <p className="text-lg text-[rgba(0,0,0,0.5)] leading-relaxed max-w-2xl mb-6">
           StreamVitals is the Field Companion submitted to the OneAquaHealth IEEE Global
-          Hackathon 2026, Track 1. It walks a volunteer through the five official Key
-          Indicators, keeps the observation structured, and hands a reviewer clean,
-          source-traceable data. Everything on this page can be checked against the
-          repository or the live app.
+          Hackathon 2026, Track 3. It walks a volunteer through the five official Key
+          Indicators, keeps the observation structured, assesses it with deterministic
+          rules you can audit line by line, and hands a reviewer clean, source-traceable
+          data. Everything on this page can be checked against the repository or the
+          live app.
         </p>
         <div className="flex items-center gap-3 flex-wrap">
           <Link href="/field" className="btn-pill-accent">
@@ -101,11 +106,13 @@ export default function AboutPage() {
             When the sheet and the sighting do not line up, the free-text note fills the
             gap: <em>&ldquo;healthy stream.&rdquo;</em> That single word is an
             assessment, not an observation, and it is exactly what makes volunteer data
-            unusable downstream. Most entries to a hackathon add more AI on top of this
-            problem. We removed it from the recording path instead.
+            unusable downstream. Most entries to a hackathon answer this by adding more
+            AI on top. We made the assessment itself deterministic instead: rules score
+            the observation, every score carries its chain of evidence, and AI stays at
+            the edges where it explains — never where it judges.
           </p>
           <p className="text-black font-semibold">
-            AI may interpret input. AI may not adjudicate.
+            Deterministic rules assess. AI may explain — AI never scores.
           </p>
         </div>
       </section>
@@ -191,7 +198,7 @@ export default function AboutPage() {
         </div>
         <div className="stats-strip">
           <div className="stat-item">
-            <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">41</span>
+            <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">53</span>
             <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">
               Automated tests (Vitest)
             </span>
@@ -207,7 +214,7 @@ export default function AboutPage() {
           <div className="stat-item">
             <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">0</span>
             <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">
-              AI calls in the recording path
+              AI calls in the assessment path
             </span>
           </div>
           <div className="stat-divider" />
@@ -285,8 +292,16 @@ export default function AboutPage() {
               github.com/kathir-iTech/streamvitals
             </a>{" "}
             <span className="text-[rgba(0,0,0,0.5)]">
-              — run <code className="text-[#0d9b6e]">npm test</code> for the 41 tests,
+              — run <code className="text-[#0d9b6e]">npm test</code> for the 53 tests,
               <code className="text-[#0d9b6e]"> npm run e2e</code> for the full session walkthrough
+            </span>
+          </li>
+          <li>
+            <code className="text-[#0d9b6e]">src/lib/assessment/engine.ts</code>{" "}
+            <span className="text-[rgba(0,0,0,0.5)]">
+              — the whole assessment: rules, chains, caveats. Its test suite reads the
+              source and fails if it ever imports a model, calls the network, or reads
+              the clock.
             </span>
           </li>
         </ul>

@@ -49,6 +49,9 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await firstButton.click();
     await expect(page.url()).toBe(urlBefore);
     await expect(firstButton).toHaveClass(/bg-\[rgba\(13,155,110,0\.06\)\]/);
+    // Track 3: selecting a state renders the deterministic assessment card.
+    await expect(page.locator('[data-testid="assessment-card"]')).toBeVisible();
+    await expect(page.locator('[data-testid="assessment-band"]')).toContainText('Favorable signal');
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '03a-bmi-01-state-selected.png'), fullPage: true });
 
     // Notes persist after state selection
@@ -130,6 +133,11 @@ test.describe.serial('StreamVitals Smoke Test', () => {
       await expect(protocolHeading).toHaveCount(1);
       await expect(page.getByText('You cannot determine the result in the field')).toHaveCount(1);
 
+      // Track 3: lab pages carry a pending band from the moment the sample ID
+      // exists — never a verdict for work that has not been done.
+      await expect(page.locator('[data-testid="assessment-card"]')).toBeVisible();
+      await expect(page.locator('[data-testid="assessment-band"]')).toContainText('Awaiting laboratory analysis');
+
       await page.screenshot({ path: path.join(ARTIFACTS_DIR, `04-${indicatorId.toLowerCase()}-lab-page.png`), fullPage: true });
     }
 
@@ -193,6 +201,16 @@ test.describe.serial('StreamVitals Smoke Test', () => {
 
     // Notes typed on the indicator page must appear on the review page
     await expect(page.getByText(BMI_NOTES).first()).toBeVisible();
+
+    // Track 3: the review page shows the session's deterministic bands —
+    // favorable for the three citizen states selected above, pending for labs.
+    const assessmentSummary = page.locator('[data-testid="assessment-summary"]');
+    await expect(assessmentSummary).toBeVisible();
+    await expect(page.locator('[data-testid="band-chip-BMI-01"]')).toContainText('Favorable');
+    await expect(page.locator('[data-testid="band-chip-BIR-04"]')).toContainText('Favorable');
+    await expect(page.locator('[data-testid="band-chip-INV-11"]')).toContainText('Favorable');
+    await expect(page.locator('[data-testid="band-chip-FCL-06"]')).toContainText('Awaiting laboratory');
+    await expect(page.locator('[data-testid="band-chip-DIA-10"]')).toContainText('Awaiting laboratory');
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '05-review.png'), fullPage: true });
 
     // Step 6: Export triggers download — REQUIRED, not optional. A missing
@@ -224,6 +242,8 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     expect(outOfScopeBody.source).toBe('offline');
     expect(outOfScopeBody.response).toContain('falls outside that scope');
     expect(outOfScopeBody.response).toContain('protocol, states, or sampling');
+    // Track 3: refusals point at the deterministic card instead of scoring.
+    expect(outOfScopeBody.response).toContain('deterministic assessment card');
 
     const inScopeRes = await page.request.post('/api/ai/assistant', {
       data: { indicatorId: 'BMI-01', question: 'What equipment do I need for this sample?' },
@@ -307,7 +327,7 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await expect(page.getByRole('heading', { name: 'Published numbers' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Honest limits' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'What comes next' })).toBeVisible();
-    await expect(page.locator('text=AI may interpret input. AI may not adjudicate.')).toBeVisible();
+    await expect(page.locator('text=Deterministic rules assess. AI may explain — AI never scores.')).toBeVisible();
     await expect(page.locator('footer')).toContainText('Provenance');
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '09-about.png'), fullPage: true });
   });

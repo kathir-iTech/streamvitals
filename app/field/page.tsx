@@ -125,7 +125,7 @@ export default function FieldPage() {
               Take the<br />stream&rsquo;s vitals
             </h1>
             <p className="text-lg text-[rgba(0,0,0,0.5)] leading-relaxed max-w-md mb-10">
-              Collect real field data across five official OneAquaHealth indicators. No assessment, no tier, no verdict — just structured observation.
+              Collect real field data across five official OneAquaHealth indicators, then see a deterministic assessment with its full chain of evidence. AI may explain — AI never scores.
             </p>
             <form onSubmit={handleStart} className="space-y-4">
               <div>

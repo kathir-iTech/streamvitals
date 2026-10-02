@@ -4,9 +4,18 @@ import { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { indicators } from '@/data/indicators';
 import { getFullSession } from '@/lib/field-session';
+import { assess, summarizeAssessments, type Band } from '@/lib/assessment/engine';
 import ExportButton from '@/components/ExportButton';
 
 const FIELD_INDICATORS = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
+
+const BAND_CHIP: Record<Band, string> = {
+  favorable: 'bg-[rgba(13,155,110,0.12)] text-[#0a7d58]',
+  moderate: 'bg-[rgba(180,83,9,0.12)] text-[#b45309]',
+  degraded: 'bg-[rgba(232,93,58,0.12)] text-[#e85d3a]',
+  pending_lab: 'bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.5)]',
+  unassessable: 'bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.35)]',
+};
 
 export default function ReviewPage() {
   const [session, setSession] = useState<{ sessionId: string; streamName: string; volunteer: string; date: string; startedAt: string; indicators: any[] } | null>(null);
@@ -66,6 +75,9 @@ export default function ReviewPage() {
   const labIndicators = FIELD_INDICATORS.filter((id) => getIndicator(id)?.lab_only);
   const totalPhotos = photos.length;
   const totalNotes = session.indicators.filter((i: any) => i.notes).length;
+  const assessmentSummary = summarizeAssessments(
+    session.indicators.map((ind: any) => ({ indicatorId: ind.indicatorId, state: ind.state }))
+  );
 
   return (
     <main className="min-h-screen bg-[#ffffff]">
@@ -104,6 +116,7 @@ export default function ReviewPage() {
               const indInfo = getIndicator(ind.indicatorId);
               const isLab = ind.type === 'lab_only';
               const photoCount = photos.filter((p: any) => p.indicatorId === ind.indicatorId).length;
+              const band = assess(ind.indicatorId, ind.state);
               return (
                 <div key={ind.indicatorId} className={`rounded-xl border p-5 ${isLab ? 'bg-[rgba(232,93,58,0.04)] border-[rgba(232,93,58,0.1)]' : 'bg-white border-[rgba(0,0,0,0.06)]'}`}>
                   <div className="flex items-center justify-between">
@@ -115,6 +128,12 @@ export default function ReviewPage() {
                       )}
                     </div>
                     <div className="flex items-center gap-2">
+                      <span
+                        data-testid={`band-chip-${ind.indicatorId}`}
+                        className={`text-[10px] px-3 py-1 rounded-full font-black ${BAND_CHIP[band.band]}`}
+                      >
+                        {band.bandLabel}
+                      </span>
                       {ind.state ? (
                         <span className="text-xs bg-[rgba(13,155,110,0.08)] text-[#0d9b6e] px-4 py-1 rounded-full font-bold">
                           {getStateLabel(ind.indicatorId, ind.state)}
@@ -145,6 +164,37 @@ export default function ReviewPage() {
               );
             })}
           </div>
+        </div>
+
+        <div className="bg-[#f5faf7] border border-[rgba(0,0,0,0.06)] rounded-2xl p-8 mb-8">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
+            <h2 className="text-xl font-black tracking-tighter text-black">Session assessment</h2>
+            <span className="text-[10px] font-mono text-[rgba(0,0,0,0.4)]">{assessmentSummary.engine}</span>
+          </div>
+          <div data-testid="assessment-summary" className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+            <div className="bg-white rounded-xl p-5 text-center border border-[rgba(0,0,0,0.04)]">
+              <p className="text-3xl font-black tracking-tighter text-[#0d9b6e]">{assessmentSummary.counts.favorable}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1 font-medium">Favorable</p>
+            </div>
+            <div className="bg-white rounded-xl p-5 text-center border border-[rgba(0,0,0,0.04)]">
+              <p className="text-3xl font-black tracking-tighter text-[#b45309]">{assessmentSummary.counts.moderate}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1 font-medium">Moderate</p>
+            </div>
+            <div className="bg-white rounded-xl p-5 text-center border border-[rgba(0,0,0,0.04)]">
+              <p className="text-3xl font-black tracking-tighter text-[#e85d3a]">{assessmentSummary.counts.degraded}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1 font-medium">Degraded</p>
+            </div>
+            <div className="bg-white rounded-xl p-5 text-center border border-[rgba(0,0,0,0.04)]">
+              <p className="text-3xl font-black tracking-tighter text-[rgba(0,0,0,0.5)]">{assessmentSummary.counts.pending_lab}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1 font-medium">Pending lab</p>
+            </div>
+          </div>
+          <p className="text-sm text-[rgba(0,0,0,0.55)] leading-relaxed">
+            {assessmentSummary.worstBand
+              ? `Worst band across assessed indicators: ${assessmentSummary.worstBand}. `
+              : 'No citizen indicator has been assessed yet. '}
+            Scored by deterministic rules from the observation states — the same state always produces the same band, and no model is consulted. Open any indicator to inspect its chain of evidence.
+          </p>
         </div>
 
         <div className="bg-[#f5faf7] border border-[rgba(0,0,0,0.06)] rounded-2xl p-8 mb-8">
@@ -218,7 +268,7 @@ export default function ReviewPage() {
         )}
 
         <p className="text-center text-xs text-[rgba(0,0,0,0.2)] mt-6">
-          This data is structured for the OneAquaHealth indicator framework (doi:10.5281/zenodo.20345207). No assessment, no tier, no verdict.
+          This data is structured for the OneAquaHealth indicator framework (doi:10.5281/zenodo.20345207). Assessment is produced by deterministic rules (streamvitals-assessment/1.0.0) — no AI, no model, no hidden state.
         </p>
       </div>
     </main>

@@ -110,7 +110,7 @@ export default function BoundedAssistant({ indicatorId }: { indicatorId: string 
             <Shield className="w-3 h-3 text-[#0d9b6e] flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-[10px] text-[#0d9b6e] font-bold">Bounded Scope</p>
-              <p className="text-[10px] text-[rgba(0,0,0,0.35)] leading-tight">Answers from OneAquaHealth factsheets only. Cannot identify species or assess water quality.</p>
+              <p className="text-[10px] text-[rgba(0,0,0,0.35)] leading-tight">Answers from OneAquaHealth factsheets only. Never identifies species and never scores — assessment comes from the deterministic rules on this page.</p>
             </div>
           </div>
         </div>

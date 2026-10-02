@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "StreamVitals — OneAquaHealth IEEE Global Hackathon 2026",
-  description: "Field data collection tool for OneAquaHealth stream monitoring volunteers. Collect real data. No assessment. No verdict.",
+  description: "Field companion for OneAquaHealth stream monitoring: guided observations with deterministic, auditable assessment. AI may explain — AI never scores.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -49,8 +49,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="bg-white border-t border-[rgba(0,0,0,0.06)] px-6 py-6">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs text-[rgba(0,0,0,0.45)]">
             <p>
-              StreamVitals — OneAquaHealth IEEE Global Hackathon 2026, Track 1. No
-              assessment, no tier, no verdict.
+              StreamVitals — OneAquaHealth IEEE Global Hackathon 2026, Track 3.
+              Deterministic assessment (streamvitals-assessment/1.0.0) — AI never scores.
             </p>
             <nav aria-label="Footer" className="flex items-center gap-5">
               <Link href="/about" className="hover:text-black transition-colors">How it works</Link>

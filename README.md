@@ -1,24 +1,37 @@
 # StreamVitals
 
-StreamVitals — OneAquaHealth IEEE Global Hackathon 2026, **Track 1** (guided workflows, simplified terminology, data-accuracy features)
+StreamVitals — OneAquaHealth IEEE Global Hackathon 2026, **Track 3** (AI-Supported Assessment — by deterministic rules, not a model)
 
 **We don't use AI to decide whether the stream is healthy; we use AI to make sure the thing being assessed is actually what the citizen observed.**
 
 ## Track
 
-This submission enters **Track 1** only. We are not claiming Track 3, because the app contains no AI-supported assessment: nothing in the product grades, scores, tiers, or adjudicates an observation. The only AI component is a bounded Q&A panel that quotes the official factsheets.
+This submission enters **Track 3**. The AI-supported assessment claim is precise: the app's only AI component is a bounded Q&A panel that quotes the official factsheets — and the assessment itself is produced by a pure TypeScript module (`src/lib/assessment/engine.ts`, version `streamvitals-assessment/1.0.0`) that maps observed states to bands (favorable / moderate / degraded, or pending for lab indicators) and attaches the chain of evidence behind every band. The engine never imports a model, never calls the network, never reads the clock — its test suite reads the module's own source and fails if it ever does.
+
+**Deterministic rules assess. AI may explain — AI never scores.**
 
 ## What It Does
 
 A citizen answers guided questions about an urban stream across five official OneAquaHealth indicators — Benthic Macroinvertebrates (BMI-01), Birds (BIR-04), Invasive Alien Plants (INV-11), Fecal Coliforms (FCL-06), and Diatoms (DIA-10). FCL-06 and DIA-10 are laboratory-only and cannot be evaluated in the field. For those two, the app shows a prominent **sample ID** to write on the container, a single collection protocol, photo capture, and sampling notes.
 
-The citizen selects observation states, optionally captures photos, and adds field notes. All data is stored persistently in IndexedDB and exported via CSV, JSON, or a printable **Lab Submission Sheet**.
+The citizen selects observation states, optionally captures photos, and adds field notes. Once a state is selected (or a lab sample ID exists), the deterministic assessment card renders: band label, the rule that fired, the factsheet passage behind it, and the honesty caveats. All data is stored persistently in IndexedDB and exported via CSV, JSON, or a printable **Lab Submission Sheet** — every export carries the band, the engine version, and the chain rule IDs.
 
 Offline boundary: data entry keeps working without connectivity on an already-open session, but loading a new page and reaching the AI assistant both require a connection. There is no service worker, so this is a documented fallback, not offline-first.
 
-A bounded **AI Field Assistant** answers questions using only the OneAquaHealth Key Indicators factsheets (doi:10.5281/zenodo.20345207). It never identifies species beyond what's in the factsheet, never gives opinions on water quality or health, and never assigns tiers, scores, or severity levels.
+A bounded **AI Field Assistant** answers questions using only the OneAquaHealth Key Indicators factsheets (doi:10.5281/zenodo.20345207). It never identifies species beyond what's in the factsheet, never gives opinions on water quality or health, and never assigns tiers, scores, or severity levels — for health judgements it points back at the deterministic assessment card on the page.
 
-**AI may interpret input. AI may not adjudicate.**
+**Deterministic rules assess. AI may explain — AI never scores.**
+
+## The Assessment Is Rule-Based, Not AI
+
+`src/lib/assessment/engine.ts` (`streamvitals-assessment/1.0.0`) is the Track 3 core: a pure function from (indicator, observed state) to a band with a chain of evidence.
+
+- **Bands**: `favorable` / `moderate` / `degraded` for citizen indicators; `pending_lab` for FCL-06 and DIA-10 (a sample ID is not a measurement — the rules refuse to grade what was not measured); `unassessable` when a state or rule is missing, with the gap stated instead of hidden.
+- **Chains**: every band carries structured steps — the observation, the rule that fired (`rule/{indicator}/{state}`), and the factsheet sources (`source/factsheet/{indicator}`) — rendered as a readable `<ol>` on the indicator card and exported with the data.
+- **Grounding**: bands cite the factsheet's own measurement principles (tolerance-based scoring for BMI, species richness for BIR, % coverage for INV) and are explicitly labelled **proxies, never laboratory indices** — BMWP/IBD/IPS require taxon-level lab identification (factsheet §§I, II).
+- **Honesty**: each result carries caveats (e.g. a BMWP score would quantify the degradation; it cannot be computed from a photograph) and a `scoredBy: "No AI, no network, no hidden state"` statement.
+- **Session view**: `/field/review` summarises all five indicators (`assessment-summary`) with per-indicator chips and worst-band across assessed indicators; every export (JSON/CSV/print/lab sheet) carries the band, engine version, and rule IDs.
+- **Source guard**: `engine.test.ts` reads the module's own source and fails if it ever imports a model, calls the network, reads the clock, or uses randomness.
 
 ## The Note Check Is Rule-Based, Not AI
 
@@ -53,7 +66,7 @@ Each indicator page carries a "Why this matters" line quoting the factsheet's ow
 app/                 <- the ONLY Next.js app directory (routes, layout, global CSS)
 src/components/      <- shared React components
 src/data/            <- indicator definitions and factsheet content
-src/lib/             <- session storage, note-quality rules, factsheet lookup
+src/lib/         <- session storage, note-quality rules, factsheet lookup, deterministic assessment engine
 tests/               <- Playwright smoke test + screenshot artifacts
 research/            <- source factsheet text used for provenance checks
 ```
@@ -76,9 +89,9 @@ The footer links to **`/provenance`** (machine-readable track, DOI, citation, an
 
 ## Constraints
 
-- No tier ratings (T1/T2/T3) anywhere in the UI
-- No diagnostic assessments
-- Lab-only isolation for FCL-06/DIA-10 indicators
+- Citizen bands are labelled **proxies, never laboratory indices** — no BMWP/IBD/IPS/CFU claims from field observations
+- Lab-only isolation for FCL-06/DIA-10 indicators (they show `pending_lab`, never a field band)
+- The assistant never assesses — health judgements come only from the deterministic card
 - Indicator-to-indicator navigation uses the Next.js client router (`router.push`) — no full page reload, so assistant and form state survive Next/Previous. Recovery redirects (missing session) still use full page loads.
 - Navigation links use Next.js `<Link>` (client-side). No React Router anywhere.
 - Case-insensitive indicator lookup
@@ -109,9 +122,10 @@ npm run build
 1. **Home**: Indicator selection with status (available/limited)
 2. **Session**: Create or continue a monitoring session
 3. **Field**: Per-indicator observation with state selection and optional photo capture
-4. **Review**: Summary of all observations with export and submit
-5. **AI Assistant**: Bounded factsheet-based Q&A sidebar
-6. **API**: Groq proxy for the bounded assistant, provenance metadata
+4. **Assessment**: deterministic band + chain of evidence per indicator (rendered at view/export time — not stored, not AI)
+5. **Review**: Summary of all observations, session assessment grid, export and submit
+6. **AI Assistant**: Bounded factsheet-based Q&A sidebar — explains, never scores
+7. **API**: Groq proxy for the bounded assistant, provenance metadata
 
 ## API Routes
 
@@ -127,9 +141,10 @@ Countable from this repository, not estimates:
 
 | Number | What it is |
 |---|---|
-| **41** | Vitest tests across 4 files (session 7, factsheet/assistant 14, note rules 15, frequencies 5) |
+| **53** | Vitest tests across 5 files (session 7, factsheet/assistant 14, note rules 15, frequencies 5, assessment engine 12) |
 | **9** | Citizen observation states — 3 field indicators × 3 states each |
-| **0** | AI calls in the recording path (state selection, note gate, exports are deterministic) |
+| **0** | AI calls in the assessment path (state selection, note gate, bands, exports are deterministic) |
+| **1** | Deterministic assessment engine (`streamvitals-assessment/1.0.0`) — same state, same band, every time |
 | **~1.9 s** | Median assistant answer, 5 live probes against the deployed app on 2026-10-02 (min 1.4 s, max 4.1 s; moves with the provider) |
 | **21** | Committed screenshots from automated runs under `tests/artifacts/` |
 
@@ -146,7 +161,7 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 
 ## Submission Artifacts
 
-- [`DEVPOST.md`](DEVPOST.md) — the paste-ready Devpost write-up: problem, five features, the number (41 tests), before/after, removed features, limits, roadmap.
+- [`DEVPOST.md`](DEVPOST.md) — the paste-ready Devpost write-up: problem, five features, the number (53 tests), before/after, removed features, limits, roadmap.
 - [`VIDEO.md`](VIDEO.md) — the shot-by-shot demo script (~4:15, inside the event's 3–5 minute requirement) with a recording checklist.
 
 ## What's Next
@@ -160,11 +175,12 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 - `src/lib/field-session.test.ts` — 7 tests for IndexedDB session management
 - `src/lib/factsheet-content.test.ts` — 14 tests for factsheet lookup, out-of-scope detection, and the offline assistant pipeline (in-scope / nonsense / meta questions get three distinct responses)
 - `src/lib/note-quality.test.ts` — 15 tests, including 12 realistic notes (6 must not flag, 6 must)
-- `src/lib/observation-frequencies.test.ts` — 5 tests for the observation-frequencies counts (41 tests total)
+- `src/lib/observation-frequencies.test.ts` — 5 tests for the observation-frequencies counts
+- `src/lib/assessment/engine.test.ts` — 12 tests for bands, chains, session summary, and the source guard that fails if the engine ever touches a model, the network, or the clock (53 tests total)
 
 Run with `npm test` (Vitest, jsdom environment, IndexedDB via `fake-indexeddb`).
 
-The end-to-end smoke test (`npm run e2e`) asserts that the stream name, **volunteer name**, date, selected states, notes, sample IDs, and **photo count shown on the review page match what was actually typed and uploaded**. It also asserts the page contains no "Not provided" placeholder, that the assistant's in-scope, nonsense, and meta questions receive three distinct correct responses, and that the observation-frequencies panel on `/field` shows real counts labeled as frequencies rather than predictions. This exists because an earlier version of the review page rendered a hardcoded placeholder session, and the previous test suite passed against it. It also exists because `/field` once had no volunteer input at all, so the review page legitimately (but uselessly) showed "Not provided" for every session. If the review page ever shows data the user did not enter, the smoke test now fails.
+The end-to-end smoke test (`npm run e2e`) asserts that the stream name, **volunteer name**, date, selected states, notes, sample IDs, and **photo count shown on the review page match what was actually typed and uploaded**. It also asserts the deterministic assessment card renders on state selection and on lab pages (`pending_lab`, never a verdict), that the review page shows the session assessment grid with correct per-indicator bands, that no "Not provided" placeholder appears, that the assistant's in-scope, nonsense, and meta questions receive three distinct correct responses (and that refusals point at the assessment card instead of scoring), and that the observation-frequencies panel on `/field` shows real counts labeled as frequencies rather than predictions. This exists because an earlier version of the review page rendered a hardcoded placeholder session, and the previous test suite passed against it. It also exists because `/field` once had no volunteer input at all, so the review page legitimately (but uselessly) showed "Not provided" for every session. If the review page ever shows data the user did not enter, the smoke test now fails.
 
 ## Factsheet Provenance
 

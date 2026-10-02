@@ -41,7 +41,7 @@ export function getAllFactsheetContent(): FactsheetEntry[] {
 // Shared refusal, used by the API route's offline branch, the Groq system
 // prompt, and the client-side fallback. The last sentence points the user at
 // what the assistant CAN answer instead of leaving a dead end.
-export const OUT_OF_SCOPE_RESPONSE = "I'm equipped to answer using the OneAquaHealth protocol and factsheet definitions I have. This question falls outside that scope — please consult the official monitoring guide. I can answer questions about this indicator's protocol, states, or sampling — try rephrasing around one of those.";
+export const OUT_OF_SCOPE_RESPONSE = "I'm equipped to answer using the OneAquaHealth protocol and factsheet definitions I have. This question falls outside that scope — please consult the official monitoring guide. I can answer questions about this indicator's protocol, states, or sampling — try rephrasing around one of those. For a health judgement about this observation, open the deterministic assessment card on this page: rules produce it, not me.";
 
 // Meta questions ("why do you keep saying the same thing?") get a distinct,
 // honest answer explaining the offline fallback, not the scope refusal.

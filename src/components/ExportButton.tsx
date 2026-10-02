@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { Download, FileText, Printer, FlaskConical } from 'lucide-react';
 import { getFullSession } from '@/lib/field-session';
 import { indicators } from '@/data/indicators';
+import { assess, summarizeAssessments, ENGINE_VERSION } from '@/lib/assessment/engine';
 
 interface ExportButtonProps {
   sessionId: string;
@@ -30,8 +31,10 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
       exportTimestamp: new Date().toISOString(),
       framework: 'OneAquaHealth Key Indicators',
       doi: '10.5281/zenodo.20345207',
+      assessmentEngine: ENGINE_VERSION,
       session: { sessionId: session.sessionId, streamName: session.streamName, volunteer: session.volunteer, date: session.date, startedAt: session.startedAt, completedAt: session.completedAt },
-      indicators: session.indicators.map((ind) => ({ indicatorId: ind.indicatorId, indicatorName: ind.indicatorName, type: ind.type, state: ind.state, status: ind.status, photos: result.photos.filter((p) => p.indicatorId === ind.indicatorId).map((p) => ({ photoId: p.photoId, timestamp: p.timestamp })), notes: ind.notes, note_flag: ind.note_flag || '', sampleLabel: ind.sampleLabel, labProtocolGuidance: ind.labProtocolGuidance, timestamp: ind.timestamp })),
+      indicators: session.indicators.map((ind) => ({ indicatorId: ind.indicatorId, indicatorName: ind.indicatorName, type: ind.type, state: ind.state, status: ind.status, photos: result.photos.filter((p) => p.indicatorId === ind.indicatorId).map((p) => ({ photoId: p.photoId, timestamp: p.timestamp })), notes: ind.notes, note_flag: ind.note_flag || '', sampleLabel: ind.sampleLabel, labProtocolGuidance: ind.labProtocolGuidance, timestamp: ind.timestamp, assessment: assess(ind.indicatorId, ind.state) })),
+      assessmentSummary: summarizeAssessments(session.indicators.map((ind) => ({ indicatorId: ind.indicatorId, state: ind.state }))),
     };
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -46,8 +49,8 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
     const result = await getFullSession(sessionId);
     if (!result.session) return;
     const session = result.session;
-    const headers = ['indicatorId', 'indicatorName', 'type', 'state', 'status', 'photos', 'notes', 'note_flag', 'sampleLabel', 'timestamp'];
-    const rows = session.indicators.map((ind) => [ind.indicatorId, ind.indicatorName, ind.type, ind.state || '', ind.status, result.photos.filter((p) => p.indicatorId === ind.indicatorId).length.toString(), (ind.notes || '').replace(/,/g, ';'), (ind.note_flag || '').replace(/,/g, ';'), ind.sampleLabel || '', ind.timestamp]);
+    const headers = ['indicatorId', 'indicatorName', 'type', 'state', 'status', 'photos', 'notes', 'note_flag', 'sampleLabel', 'assessment_band', 'assessment_engine', 'timestamp'];
+    const rows = session.indicators.map((ind) => [ind.indicatorId, ind.indicatorName, ind.type, ind.state || '', ind.status, result.photos.filter((p) => p.indicatorId === ind.indicatorId).length.toString(), (ind.notes || '').replace(/,/g, ';'), (ind.note_flag || '').replace(/,/g, ';'), ind.sampleLabel || '', assess(ind.indicatorId, ind.state).band, assess(ind.indicatorId, ind.state).engine, ind.timestamp]);
     const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -72,6 +75,8 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
       lines.push(`${ind.indicatorName} (${ind.indicatorId})`);
       lines.push(`Type: ${ind.type}`);
       if (ind.state) lines.push(`Observation: ${getStateLabel(ind.indicatorId, ind.state)}`);
+      const a = assess(ind.indicatorId, ind.state);
+      lines.push(`Assessment: ${a.bandLabel} (${a.engine})`);
       if (ind.notes) lines.push(`Notes: ${ind.notes}`);
       lines.push('');
     }
@@ -112,7 +117,7 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
       lines.push('<tr><th>Photos attached</th><td>' + photos.length + ' photo' + (photos.length === 1 ? '' : 's') + '</td></tr>');
       lines.push('</table>');
     }
-    lines.push('<p style="margin-top:30px;color:#888;font-size:11px">Fields above are only those collected in the field by StreamVitals Field Companion. No result, no assessment, no tier. Factsheets: doi:10.5281/zenodo.20345207</p>');
+    lines.push('<p style="margin-top:30px;color:#888;font-size:11px">Fields above are only those collected in the field by StreamVitals Field Companion. Assessment stays pending until the laboratory reports a measurement. Factsheets: doi:10.5281/zenodo.20345207</p>');
     lines.push('</body></html>');
     printWindow.document.write(lines.join('\n'));
     printWindow.document.close();

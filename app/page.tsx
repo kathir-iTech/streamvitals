@@ -21,7 +21,7 @@ export default function HomePage() {
             Take the<br />stream&rsquo;s vitals
           </h1>
           <p className="text-lg text-[rgba(0,0,0,0.5)] leading-relaxed max-w-md mb-10">
-            Collect real field data across five official OneAquaHealth indicators. No assessment, no tier, no verdict — just structured observation.
+            Collect real field data across five official OneAquaHealth indicators, then see a deterministic assessment with its full chain of evidence. AI may explain — AI never scores.
           </p>
           <a href="/field" className="btn-pill-accent text-lg">
             Start Monitoring <ArrowRight className="w-4 h-4 ml-2" />
@@ -83,7 +83,7 @@ export default function HomePage() {
 
       <div className="stats-strip">
         <div className="stat-item">
-          <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">41</span>
+          <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">53</span>
           <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">Automated tests</span>
         </div>
         <div className="stat-divider" />

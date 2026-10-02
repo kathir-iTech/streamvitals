@@ -12,7 +12,7 @@
 ## 0:00 — Hook (screen: home page)
 
 **Narration:**
-"This is StreamVitals, a field companion for the OneAquaHealth protocol. It does one thing on purpose: it makes sure the thing being assessed is actually what the citizen observed. It does not grade the stream. It does not score it. It records."
+"This is StreamVitals, a field companion for the OneAquaHealth protocol. It makes sure the thing being assessed is actually what the citizen observed — and when it shows a health band, deterministic rules produced it. AI may explain. AI never scores."
 
 ## 0:15 — The problem (screen: home page, slow scroll to the indicator cards)
 
@@ -23,17 +23,17 @@
 
 **Action (click-by-click):**
 1. `/field` — type a real stream name and a real volunteer name, start the session.
-2. BMI-01 — select one state, add a note that contains the word "healthy".
+2. BMI-01 — select one state, add a note that contains the word "healthy". Show the **assessment card** that appears: favorable band, the rule that fired, the factsheet chain.
 3. Show the note-check warning appear. Click **"Keep my note anyway"**. Point at the `note_flag` badge.
 4. BIR-04 — select a state, move on (keep it fast, show the Next button does not reload the page).
-5. FCL-06 — show the **sample ID** to write on the container, scroll the collection protocol, add a sampling note.
-6. DIA-10 — one glance: same lab treatment, no fake field verdict.
-7. `/field/review` — show the summary: names, states, notes, sample IDs, the note flag.
-8. Click **Export CSV**, open the downloaded file, show the `note_flag` column with its value.
+5. FCL-06 — show the **sample ID** to write on the container, scroll the collection protocol, add a sampling note. Point at the card: "Awaiting laboratory analysis — pending, not graded."
+6. DIA-10 — one glance: same lab treatment, same pending band, no fake field verdict.
+7. `/field/review` — show the summary: names, states, notes, sample IDs, the note flag, and the **session assessment grid** (three favorable chips, two pending).
+8. Click **Export CSV**, open the downloaded file, show the `note_flag` column and the `assessment_band` column with their values.
 9. Click **Lab Submission Sheet**, show the printable sheet with the sample ID.
 
 **Narration:**
-"A session, start to finish. Nine citizen states across three field indicators — everything here came from what the volunteer typed. The note check warned about 'healthy' and the volunteer chose to keep it anyway, so the flag rides along into the export instead of being hidden. Fecal coliforms and diatoms can't be judged in the field — so the app shows a sample ID and the factsheet's own protocol. Pending lab analysis means pending."
+"A session, start to finish. Nine citizen states across three field indicators — everything here came from what the volunteer typed, and every band came from the rules. The note check warned about 'healthy' and the volunteer chose to keep it anyway, so the flag rides along into the export instead of being hidden. Fecal coliforms and diatoms can't be judged in the field — so the app shows a sample ID, the factsheet's own protocol, and a pending band. Pending lab analysis means pending."
 
 ## 2:25 — The bounded assistant (screen: open Field Assistant on FCL-06)
 
@@ -44,21 +44,21 @@
 3. "Why do you keep saying the same thing?" → an honest explanation of the local fallback.
 
 **Narration:**
-"Three questions, three different answers. In-scope questions are answered from the factsheet text itself; meta and out-of-scope questions never reach a model at all — a local scope gate handles them. AI may interpret input. AI may not adjudicate. And the test suite asserts exactly these three behaviors."
+"Three questions, three different answers. In-scope questions are answered from the factsheet text itself; meta and out-of-scope questions never reach a model at all — a local scope gate handles them, and health judgements point back at the deterministic card. Deterministic rules assess; AI explains. And the test suite asserts exactly these three behaviors."
 
 ## 3:05 — The tech beat (screen: terminal, then /provenance)
 
 **Action:**
-1. In a terminal: `npm test` → let the camera see **"Tests 41 passed"**.
+1. In a terminal: `npm test` → let the camera see **"Tests 53 passed"**.
 2. Browser: open `streamvitals.vercel.app/provenance` → show track, DOI, citation, AI-boundary statement.
 
 **Narration:**
-"Forty-one automated tests — session storage, the assistant's three-answer contract, the note rules, the frequencies panel — plus an end-to-end walkthrough that fails if the review page ever shows data the volunteer did not enter. Zero AI calls in the recording path: states, note rules, and exports are deterministic. The provenance endpoint publishes the track, the DOI, and the AI boundary as machine-readable JSON."
+"Fifty-three automated tests — session storage, the assistant's three-answer contract, the note rules, the frequencies panel, and the assessment engine with its source guard — plus an end-to-end walkthrough that fails if the review page ever shows data the volunteer did not enter. Zero AI calls in the assessment path: states, bands, note rules, and exports are deterministic. The provenance endpoint publishes the track, the DOI, and the AI boundary as machine-readable JSON."
 
 ## 3:40 — Honest limits (screen: static card, readable for 12 s)
 
 **On-screen text (read aloud):**
-- Track 1 only — no assessment, no tiers, no scores.
+- Track 3 — deterministic assessment with chains; the assistant never scores.
 - **The app interface is English only.** No service worker: an open session keeps working offline; loading a new page does not.
 - The note-check rules and their tests were written by the same author — self-consistency, not accuracy.
 - We removed four scaffolded features we couldn't back: a fabricated sensors endpoint, an AI-analyze route, a fake monitoring map, and an 'offline-first' PWA claim.
@@ -81,7 +81,7 @@
 - [ ] Final duration between **3:00 and 5:00** (target ~4:15) — check before upload
 - [ ] Real session, real notes, all five indicators touched
 - [ ] No synthetic photos as field photos — if the demo has no photos, show it with no photos
-- [ ] `npm test` result visible on camera (41 passed)
+- [ ] `npm test` result visible on camera (53 passed)
 - [ ] The three assistant questions shown in full, not cut
 - [ ] Limits card held long enough to read (~12 s)
 - [ ] English-only stated out loud

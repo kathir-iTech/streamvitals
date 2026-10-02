@@ -6,10 +6,39 @@ import { ArrowLeft, ArrowRight, Shield, AlertTriangle, FlaskConical } from 'luci
 import { indicators } from '@/data/indicators';
 import { updateSession, getSession, createSession } from '@/lib/field-session';
 import { checkNoteQuality } from '@/lib/note-quality';
+import { assess, type Band } from '@/lib/assessment/engine';
 import BoundedAssistant from '@/components/BoundedAssistant';
 import PhotoCapture from '@/components/PhotoCapture';
 
 const FIELD_INDICATORS = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
+
+const BAND_STYLES: Record<Band, { card: string; chip: string; dot: string }> = {
+  favorable: {
+    card: 'border-[rgba(13,155,110,0.35)] bg-[rgba(13,155,110,0.05)]',
+    chip: 'bg-[rgba(13,155,110,0.12)] text-[#0a7d58]',
+    dot: 'bg-[#0d9b6e]',
+  },
+  moderate: {
+    card: 'border-[rgba(180,83,9,0.35)] bg-[rgba(180,83,9,0.05)]',
+    chip: 'bg-[rgba(180,83,9,0.12)] text-[#b45309]',
+    dot: 'bg-[#b45309]',
+  },
+  degraded: {
+    card: 'border-[rgba(232,93,58,0.4)] bg-[rgba(232,93,58,0.05)]',
+    chip: 'bg-[rgba(232,93,58,0.12)] text-[#e85d3a]',
+    dot: 'bg-[#e85d3a]',
+  },
+  pending_lab: {
+    card: 'border-[rgba(0,0,0,0.14)] bg-[rgba(0,0,0,0.02)]',
+    chip: 'bg-[rgba(0,0,0,0.06)] text-[rgba(0,0,0,0.55)]',
+    dot: 'bg-[rgba(0,0,0,0.35)]',
+  },
+  unassessable: {
+    card: 'border-[rgba(0,0,0,0.08)] bg-white',
+    chip: 'bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.4)]',
+    dot: 'bg-[rgba(0,0,0,0.2)]',
+  },
+};
 
 export default function IndicatorPage({ params }: { params: Promise<{ indicator: string }> }) {
   const router = useRouter();
@@ -65,6 +94,12 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
     () => checkNoteQuality(indicatorId, selectedState, notes),
     [indicatorId, selectedState, notes]
   );
+  const assessment = useMemo(
+    () => assess(indicatorId, selectedState || null),
+    [indicatorId, selectedState]
+  );
+  const showAssessment = isLabOnly || (isCitizen && selectedState.length > 0);
+  const bandStyle = BAND_STYLES[assessment.band];
   // Warns rather than blocks: once the volunteer explicitly chooses to keep the
   // note, noteFlag is set and the warning clears.
   const noteBlocked = !noteFlag && isCitizen && notes.trim().length > 0 && !noteQuality.ok;
@@ -241,6 +276,53 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
             </fieldset>
           )}
 
+          {showAssessment && (
+            <div
+              data-testid="assessment-card"
+              className={`mt-6 rounded-xl border-2 p-5 ${bandStyle.card}`}
+            >
+              <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
+                <p className="text-[11px] font-black uppercase tracking-wider text-[rgba(0,0,0,0.45)]">
+                  Deterministic assessment
+                </p>
+                <span
+                  data-testid="assessment-band"
+                  className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black ${bandStyle.chip}`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${bandStyle.dot}`} />
+                  {assessment.bandLabel}
+                </span>
+              </div>
+
+              <ol className="space-y-2 mb-3" aria-label="Chain of evidence">
+                {assessment.chain.map((step) => (
+                  <li key={step.ruleId} className="flex gap-3 text-xs leading-relaxed">
+                    <span className="shrink-0 font-black text-[rgba(0,0,0,0.35)] w-16 pt-0.5">
+                      {step.step}
+                    </span>
+                    <span className="text-[rgba(0,0,0,0.6)]">
+                      {step.basis}
+                      <code className="block text-[10px] text-[#0d9b6e] mt-0.5">{step.ruleId}</code>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+
+              <ul className="space-y-1 mb-3">
+                {assessment.caveats.map((caveat) => (
+                  <li key={caveat} className="text-[11px] text-[rgba(0,0,0,0.45)] leading-relaxed flex gap-2">
+                    <span className="text-[#b45309] font-bold shrink-0">!</span>
+                    <span>{caveat}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <p className="text-[10px] font-semibold text-[rgba(0,0,0,0.35)] font-mono">
+                {assessment.scoredBy}
+              </p>
+            </div>
+          )}
+
           <div className="mt-6 space-y-4" suppressHydrationWarning>
             <PhotoCapture sessionId={sessionId} indicatorId={indicatorId} onPhotosChange={(ids) => setPhotos(ids)} />
             <div>
@@ -268,7 +350,7 @@ export default function IndicatorPage({ params }: { params: Promise<{ indicator:
                       <li key={i} className="text-sm text-[rgba(0,0,0,0.6)]">• {issue.message}</li>
                     ))}
                   </ul>
-                  <p className="text-xs text-[rgba(0,0,0,0.4)] mt-2">This is a rule-based wording check, not AI. It only looks for assessment words and notes that contradict your selection. It never judges the water.</p>
+                  <p className="text-xs text-[rgba(0,0,0,0.4)] mt-2">This is a rule-based wording check, not AI. It only looks for assessment words and notes that contradict your selection. Assessment itself comes from the deterministic rule card above — this check never scores anything.</p>
                   <button
                     onClick={() => setNoteFlag(pendingFlag)}
                     data-testid="keep-note-override"

@@ -103,7 +103,7 @@ export function checkNoteQuality(indicatorId: string, selectedState: string, not
       issues.push({
         kind: 'unsupported',
         matched: m[0],
-        message: `Note includes ${label} (“${m[0]}”) which cannot be determined in the field. Please stick to what you observed — no assessment, no verdict.`,
+        message: `Note includes ${label} (“${m[0]}”) which cannot be determined in the field. Please stick to what you observed — the deterministic assessment rules produce the judgement, your note stays an observation.`,
       });
       break;
     }
