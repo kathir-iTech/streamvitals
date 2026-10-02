@@ -261,6 +261,16 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     expect(lab.assessment.band).toBe('pending_lab');
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '06-export.png'), fullPage: true });
 
+    // CSV must carry note text VERBATIM (RFC 4180 quoting) — the typed BMI
+    // note contains a comma, which an earlier CSV mangled into a semicolon.
+    const csvPromise = page.waitForEvent('download', { timeout: 15000 });
+    await page.click('button:has-text("Export CSV")');
+    const csvDownload = await csvPromise;
+    expect(csvDownload.suggestedFilename()).toMatch(/\.csv$/);
+    const csvText = fs.readFileSync(await csvDownload.path(), 'utf8');
+    expect(csvText).toContain(BMI_NOTES);
+    expect(csvText).toContain('session_latitude');
+
     // Step 6b: share across devices — create a link on review, open it in this
     // browser, preview, and import. The link payload lives in the URL fragment.
     await page.locator('[data-testid="create-share-link"]').click();

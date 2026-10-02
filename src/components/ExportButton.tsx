@@ -10,6 +10,13 @@ interface ExportButtonProps {
   sessionId: string;
 }
 
+// RFC 4180 cell: quote when the value contains commas, quotes, or newlines so
+// note text travels VERBATIM (the old comma-to-semicolon swap altered it).
+function csvCell(value: string): string {
+  if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
+  return value;
+}
+
 export default function ExportButton({ sessionId }: ExportButtonProps) {
   const getStateLabel = useCallback((indicatorId: string, state: string) => {
     const ind = indicators.find((i) => i.id === indicatorId);
@@ -46,8 +53,8 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
     if (!result.session) return;
     const session = result.session;
     const headers = ['indicatorId', 'indicatorName', 'type', 'state', 'status', 'photos', 'notes', 'note_flag', 'sampleLabel', 'assessment_band', 'assessment_engine', 'timestamp', 'session_latitude', 'session_longitude', 'location_accuracy_m'];
-    const rows = session.indicators.map((ind) => [ind.indicatorId, ind.indicatorName, ind.type, ind.state || '', ind.status, result.photos.filter((p) => p.indicatorId === ind.indicatorId).length.toString(), (ind.notes || '').replace(/,/g, ';'), (ind.note_flag || '').replace(/,/g, ';'), ind.sampleLabel || '', assess(ind.indicatorId, ind.state).band, assess(ind.indicatorId, ind.state).engine, ind.timestamp, session.location ? session.location.lat.toString() : '', session.location ? session.location.lng.toString() : '', session.location && session.location.accuracyM !== null ? Math.round(session.location.accuracyM).toString() : '']);
-    const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const rows = session.indicators.map((ind) => [ind.indicatorId, ind.indicatorName, ind.type, ind.state || '', ind.status, result.photos.filter((p) => p.indicatorId === ind.indicatorId).length.toString(), ind.notes || '', ind.note_flag || '', ind.sampleLabel || '', assess(ind.indicatorId, ind.state).band, assess(ind.indicatorId, ind.state).engine, ind.timestamp, session.location ? session.location.lat.toString() : '', session.location ? session.location.lng.toString() : '', session.location && session.location.accuracyM !== null ? Math.round(session.location.accuracyM).toString() : '']);
+    const csv = [headers.join(','), ...rows.map((r) => r.map(csvCell).join(','))].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -132,22 +139,23 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
     const session = result.session;
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
+    const esc = (v: string) => (v || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const lines: string[] = [];
     lines.push('<!DOCTYPE html><html><head><title>Field Session Summary</title>');
-    lines.push('<style>body{font-family:system-ui,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;color:#000;line-height:1.6}h1{color:#0d9b6e;border-bottom:2px solid #0d9b6e;padding-bottom:8px}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #ddd;padding:8px 12px;text-align:left}th{background:#0d9b6e;color:#fff}tr:nth-child(even){background:#f8f9fa}.lab{background:#fffbeb}</style></head><body>');
+    lines.push('<style>body{font-family:system-ui,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;color:#000;line-height:1.6}h1{color:#0d9b6e;border-bottom:2px solid #0d9b6e;padding-bottom:8px}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #ddd;padding:8px 12px;text-align:left;vertical-align:top;font-size:12px}th{background:#0d9b6e;color:#fff}tr:nth-child(even){background:#f8f9fa}.lab{background:#fffbeb}.notes{white-space:pre-wrap;max-width:260px}</style></head><body>');
     lines.push('<h1>Field Monitoring Session Summary</h1>');
-    lines.push(`<p><strong>Stream / Location:</strong> ${session.streamName}</p>`);
-    lines.push(`<p><strong>Volunteer:</strong> ${session.volunteer || 'Not provided'}</p>`);
-    lines.push(`<p><strong>Date:</strong> ${session.date}</p>`);
+    lines.push(`<p><strong>Stream / Location:</strong> ${esc(session.streamName)}</p>`);
+    lines.push(`<p><strong>Volunteer:</strong> ${esc(session.volunteer) || 'Not provided'}</p>`);
+    lines.push(`<p><strong>Date:</strong> ${esc(session.date)}</p>`);
     if (session.location) {
       lines.push(`<p><strong>GPS:</strong> ${session.location.lat.toFixed(5)}, ${session.location.lng.toFixed(5)}${session.location.accuracyM !== null ? ` (±${Math.round(session.location.accuracyM)} m)` : ''}</p>`);
     }
-    lines.push('<div><h2>Indicator Records</h2><table><tr><th>Indicator</th><th>Type</th><th>Status</th><th>Observation</th><th>Photos</th></tr>');
+    lines.push('<div><h2>Indicator Records</h2><table><tr><th>Indicator</th><th>Type</th><th>Status</th><th>Observation</th><th>Photos</th><th>Notes</th></tr>');
     for (const ind of session.indicators) {
       const label = ind.state ? getStateLabel(ind.indicatorId, ind.state) : '—';
       const photoCount = result.photos.filter((p) => p.indicatorId === ind.indicatorId).length;
       const rowClass = ind.type === 'lab_only' ? 'class="lab"' : '';
-      lines.push(`<tr ${rowClass}><td>${ind.indicatorName}</td><td>${ind.type}</td><td>${ind.status}</td><td>${label}</td><td>${photoCount}</td></tr>`);
+      lines.push(`<tr ${rowClass}><td>${esc(ind.indicatorName)}</td><td>${esc(ind.type)}</td><td>${esc(ind.status)}</td><td>${esc(label)}</td><td>${photoCount}</td><td class="notes">${ind.notes ? esc(ind.notes) : '—'}</td></tr>`);
     }
     lines.push('</table></div>');
     if (session.completedAt) lines.push(`<p><strong>Completed:</strong> ${session.completedAt}</p>`);
