@@ -32,7 +32,7 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
       framework: 'OneAquaHealth Key Indicators',
       doi: '10.5281/zenodo.20345207',
       assessmentEngine: ENGINE_VERSION,
-      session: { sessionId: session.sessionId, streamName: session.streamName, volunteer: session.volunteer, date: session.date, startedAt: session.startedAt, completedAt: session.completedAt },
+      session: { sessionId: session.sessionId, streamName: session.streamName, volunteer: session.volunteer, date: session.date, startedAt: session.startedAt, completedAt: session.completedAt, location: session.location ?? null, gbifBaseline: session.gbifBaseline ?? null },
       indicators: session.indicators.map((ind) => ({ indicatorId: ind.indicatorId, indicatorName: ind.indicatorName, type: ind.type, state: ind.state, status: ind.status, photos: result.photos.filter((p) => p.indicatorId === ind.indicatorId).map((p) => ({ photoId: p.photoId, timestamp: p.timestamp })), notes: ind.notes, note_flag: ind.note_flag || '', sampleLabel: ind.sampleLabel, labProtocolGuidance: ind.labProtocolGuidance, timestamp: ind.timestamp, assessment: assess(ind.indicatorId, ind.state) })),
       assessmentSummary: summarizeAssessments(session.indicators.map((ind) => ({ indicatorId: ind.indicatorId, state: ind.state }))),
     };
@@ -49,8 +49,8 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
     const result = await getFullSession(sessionId);
     if (!result.session) return;
     const session = result.session;
-    const headers = ['indicatorId', 'indicatorName', 'type', 'state', 'status', 'photos', 'notes', 'note_flag', 'sampleLabel', 'assessment_band', 'assessment_engine', 'timestamp'];
-    const rows = session.indicators.map((ind) => [ind.indicatorId, ind.indicatorName, ind.type, ind.state || '', ind.status, result.photos.filter((p) => p.indicatorId === ind.indicatorId).length.toString(), (ind.notes || '').replace(/,/g, ';'), (ind.note_flag || '').replace(/,/g, ';'), ind.sampleLabel || '', assess(ind.indicatorId, ind.state).band, assess(ind.indicatorId, ind.state).engine, ind.timestamp]);
+    const headers = ['indicatorId', 'indicatorName', 'type', 'state', 'status', 'photos', 'notes', 'note_flag', 'sampleLabel', 'assessment_band', 'assessment_engine', 'timestamp', 'session_latitude', 'session_longitude', 'location_accuracy_m'];
+    const rows = session.indicators.map((ind) => [ind.indicatorId, ind.indicatorName, ind.type, ind.state || '', ind.status, result.photos.filter((p) => p.indicatorId === ind.indicatorId).length.toString(), (ind.notes || '').replace(/,/g, ';'), (ind.note_flag || '').replace(/,/g, ';'), ind.sampleLabel || '', assess(ind.indicatorId, ind.state).band, assess(ind.indicatorId, ind.state).engine, ind.timestamp, session.location ? session.location.lat.toString() : '', session.location ? session.location.lng.toString() : '', session.location && session.location.accuracyM !== null ? Math.round(session.location.accuracyM).toString() : '']);
     const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -70,6 +70,12 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
     lines.push(`Stream / Location: ${session.streamName}`);
     lines.push(`Volunteer: ${session.volunteer || 'Not provided'}`);
     lines.push(`Date: ${session.date}`);
+    if (session.location) {
+      lines.push(`GPS: ${session.location.lat.toFixed(5)}, ${session.location.lng.toFixed(5)}${session.location.accuracyM !== null ? ` (±${Math.round(session.location.accuracyM)} m)` : ''}`);
+    }
+    if (session.gbifBaseline) {
+      lines.push(`GBIF baseline: ${session.gbifBaseline.rows.filter((r) => r.status === 'ok').length} taxa queried within ${session.gbifBaseline.radiusKm} km of the GPS point (api.gbif.org/v1, ${session.gbifBaseline.capturedAt}) — context only, not an assessment.`);
+    }
     lines.push('');
     for (const ind of session.indicators) {
       lines.push(`${ind.indicatorName} (${ind.indicatorId})`);
@@ -137,6 +143,9 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
     lines.push(`<p><strong>Stream / Location:</strong> ${session.streamName}</p>`);
     lines.push(`<p><strong>Volunteer:</strong> ${session.volunteer || 'Not provided'}</p>`);
     lines.push(`<p><strong>Date:</strong> ${session.date}</p>`);
+    if (session.location) {
+      lines.push(`<p><strong>GPS:</strong> ${session.location.lat.toFixed(5)}, ${session.location.lng.toFixed(5)}${session.location.accuracyM !== null ? ` (±${Math.round(session.location.accuracyM)} m)` : ''}</p>`);
+    }
     lines.push('<div><h2>Indicator Records</h2><table><tr><th>Indicator</th><th>Type</th><th>Status</th><th>Observation</th><th>Photos</th></tr>');
     for (const ind of session.indicators) {
       const label = ind.state ? getStateLabel(ind.indicatorId, ind.state) : '—';

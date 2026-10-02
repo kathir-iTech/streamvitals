@@ -1,3 +1,5 @@
+import type { GbifBaseline } from './gbif';
+
 const DB_NAME = 'streamvitals-field';
 const DB_VERSION = 1;
 let dbInstance: IDBDatabase | null = null;
@@ -63,6 +65,13 @@ export interface FieldIndicatorRecord {
   status: 'complete' | 'pending_lab_analysis';
 }
 
+export interface SessionLocation {
+  lat: number;
+  lng: number;
+  accuracyM: number | null;
+  capturedAt: string;
+}
+
 export interface FieldSession {
   sessionId: string;
   streamName: string;
@@ -71,6 +80,8 @@ export interface FieldSession {
   indicators: FieldIndicatorRecord[];
   startedAt: string;
   completedAt?: string;
+  location?: SessionLocation;
+  gbifBaseline?: GbifBaseline;
 }
 
 export async function createSession(session: FieldSession): Promise<{ success: boolean; error?: string }> {

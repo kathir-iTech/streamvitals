@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { createSession, getSession, getFullSession, isIndexedDBAvailable, updateSession, getAllSessions } from './field-session';
+import { createSession, getSession, getFullSession, isIndexedDBAvailable, updateSession, getAllSessions, type FieldSession } from './field-session';
 
 describe('field-session', () => {
   beforeEach(async () => {
@@ -90,5 +90,54 @@ describe('field-session', () => {
       const updated = await updateSession('update-test', { completedAt: new Date().toISOString() });
       expect(updated.success).toBe(true);
     }
+  });
+
+  it('round-trips optional location and GBIF baseline', async () => {
+    const session: FieldSession = {
+      sessionId: 'location-test',
+      streamName: 'GPS Creek',
+      volunteer: 'Test',
+      date: '2026-01-01',
+      indicators: [],
+      startedAt: new Date().toISOString(),
+      location: { lat: 40.4168, lng: -3.7038, accuracyM: 12.5, capturedAt: new Date().toISOString() },
+    };
+    const created = await createSession(session);
+    expect(created.success).toBe(true);
+    const retrieved = await getSession('location-test');
+    expect(retrieved?.location?.lat).toBe(40.4168);
+    expect(retrieved?.location?.accuracyM).toBe(12.5);
+
+    const updated = await updateSession('location-test', {
+      gbifBaseline: {
+        engine: 'api.gbif.org/v1',
+        radiusKm: 50,
+        lat: 40.4168,
+        lng: -3.7038,
+        capturedAt: new Date().toISOString(),
+        rows: [],
+        attribution: 'GBIF.org occurrence records near the session location.',
+      },
+    });
+    expect(updated.success).toBe(true);
+    const after = await getSession('location-test');
+    expect(after?.gbifBaseline?.engine).toBe('api.gbif.org/v1');
+    expect(after?.location?.lng).toBe(-3.7038);
+  });
+
+  it('sessions without location stay valid (optional field)', async () => {
+    const session: FieldSession = {
+      sessionId: 'no-location-test',
+      streamName: 'Plain Creek',
+      volunteer: 'Test',
+      date: '2026-01-01',
+      indicators: [],
+      startedAt: new Date().toISOString(),
+    };
+    const created = await createSession(session);
+    expect(created.success).toBe(true);
+    const retrieved = await getSession('no-location-test');
+    expect(retrieved?.location).toBeUndefined();
+    expect(retrieved?.gbifBaseline).toBeUndefined();
   });
 });

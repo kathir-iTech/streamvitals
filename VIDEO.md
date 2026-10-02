@@ -49,11 +49,11 @@
 ## 3:05 — The tech beat (screen: terminal, then /provenance)
 
 **Action:**
-1. In a terminal: `npm test` → let the camera see **"Tests 53 passed"**.
+1. In a terminal: `npm test` → let the camera see **"Tests 61 passed"**.
 2. Browser: open `streamvitals.vercel.app/provenance` → show track, DOI, citation, AI-boundary statement.
 
 **Narration:**
-"Fifty-three automated tests — session storage, the assistant's three-answer contract, the note rules, the frequencies panel, and the assessment engine with its source guard — plus an end-to-end walkthrough that fails if the review page ever shows data the volunteer did not enter. Zero AI calls in the assessment path: states, bands, note rules, and exports are deterministic. The provenance endpoint publishes the track, the DOI, and the AI boundary as machine-readable JSON."
+"Sixty-one automated tests — session storage, the assistant's three-answer contract, the note rules, the frequencies panel, the assessment engine with its source guard, and the GBIF client — plus an end-to-end walkthrough that fails if the review page ever shows data the volunteer did not enter. Zero AI calls in the assessment path: states, bands, note rules, and exports are deterministic. The provenance endpoint publishes the track, the DOI, and the AI boundary as machine-readable JSON."
 
 ## 3:40 — Honest limits (screen: static card, readable for 12 s)
 
@@ -81,7 +81,7 @@
 - [ ] Final duration between **3:00 and 5:00** (target ~4:15) — check before upload
 - [ ] Real session, real notes, all five indicators touched
 - [ ] No synthetic photos as field photos — if the demo has no photos, show it with no photos
-- [ ] `npm test` result visible on camera (53 passed)
+- [ ] `npm test` result visible on camera (61 passed)
 - [ ] The three assistant questions shown in full, not cut
 - [ ] Limits card held long enough to read (~12 s)
 - [ ] English-only stated out loud

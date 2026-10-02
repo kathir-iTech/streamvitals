@@ -19,7 +19,7 @@ That word is an assessment smuggled into observation data. Downstream it is wort
 
 StreamVitals closes that gap without adding a second AI problem on top of the first.
 
-### What it does — six features, all in the live app
+### What it does — seven features, all in the live app
 
 1. **Guided observation.** Five official indicators — BMI-01 Benthic Macroinvertebrates, BIR-04 Birds, INV-11 Invasive Alien Plants, FCL-06 Fecal Coliforms, DIA-10 Diatoms. Three field indicators offer three observation states each (nine states total), photo capture, and a field note; the session persists in IndexedDB and survives a refresh.
 2. **Lab mode that admits what it cannot know.** FCL-06 and DIA-10 cannot be judged in the field, so the app does not pretend: it shows a prominent **sample ID** to write on the container, the factsheet's own collection protocol, photo capture, and sampling notes. Pending lab analysis means pending — the assessment band says `pending_lab`, never a verdict.
@@ -27,20 +27,21 @@ StreamVitals closes that gap without adding a second AI problem on top of the fi
 4. **A deterministic note check — not AI.** `src/lib/note-quality.ts` is keyword and contradiction rules with no model and no API call. It flags assessment language ("healthy", "tier 1", "score") and notes that contradict the selected state. It warns; it never blocks. "Keep my note anyway" writes a `note_flag` that travels into the JSON and CSV exports, so the flag is visible downstream instead of hidden. Your note stays an observation; the band comes from feature 3.
 5. **A bounded Field Assistant.** In-scope protocol questions are answered from the factsheet text itself (Groq, `openai/gpt-oss-120b`, factsheet injected into the prompt). Meta questions and out-of-scope questions never reach a model at all — they are answered locally by a scope gate, and health-judgement questions are pointed at the deterministic card. It never grades, scores, or identifies species beyond the factsheet.
 6. **Review and export you can audit.** The review page shows exactly what the volunteer typed — names, states, notes, sample IDs — plus the session's assessment grid (per-indicator band chips, counts, worst band) — and exports CSV, JSON, a print summary, and a printable Lab Submission Sheet, every one of them carrying the band, the engine version, and the chain rule IDs. The frequencies panel on `/field` shows counts of what was recorded, labelled frequencies, never predictions.
+7. **Session location + GBIF baseline.** Optional GPS capture at session start (browser Geolocation API) — coordinates live in the session record on the device and its exports, never on a server of ours. With a location present, the review page fetches a baseline from `api.gbif.org/v1` browser-side (no key, no proxy): 8 taxa — EPT orders (BMI-01), Aves (BIR-04), the factsheet's three abbreviated IAP examples expanded to full binomials (INV-11), Bacillariophyta (DIA-10); FCL-06 is stated as "no taxon group — laboratory indicator". Counts within 50 km, timestamped, stored with the session, and labelled "presence data for context only, not a water-quality assessment — absence of records is not absence of species".
 
 ### How it works
 
-1. Name the stream and the volunteer, start a session (stored in the browser).
+1. Name the stream and the volunteer (optionally capture the GPS location), start a session (stored in the browser).
 2. Choose one of the five indicators.
 3. Record the observation — state, photo, note; lab indicators get a sample ID and protocol instead.
 4. The deterministic engine assesses the state — band, chain of evidence, caveats — on the card, at view and export time.
 5. The note check runs on every note and warns without blocking.
 6. Ask the Field Assistant — factsheet answers only; the scope gate handles everything else, and judgements point back at the card.
-7. Review and export — session assessment grid, CSV, JSON, print, Lab Submission Sheet.
+7. Review and export — session assessment grid, GBIF baseline (if GPS captured), CSV, JSON, print, Lab Submission Sheet.
 
 ### The number
 
-**53 automated tests** (Vitest: 7 session + 14 factsheet/assistant + 15 note rules + 5 frequencies + 12 assessment engine), plus an end-to-end Playwright walkthrough of the entire session that fails if the review page ever shows data the volunteer did not enter or if the assessment card/chips don't render. **0 AI calls in the assessment path.** The assistant's median answer time is ~1.9 s (5 live probes against the deployed app, 2026-10-02, min 1.4 s / max 4.1 s).
+**61 automated tests** (Vitest: 9 session + 14 factsheet/assistant + 15 note rules + 5 frequencies + 12 assessment engine + 6 GBIF client), plus an end-to-end Playwright walkthrough of the entire session that fails if the review page ever shows data the volunteer did not enter or if the assessment card/chips/location/baseline don't render. **0 AI calls in the assessment path.** The assistant's median answer time is ~1.9 s (5 live probes against the deployed app, 2026-10-02, min 1.4 s / max 4.1 s).
 
 ### Before / after — the same note, two datasets
 
@@ -66,7 +67,7 @@ We also corrected two live claims before submission: the provenance endpoint no 
 
 ### Built with
 
-Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS 4 · IndexedDB persistence · deterministic assessment engine (`streamvitals-assessment/1.0.0`, pure TypeScript — no network, no clock, no model) · Groq (`openai/gpt-oss-120b`) for the bounded assistant only · Vitest (53 tests) + Playwright (end-to-end smoke test) · Vercel.
+Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS 4 · IndexedDB persistence · deterministic assessment engine (`streamvitals-assessment/1.0.0`, pure TypeScript — no network, no clock, no model) · GBIF baseline via `api.gbif.org/v1` (browser-direct) · Groq (`openai/gpt-oss-120b`) for the bounded assistant only · Vitest (61 tests) + Playwright (end-to-end smoke test) · Vercel.
 
 ### Sources
 

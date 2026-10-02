@@ -10,7 +10,7 @@ export const metadata = {
 const pipeline = [
   {
     title: "Name the stream and the volunteer, start a session",
-    body: "Session state persists in the browser (IndexedDB), so a refresh or a dropped connection on an open session does not erase what was recorded.",
+    body: "Session state persists in the browser (IndexedDB), so a refresh or a dropped connection on an open session does not erase what was recorded. Optionally capture the session's GPS location — it stays on the device, in the session record and its exports only.",
   },
   {
     title: "Choose one of the five official indicators",
@@ -34,7 +34,7 @@ const pipeline = [
   },
   {
     title: "Review and export",
-    body: "The review page shows exactly what was typed — names, states, notes, sample IDs — plus the session's assessment bands, and exports CSV, JSON, a print summary, and a printable Lab Submission Sheet. Every export carries the band, the engine version, and the chain rule IDs.",
+    body: "The review page shows exactly what was typed — names, states, notes, sample IDs — plus the session's assessment bands and, when a GPS location was captured, a GBIF baseline of records within 50 km (context only, labelled as such). Exports (CSV, JSON, print, Lab Submission Sheet) carry the bands, the engine version, the chain rule IDs, and the GPS coordinates.",
   },
 ];
 
@@ -198,7 +198,7 @@ export default function AboutPage() {
         </div>
         <div className="stats-strip">
           <div className="stat-item">
-            <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">53</span>
+            <span className="text-3xl font-black tracking-tighter text-[#0d9b6e]">61</span>
             <span className="text-xs text-[rgba(0,0,0,0.4)] font-medium">
               Automated tests (Vitest)
             </span>
@@ -292,7 +292,7 @@ export default function AboutPage() {
               github.com/kathir-iTech/streamvitals
             </a>{" "}
             <span className="text-[rgba(0,0,0,0.5)]">
-              — run <code className="text-[#0d9b6e]">npm test</code> for the 53 tests,
+              — run <code className="text-[#0d9b6e]">npm test</code> for the 61 tests,
               <code className="text-[#0d9b6e]"> npm run e2e</code> for the full session walkthrough
             </span>
           </li>

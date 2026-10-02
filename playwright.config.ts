@@ -12,6 +12,8 @@ export default defineConfig({
     baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    permissions: ['geolocation'],
+    geolocation: { latitude: 40.4168, longitude: -3.7038 },
     launchOptions: {
       args: ['--font-render-hinting=none'],
     },

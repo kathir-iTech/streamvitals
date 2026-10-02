@@ -23,7 +23,20 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     page.on('console', (msg) => { if (msg.type() === 'error' && !msg.text().includes('404')) consoleErrors.push(msg.text()); });
     page.on('pageerror', (err) => { consoleErrors.push(err.message); });
 
-    // Step 1: Load homepage, assert no console errors
+    // Step 1: Load homepage, assert no console errors. Intercept GBIF so the
+    // baseline assertions below are deterministic (fixture: match ok, count 42).
+    await page.route('**://api.gbif.org/**', async (route) => {
+      const url = route.request().url();
+      const body = url.includes('/species/match')
+        ? { matchType: 'EXACT', usageKey: 999, confidence: 100 }
+        : { count: 42, limit: 0 };
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        headers: { 'access-control-allow-origin': '*' },
+        body: JSON.stringify(body),
+      });
+    });
     await page.goto('/');
     await expect(page).toHaveURL('/');
     expect(consoleErrors).toEqual([]);
@@ -35,6 +48,11 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await page.fill('#volunteer-name', VOLUNTEER_NAME);
     await page.fill('#session-date', new Date().toISOString().split('T')[0]);
     await page.fill('#session-time', new Date().toTimeString().slice(0, 5));
+    // Step 2b: capture session location via the browser geolocation API
+    // (permission + fixed coordinates granted in playwright.config.ts).
+    await page.locator('[data-testid="capture-location"]').click();
+    await expect(page.locator('[data-testid="session-location"]')).toContainText('40.4168');
+    await expect(page.locator('[data-testid="session-location"]')).toContainText('-3.7038');
     await page.click('button:has-text("Start Monitoring Session")');
     await page.waitForURL('/field/bmi-01');
     await page.waitForSelector('fieldset[aria-label="Select your observation"]', { timeout: 10000 });
@@ -211,6 +229,14 @@ test.describe.serial('StreamVitals Smoke Test', () => {
     await expect(page.locator('[data-testid="band-chip-INV-11"]')).toContainText('Favorable');
     await expect(page.locator('[data-testid="band-chip-FCL-06"]')).toContainText('Awaiting laboratory');
     await expect(page.locator('[data-testid="band-chip-DIA-10"]')).toContainText('Awaiting laboratory');
+
+    // Track B: session location + GBIF baseline (mocked above) render on review.
+    await expect(page.locator('[data-testid="review-location"]')).toContainText('40.4168');
+    const gbifBaseline = page.locator('[data-testid="gbif-baseline"]');
+    await expect(gbifBaseline).toBeVisible({ timeout: 15000 });
+    await expect(gbifBaseline).toContainText('42 records');
+    await expect(gbifBaseline).toContainText('GBIF.org');
+    await expect(gbifBaseline).toContainText('not a water-quality assessment');
     await page.screenshot({ path: path.join(ARTIFACTS_DIR, '05-review.png'), fullPage: true });
 
     // Step 6: Export triggers download — REQUIRED, not optional. A missing

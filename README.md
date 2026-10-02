@@ -33,6 +33,16 @@ A bounded **AI Field Assistant** answers questions using only the OneAquaHealth 
 - **Session view**: `/field/review` summarises all five indicators (`assessment-summary`) with per-indicator chips and worst-band across assessed indicators; every export (JSON/CSV/print/lab sheet) carries the band, engine version, and rule IDs.
 - **Source guard**: `engine.test.ts` reads the module's own source and fails if it ever imports a model, calls the network, reads the clock, or uses randomness.
 
+## Location & GBIF Baseline
+
+The session form offers an optional **"Use my location (GPS)"** capture (browser Geolocation API). The coordinates live in the session record (`location: {lat, lng, accuracyM, capturedAt}`) — stored in IndexedDB on the device, included in exports, and **never sent to any server of ours** (there is no server endpoint that receives them).
+
+When the review page opens with a location present, it fetches a **GBIF baseline** directly from the browser against `api.gbif.org/v1` (CORS-open, no API key, no proxy): for each of 8 configured taxa — EPT orders for BMI-01, Aves for BIR-04, the factsheet's three abbreviated IAP examples expanded to full binomials for INV-11, Bacillariophyta for DIA-10 — it resolves the GBIF taxon via `species/match`, then counts occurrences with `occurrence/search?geo=…&radius=50000&limit=0`. FCL-06 is shown as "no taxon group — laboratory indicator". The result is stored with the session (`gbifBaseline`, timestamped `capturedAt`) so it is fetched once, exported with the data, and honestly labelled:
+
+> GBIF.org occurrence records near the session location — presence data for context only, not a water-quality assessment. Absence of records is not absence of species.
+
+Exports: JSON carries `session.location` and `session.gbifBaseline`; CSV carries `session_latitude`, `session_longitude`, `location_accuracy_m` columns. The GBIF client lives in `src/lib/gbif.ts` with an injectable fetcher and 6 tests covering URL shape, no-match, and network-failure behaviour.
+
 ## The Note Check Is Rule-Based, Not AI
 
 `src/lib/note-quality.ts` is a **deterministic keyword and contradiction rule set**. It contains no model, no API call, and no inference. It does two things:
@@ -81,7 +91,7 @@ source of truth. Do not reintroduce `src/app/`.
 
 1. **`/`** — Home page with 5 indicator cards, each navigates to `/field/[indicator]`
 2. **`/about`** — How it works: why the product exists, the One Health quote for each indicator, the session pipeline, the published numbers, honest limits, and the roadmap
-3. **`/field`** — Session dashboard. Captures stream name, **volunteer name**, date and time, then creates or continues a monitoring session
+3. **`/field`** — Session dashboard. Captures stream name, **volunteer name**, date and time (plus optional GPS location), then creates or continues a monitoring session
 4. **`/field/[indicator]`** — Per-indicator observation form. Citizen indicators get state selection, photo capture, and field notes. Lab indicators (FCL-06, DIA-10) get a prominent sample ID to write on the container, one collection protocol, photo capture, and sampling notes.
 5. **`/field/review`** — Review all observations, print a Lab Submission Sheet, export (JSON/CSV/Print), submit session
 
@@ -116,6 +126,7 @@ npm run build
 ## Data Sources
 
 - **OneAquaHealth Key Indicators Factsheets**: Zenodo doi:10.5281/zenodo.20345207 (CC-BY 4.0)
+- **GBIF**: GBIF.org API (`api.gbif.org/v1`) — occurrence counts near the session GPS, fetched browser-side for the baseline panel
 
 ## Architecture
 
@@ -141,8 +152,9 @@ Countable from this repository, not estimates:
 
 | Number | What it is |
 |---|---|
-| **53** | Vitest tests across 5 files (session 7, factsheet/assistant 14, note rules 15, frequencies 5, assessment engine 12) |
+| **61** | Vitest tests across 6 files (session 9, factsheet/assistant 14, note rules 15, frequencies 5, assessment engine 12, GBIF client 6) |
 | **9** | Citizen observation states — 3 field indicators × 3 states each |
+| **8** | GBIF baseline taxa queried within 50 km of the session GPS (FCL-06 excluded — laboratory indicator) |
 | **0** | AI calls in the assessment path (state selection, note gate, bands, exports are deterministic) |
 | **1** | Deterministic assessment engine (`streamvitals-assessment/1.0.0`) — same state, same band, every time |
 | **~1.9 s** | Median assistant answer, 5 live probes against the deployed app on 2026-10-02 (min 1.4 s, max 4.1 s; moves with the provider) |
@@ -161,7 +173,7 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 
 ## Submission Artifacts
 
-- [`DEVPOST.md`](DEVPOST.md) — the paste-ready Devpost write-up: problem, five features, the number (53 tests), before/after, removed features, limits, roadmap.
+- [`DEVPOST.md`](DEVPOST.md) — the paste-ready Devpost write-up: problem, seven features, the number (61 tests), before/after, removed features, limits, roadmap.
 - [`VIDEO.md`](VIDEO.md) — the shot-by-shot demo script (~4:15, inside the event's 3–5 minute requirement) with a recording checklist.
 
 ## What's Next
@@ -172,15 +184,16 @@ Captured by the automated smoke test (`npm run e2e`), committed under [`tests/ar
 
 ## Testing
 
-- `src/lib/field-session.test.ts` — 7 tests for IndexedDB session management
+- `src/lib/field-session.test.ts` — 9 tests for IndexedDB session management (incl. optional location/baseline round-trip)
 - `src/lib/factsheet-content.test.ts` — 14 tests for factsheet lookup, out-of-scope detection, and the offline assistant pipeline (in-scope / nonsense / meta questions get three distinct responses)
 - `src/lib/note-quality.test.ts` — 15 tests, including 12 realistic notes (6 must not flag, 6 must)
 - `src/lib/observation-frequencies.test.ts` — 5 tests for the observation-frequencies counts
-- `src/lib/assessment/engine.test.ts` — 12 tests for bands, chains, session summary, and the source guard that fails if the engine ever touches a model, the network, or the clock (53 tests total)
+- `src/lib/assessment/engine.test.ts` — 12 tests for bands, chains, session summary, and the source guard that fails if the engine ever touches a model, the network, or the clock
+- `src/lib/gbif.test.ts` — 6 tests for GBIF URL shape, counts, no-match, and network-failure handling via an injected fetcher (61 tests total)
 
 Run with `npm test` (Vitest, jsdom environment, IndexedDB via `fake-indexeddb`).
 
-The end-to-end smoke test (`npm run e2e`) asserts that the stream name, **volunteer name**, date, selected states, notes, sample IDs, and **photo count shown on the review page match what was actually typed and uploaded**. It also asserts the deterministic assessment card renders on state selection and on lab pages (`pending_lab`, never a verdict), that the review page shows the session assessment grid with correct per-indicator bands, that no "Not provided" placeholder appears, that the assistant's in-scope, nonsense, and meta questions receive three distinct correct responses (and that refusals point at the assessment card instead of scoring), and that the observation-frequencies panel on `/field` shows real counts labeled as frequencies rather than predictions. This exists because an earlier version of the review page rendered a hardcoded placeholder session, and the previous test suite passed against it. It also exists because `/field` once had no volunteer input at all, so the review page legitimately (but uselessly) showed "Not provided" for every session. If the review page ever shows data the user did not enter, the smoke test now fails.
+The end-to-end smoke test (`npm run e2e`) asserts that the stream name, **volunteer name**, date, selected states, notes, sample IDs, and **photo count shown on the review page match what was actually typed and uploaded**. It also asserts the deterministic assessment card renders on state selection and on lab pages (`pending_lab`, never a verdict), that the review page shows the session assessment grid with correct per-indicator bands, that the GPS capture round-trips into the review page and the GBIF baseline panel renders (GBIF is intercepted with a deterministic fixture), that no "Not provided" placeholder appears, that the assistant's in-scope, nonsense, and meta questions receive three distinct correct responses (and that refusals point at the assessment card instead of scoring), and that the observation-frequencies panel on `/field` shows real counts labeled as frequencies rather than predictions. This exists because an earlier version of the review page rendered a hardcoded placeholder session, and the previous test suite passed against it. It also exists because `/field` once had no volunteer input at all, so the review page legitimately (but uselessly) showed "Not provided" for every session. If the review page ever shows data the user did not enter, the smoke test now fails.
 
 ## Factsheet Provenance
 

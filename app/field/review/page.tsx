@@ -3,8 +3,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { indicators } from '@/data/indicators';
-import { getFullSession } from '@/lib/field-session';
+import { getFullSession, type SessionLocation } from '@/lib/field-session';
 import { assess, summarizeAssessments, type Band } from '@/lib/assessment/engine';
+import { fetchGbifBaseline, GBIF_DEFAULT_RADIUS_KM, type GbifBaseline } from '@/lib/gbif';
 import ExportButton from '@/components/ExportButton';
 
 const FIELD_INDICATORS = ['BMI-01', 'BIR-04', 'INV-11', 'FCL-06', 'DIA-10'];
@@ -18,9 +19,11 @@ const BAND_CHIP: Record<Band, string> = {
 };
 
 export default function ReviewPage() {
-  const [session, setSession] = useState<{ sessionId: string; streamName: string; volunteer: string; date: string; startedAt: string; indicators: any[] } | null>(null);
+  const [session, setSession] = useState<{ sessionId: string; streamName: string; volunteer: string; date: string; startedAt: string; indicators: any[]; location?: SessionLocation; gbifBaseline?: GbifBaseline } | null>(null);
   const [photos, setPhotos] = useState<{ photoId: string; indicatorId: string; timestamp: string }[]>([]);
   const [sessionComplete, setSessionComplete] = useState(false);
+  const [baseline, setBaseline] = useState<GbifBaseline | null>(null);
+  const [baselineState, setBaselineState] = useState<'idle' | 'loading' | 'error'>('idle');
 
   useEffect(() => {
     let sessionId = '';
@@ -32,6 +35,22 @@ export default function ReviewPage() {
         setPhotos(result.photos);
         if (result.session.completedAt) {
           setSessionComplete(true);
+        }
+        const loc = result.session.location;
+        if (loc) {
+          if (result.session.gbifBaseline) {
+            setBaseline(result.session.gbifBaseline);
+          } else {
+            setBaselineState('loading');
+            fetchGbifBaseline(loc.lat, loc.lng, GBIF_DEFAULT_RADIUS_KM)
+              .then(async (b) => {
+                setBaseline(b);
+                setBaselineState('idle');
+                const { updateSession } = await import('@/lib/field-session');
+                await updateSession(sessionId, { gbifBaseline: b });
+              })
+              .catch(() => setBaselineState('error'));
+          }
         }
       } else {
         window.location.href = '/field';
@@ -197,6 +216,60 @@ export default function ReviewPage() {
           </p>
         </div>
 
+        <section aria-label="GBIF baseline" className="bg-[#f5faf7] border border-[rgba(0,0,0,0.06)] rounded-2xl p-8 mb-8">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+            <h2 className="text-xl font-black tracking-tighter text-black">Session location &amp; nearby baseline</h2>
+            {baseline && <span className="text-[10px] font-mono text-[rgba(0,0,0,0.4)]">{baseline.engine} · within {baseline.radiusKm} km</span>}
+          </div>
+          {session.location ? (
+            <p className="text-sm text-[rgba(0,0,0,0.55)] mb-4" data-testid="review-location">
+              GPS: <span className="font-bold text-black">{session.location.lat.toFixed(5)}, {session.location.lng.toFixed(5)}</span>
+              {session.location.accuracyM !== null && <span> (±{Math.round(session.location.accuracyM)} m)</span>}
+              <span className="text-[rgba(0,0,0,0.35)]"> — captured {session.location.capturedAt}; stored in this session and its exports only.</span>
+            </p>
+          ) : (
+            <p className="text-sm text-[rgba(0,0,0,0.45)] mb-4">No GPS captured for this session — baseline below unavailable.</p>
+          )}
+
+          {baselineState === 'loading' && (
+            <p className="text-sm text-[rgba(0,0,0,0.45)]">Loading GBIF baseline for this location…</p>
+          )}
+          {baselineState === 'error' && (
+            <p className="text-sm text-[#e85d3a]">GBIF baseline unavailable (offline or the API could not be reached). Your session data is unaffected.</p>
+          )}
+          {baseline && (
+            <div data-testid="gbif-baseline">
+              <div className="bg-white rounded-xl border border-[rgba(0,0,0,0.04)] divide-y divide-[rgba(0,0,0,0.04)]">
+                {baseline.rows.map((row) => (
+                  <div key={row.scientificName} className="flex items-center justify-between px-4 py-2.5 text-sm gap-3">
+                    <span className="text-black font-medium">
+                      {row.label}
+                      <span className="text-[rgba(0,0,0,0.3)] text-xs ml-2 font-mono">{row.indicatorId}</span>
+                    </span>
+                    <span className="font-bold whitespace-nowrap">
+                      {row.status === 'ok' ? (
+                        <span className="text-[#0d9b6e]">{(row.count ?? 0).toLocaleString('en-US')} records</span>
+                      ) : row.status === 'no_match' ? (
+                        <span className="text-[rgba(0,0,0,0.35)]">no GBIF match</span>
+                      ) : (
+                        <span className="text-[#e85d3a]">unavailable</span>
+                      )}
+                    </span>
+                  </div>
+                ))}
+                <div className="flex items-center justify-between px-4 py-2.5 text-sm gap-3 bg-[rgba(232,93,58,0.03)]">
+                  <span className="text-black font-medium">Fecal coliforms (FCL-06)<span className="text-[rgba(0,0,0,0.3)] text-xs ml-2 font-mono">FCL-06</span></span>
+                  <span className="text-[rgba(0,0,0,0.4)] text-xs font-semibold whitespace-nowrap">no taxon group — laboratory indicator</span>
+                </div>
+              </div>
+              <p className="text-xs text-[rgba(0,0,0,0.4)] mt-3 leading-relaxed">{baseline.attribution}</p>
+              <p className="text-xs text-[rgba(0,0,0,0.35)] mt-1 leading-relaxed">
+                Taxa: EPT orders (BMI-01), Aves (BIR-04), the factsheet&rsquo;s three abbreviated IAP examples expanded to full binomials (INV-11), Bacillariophyta (DIA-10). Counts fetched {baseline.capturedAt}.
+              </p>
+            </div>
+          )}
+        </section>
+
         <div className="bg-[#f5faf7] border border-[rgba(0,0,0,0.06)] rounded-2xl p-8 mb-8">
           <h2 className="text-xl font-black tracking-tighter mb-6 text-black">Human-Readable Summary</h2>
           <div className="bg-white rounded-xl p-6 border border-[rgba(0,0,0,0.04)]">
@@ -209,6 +282,9 @@ export default function ReviewPage() {
               <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Volunteer:</span><span className="font-bold text-black">{session.volunteer || 'Not provided'}</span></div>
               <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Date:</span><span className="font-bold text-black">{session.date}</span></div>
               <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">Session started:</span><span className="font-bold text-black">{session.startedAt}</span></div>
+              {session.location && (
+                <div className="flex justify-between"><span className="text-[rgba(0,0,0,0.4)]">GPS:</span><span className="font-bold text-black">{session.location.lat.toFixed(5)}, {session.location.lng.toFixed(5)}</span></div>
+              )}
               <hr className="border-[rgba(0,0,0,0.06)]" />
               {session.indicators.map((ind: any) => {
                 const isLab = ind.type === 'lab_only';

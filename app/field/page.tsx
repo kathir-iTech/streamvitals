@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { createSession, isIndexedDBAvailable, getSession, getAllSessions } from '@/lib/field-session';
+import { createSession, isIndexedDBAvailable, getSession, getAllSessions, type SessionLocation } from '@/lib/field-session';
 import { computeObservationFrequencies, type IndicatorFrequency } from '@/lib/observation-frequencies';
 import { indicators } from '@/data/indicators';
 
@@ -44,6 +44,9 @@ export default function FieldPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [frequencies, setFrequencies] = useState<IndicatorFrequency[]>([]);
+  const [location, setLocation] = useState<SessionLocation | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [locationError, setLocationError] = useState('');
   const hasChecked = useRef(false);
 
   useEffect(() => {
@@ -69,6 +72,35 @@ export default function FieldPage() {
     return ind?.citizen_state_labels?.[state] || state.replace(/_/g, ' ');
   };
 
+  const handleCaptureLocation = () => {
+    if (!('geolocation' in navigator)) {
+      setLocationError('Location is not available in this browser — you can start without it.');
+      return;
+    }
+    setLocating(true);
+    setLocationError('');
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocation({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          accuracyM: typeof pos.coords.accuracy === 'number' ? pos.coords.accuracy : null,
+          capturedAt: new Date().toISOString(),
+        });
+        setLocating(false);
+      },
+      (err) => {
+        setLocationError(
+          err.code === err.PERMISSION_DENIED
+            ? 'Location permission denied — you can start without it.'
+            : 'Could not read the location — you can start without it.',
+        );
+        setLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
+    );
+  };
+
   const handleStart = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!streamName.trim()) { setError('Please enter a stream name or location'); return; }
@@ -90,6 +122,7 @@ export default function FieldPage() {
           { indicatorId: 'DIA-10', indicatorName: 'Diatoms and Diatom Teratology', type: 'lab_only' as const, photos: [], notes: '', sampleLabel: `SMP-${date.replace(/-/g, '')}-002`, labProtocolGuidance: 'Periphytic diatoms scraped from surface of submerged stones/substrate. Cleaned in lab using nitric acid and potassium dichromate at room temperature for 24h. Permanent slides prepared using Naphrax®. About 400 diatom valves identified and counted per sample under stereomicroscope.', status: 'pending_lab_analysis' as const, timestamp: now },
         ],
         startedAt: now,
+        ...(location ? { location } : {}),
       };
       const result = await createSession(session);
       if (result.success) {
@@ -162,6 +195,23 @@ export default function FieldPage() {
                   <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5" htmlFor="session-time">Time</label>
                   <input id="session-time" type="time" value={time} onChange={(e) => setTime(e.target.value)} className="w-full px-4 py-3 bg-[#f5faf7] border border-[rgba(0,0,0,0.08)] rounded-full text-black focus:ring-2 focus:ring-[#0d9b6e] focus:outline-none text-sm font-medium" />
                 </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-[rgba(0,0,0,0.5)] mb-1.5">Session location (optional, stays on your device)</label>
+                {location ? (
+                  <div data-testid="session-location" className="w-full max-w-sm px-4 py-3 bg-[#f5faf7] border border-[rgba(13,155,110,0.25)] rounded-full text-sm font-medium flex items-center justify-between gap-3">
+                    <span className="text-black">
+                      {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
+                      {location.accuracyM !== null && <span className="text-[rgba(0,0,0,0.45)]"> (±{Math.round(location.accuracyM)} m)</span>}
+                    </span>
+                    <button type="button" onClick={() => setLocation(null)} className="text-xs text-[rgba(0,0,0,0.4)] hover:text-red-500 font-semibold">Remove</button>
+                  </div>
+                ) : (
+                  <button type="button" data-testid="capture-location" onClick={handleCaptureLocation} disabled={locating} className="btn-pill-outline text-sm">
+                    {locating ? 'Locating…' : 'Use my location (GPS)'}
+                  </button>
+                )}
+                {locationError && <p className="text-xs text-red-500 font-medium mt-1.5">{locationError}</p>}
               </div>
               {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
               <button type="submit" disabled={loading} className="btn-pill-accent text-lg whitespace-nowrap">
