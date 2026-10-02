@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { Download, FileText, Printer, FlaskConical } from 'lucide-react';
 import { getFullSession } from '@/lib/field-session';
 import { indicators } from '@/data/indicators';
@@ -11,17 +11,10 @@ interface ExportButtonProps {
 }
 
 export default function ExportButton({ sessionId }: ExportButtonProps) {
-  const [exporting, setExporting] = useState(false);
-
-  const getIndicatorName = (id: string) => {
-    const ind = indicators.find((i) => i.id === id);
-    return ind?.name || id;
-  };
-
-  const getStateLabel = (indicatorId: string, state: string) => {
+  const getStateLabel = useCallback((indicatorId: string, state: string) => {
     const ind = indicators.find((i) => i.id === indicatorId);
     return ind?.citizen_state_labels?.[state] || state;
-  };
+  }, []);
 
   const generateJSON = useCallback(async () => {
     const result = await getFullSession(sessionId);
@@ -165,19 +158,19 @@ export default function ExportButton({ sessionId }: ExportButtonProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
-<button onClick={generateJSON} disabled={exporting} className="btn-pill-accent text-sm flex items-center gap-2">
+<button onClick={generateJSON} className="btn-pill-accent text-sm flex items-center gap-2">
            <Download className="w-4 h-4" /> Export JSON
          </button>
-         <button onClick={generateCSV} disabled={exporting} className="btn-pill-outline text-sm flex items-center gap-2">
+         <button onClick={generateCSV} className="btn-pill-outline text-sm flex items-center gap-2">
            <Download className="w-4 h-4" /> Export CSV
          </button>
-         <button onClick={generateHumanReadable} disabled={exporting} className="btn-pill-outline text-sm flex items-center gap-2">
+         <button onClick={generateHumanReadable} className="btn-pill-outline text-sm flex items-center gap-2">
            <FileText className="w-4 h-4" /> Print Summary
          </button>
-          <button onClick={handlePrint} disabled={exporting} className="btn-pill-outline text-sm flex items-center gap-2">
+          <button onClick={handlePrint} className="btn-pill-outline text-sm flex items-center gap-2">
             <Printer className="w-4 h-4" /> Print Page
           </button>
-          <button onClick={generateLabSubmissionSheet} disabled={exporting} className="btn-pill-outline text-sm flex items-center gap-2" data-testid="lab-submission-sheet">
+          <button onClick={generateLabSubmissionSheet} className="btn-pill-outline text-sm flex items-center gap-2" data-testid="lab-submission-sheet">
             <FlaskConical className="w-4 h-4" /> Lab Submission Sheet
           </button>
       </div>

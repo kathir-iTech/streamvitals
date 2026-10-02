@@ -102,7 +102,7 @@ export function getOfflineAssistantResponse(indicatorId: string, question: strin
     return `Based on the OneAquaHealth factsheet (${content.source}):\n\n${content.name} — laboratory-only indicator. You cannot determine the result in the field.\n\nProtocol Question: ${content.citizen_question}\n\nVisual Anchor: ${content.visual_anchor_guide}\n\nCollect your sample according to the protocol and send it to the laboratory for analysis.`;
   }
 
-  const stateLabels = Object.entries(content.citizen_state_labels).map(([key, label]) => `- ${label}`).join('\n');
+  const stateLabels = Object.entries(content.citizen_state_labels).map(([, label]) => `- ${label}`).join('\n');
   return `Based on the OneAquaHealth factsheet (${content.source}):\n\n${content.name}\n\nProtocol Question: ${content.citizen_question}\n\nVisual Anchor: ${content.visual_anchor_guide}\n\nState definitions:\n${stateLabels}\n\nThis indicator is citizen-observable. Record your observation and continue to the next indicator.`;
 }
 

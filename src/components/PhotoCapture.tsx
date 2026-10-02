@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useCallback, useEffect } from 'react';
+import Image from 'next/image';
 import { Camera, X, ImageIcon } from 'lucide-react';
 import { savePhoto, deletePhoto, getSessionPhotos } from '@/lib/field-session';
 
@@ -105,7 +106,7 @@ export default function PhotoCapture({ sessionId, indicatorId, maxPhotos = 3, on
       <div className="flex gap-3 flex-wrap">
         {photos.map((p) => (
           <div key={p.photoId} className="relative">
-            <img src={p.url} alt="Capture" className="w-36 h-36 object-cover rounded-2xl border border-[rgba(0,0,0,0.08)]" />
+            <Image src={p.url} alt="Capture" width={144} height={144} unoptimized className="w-36 h-36 object-cover rounded-2xl border border-[rgba(0,0,0,0.08)]" />
             <button onClick={() => handleRemove(p.photoId)} className="absolute -top-1 -right-1 w-5 h-5 bg-black rounded-full flex items-center justify-center text-white text-xs hover:bg-[rgba(0,0,0,0.7)] transition-colors">
               <X className="w-3 h-3" />
             </button>

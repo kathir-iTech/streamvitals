@@ -1,4 +1,4 @@
-﻿// Deterministic assessment engine for StreamVitals (Track 3).
+// Deterministic assessment engine for StreamVitals (Track 3).
 //
 // Hard boundaries, enforced by tests:
 //   - This module never imports AI/assistant code and never performs network

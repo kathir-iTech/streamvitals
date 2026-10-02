@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
 import { indicators } from '@/data/indicators';
 import { getFullSession, type FieldSession } from '@/lib/field-session';
@@ -21,6 +23,7 @@ const BAND_CHIP: Record<Band, string> = {
 };
 
 export default function ReviewPage() {
+  const router = useRouter();
   const [session, setSession] = useState<FieldSession | null>(null);
   const [photos, setPhotos] = useState<{ photoId: string; indicatorId: string; timestamp: string }[]>([]);
   const [sessionComplete, setSessionComplete] = useState(false);
@@ -56,7 +59,7 @@ export default function ReviewPage() {
   useEffect(() => {
     let sessionId = '';
     try { sessionId = sessionStorage.getItem('current_session_id') || ''; } catch { }
-    if (!sessionId) { window.location.href = '/field'; return; }
+    if (!sessionId) { router.push('/field'); return; }
     getFullSession(sessionId).then((result) => {
       if (result.session) {
         setSession(result.session);
@@ -81,12 +84,12 @@ export default function ReviewPage() {
           }
         }
       } else {
-        window.location.href = '/field';
+        router.push('/field');
       }
     }).catch(() => {
-      window.location.href = '/field';
+      router.push('/field');
     });
-  }, []);
+  }, [router]);
 
   const handleComplete = useCallback(async () => {
     const sessionId = (() => { try { return sessionStorage.getItem('current_session_id') || ''; } catch { return ''; } })();
@@ -101,8 +104,8 @@ export default function ReviewPage() {
   }, []);
 
   const handleContinueLater = useCallback(() => {
-    window.location.href = '/field';
-  }, []);
+    router.push('/field');
+  }, [router]);
 
   const getStateLabel = (indicatorId: string, state: string) => {
     const ind = indicators.find((i) => i.id === indicatorId);
@@ -326,7 +329,7 @@ export default function ReviewPage() {
                   Copy link
                 </button>
                 {shareQr ? (
-                  <img data-testid="share-qr" src={shareQr} alt="QR code encoding the session share link" width={124} height={124} className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl" />
+                  <Image data-testid="share-qr" src={shareQr} alt="QR code encoding the session share link" width={124} height={124} unoptimized className="bg-white border border-[rgba(0,0,0,0.08)] rounded-xl" />
                 ) : (
                   <p className="text-xs text-[rgba(0,0,0,0.62)] max-w-xs">This session is too large for a QR code — open the link directly or copy and paste it on the other device.</p>
                 )}

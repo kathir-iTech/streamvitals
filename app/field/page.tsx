@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import { createSession, isIndexedDBAvailable, getSession, getAllSessions, type SessionLocation } from '@/lib/field-session';
 import { computeObservationFrequencies, type IndicatorFrequency } from '@/lib/observation-frequencies';
@@ -37,6 +38,7 @@ function StreamIllustration() {
 }
 
 export default function FieldPage() {
+  const router = useRouter();
   const [streamName, setStreamName] = useState('');
   const [volunteer, setVolunteer] = useState('');
   const [date, setDate] = useState('');
@@ -128,11 +130,11 @@ export default function FieldPage() {
       const result = await createSession(session);
       if (result.success) {
         sessionStorage.setItem('current_session_id', sessionId);
-        window.location.href = '/field/bmi-01';
+        router.push('/field/bmi-01');
       } else {
         setError(result.error || 'Failed to create session');
       }
-    } catch (err) {
+    } catch {
       setError('Failed to start session');
     } finally {
       setLoading(false);
@@ -142,7 +144,7 @@ export default function FieldPage() {
   const handleContinue = () => {
     if (existingSession) {
       sessionStorage.setItem('current_session_id', existingSession.sessionId);
-      window.location.href = '/field/bmi-01';
+      router.push('/field/bmi-01');
     }
   };
 
