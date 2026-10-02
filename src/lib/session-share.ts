@@ -42,6 +42,7 @@ interface SharePayload {
     startedAt: string;
     completedAt?: string;
     location?: SessionLocation;
+    isSample?: boolean;
   };
   indicators: SharedIndicator[];
   gbifBaseline?: {
@@ -150,6 +151,7 @@ export async function encodeShare(session: FieldSession): Promise<string> {
       startedAt: session.startedAt,
       ...(session.completedAt ? { completedAt: session.completedAt } : {}),
       ...(session.location ? { location: session.location } : {}),
+      ...(session.isSample ? { isSample: true } : {}),
     },
     indicators: session.indicators.map((ind) => ({
       indicatorId: ind.indicatorId,
@@ -189,6 +191,7 @@ function isValidPartial(value: unknown): value is SharePayload {
   if (typeof s.streamName !== 'string' || !s.streamName) return false;
   if (typeof s.startedAt !== 'string' || !s.startedAt) return false;
   if (typeof s.date !== 'string' || typeof s.volunteer !== 'string') return false;
+  if (s.isSample !== undefined && typeof s.isSample !== 'boolean') return false;
   if (!Array.isArray(p.indicators)) return false;
   return p.indicators.every(
     (ind) =>
@@ -253,6 +256,7 @@ export async function decodeShare(input: string): Promise<FieldSession | null> {
       startedAt: parsed.session.startedAt,
       ...(parsed.session.completedAt ? { completedAt: parsed.session.completedAt } : {}),
       ...(parsed.session.location ? { location: parsed.session.location } : {}),
+      ...(parsed.session.isSample === true ? { isSample: true } : {}),
       ...(baseline
         ? {
             gbifBaseline: {

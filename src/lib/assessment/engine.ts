@@ -236,7 +236,12 @@ function build(result: {
 export function assess(indicatorId: string, stateId?: string | null): Assessment {
   const state = stateId && stateId.length > 0 ? stateId : null;
 
-  const citizen = CITIZEN_RULES[indicatorId];
+  // Own-property lookups only: prototype keys ("__proto__", "constructor")
+  // must never resolve to inherited objects as fake rules — a crafted share
+  // link could otherwise crash the review page (found by the fuzz tests).
+  const citizen = Object.prototype.hasOwnProperty.call(CITIZEN_RULES, indicatorId)
+    ? CITIZEN_RULES[indicatorId]
+    : undefined;
   if (citizen) {
     if (!state) {
       return build({
@@ -256,7 +261,7 @@ export function assess(indicatorId: string, stateId?: string | null): Assessment
         caveats: ['Select one of the observation states to produce an assessment.'],
       });
     }
-    const rule = citizen[state];
+    const rule = Object.prototype.hasOwnProperty.call(citizen, state) ? citizen[state] : undefined;
     if (!rule) {
       return build({
         indicatorId,
@@ -291,7 +296,9 @@ export function assess(indicatorId: string, stateId?: string | null): Assessment
     });
   }
 
-  const lab = LAB_METHODS[indicatorId];
+  const lab = Object.prototype.hasOwnProperty.call(LAB_METHODS, indicatorId)
+    ? LAB_METHODS[indicatorId]
+    : undefined;
   if (lab) {
     return build({
       indicatorId,
