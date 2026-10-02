@@ -28,7 +28,7 @@
 4. BIR-04 — select a state, move on (keep it fast, show the Next button does not reload the page).
 5. FCL-06 — show the **sample ID** to write on the container, scroll the collection protocol, add a sampling note. Point at the card: "Awaiting laboratory analysis — pending, not graded."
 6. DIA-10 — one glance: same lab treatment, same pending band, no fake field verdict.
-7. `/field/review` — show the summary: names, states, notes, sample IDs, the note flag, and the **session assessment grid** (three favorable chips, two pending).
+7. `/field/review` — show the summary: names, states, notes, sample IDs, the note flag, and the **session assessment grid** (three favorable chips, two pending). If a photo was taken, click its thumbnail to open the full-size viewer once, then close it.
 8. Click **Export CSV**, open the downloaded file, show the `note_flag` column and the `assessment_band` column with their values.
 9. Click **Lab Submission Sheet**, show the printable sheet with the sample ID.
 
