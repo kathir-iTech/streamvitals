@@ -63,7 +63,3 @@ run-benchmark.js
 
 # package files (lockfile is committed for reproducible installs)
 
-.vercel
-
-.vercel
-.env
