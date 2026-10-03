@@ -200,7 +200,7 @@ export default function FieldPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-[rgba(0,0,0,0.62)] mb-1.5">Session location (optional, stays on your device)</label>
+                <label className="block text-sm font-medium text-[rgba(0,0,0,0.62)] mb-1.5">Session location (optional) — stored on this device; used to fetch a GBIF occurrence baseline (api.gbif.org) when you reach the review page.</label>
                 {location ? (
                   <div data-testid="session-location" className="w-full max-w-sm px-4 py-3 bg-[#f5faf7] border border-[rgba(13,155,110,0.25)] rounded-full text-sm font-medium flex items-center justify-between gap-3">
                     <span className="text-black">

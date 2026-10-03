@@ -10,7 +10,7 @@ export const metadata = {
 const pipeline = [
   {
     title: "Name the stream and the volunteer, start a session",
-    body: "Session state persists in the browser (IndexedDB), so a refresh or a dropped connection on an open session does not erase what was recorded. Optionally capture the session's GPS location — it stays on the device, in the session record and its exports only.",
+    body: "Session state persists in the browser (IndexedDB), so a refresh or a dropped connection on an open session does not erase what was recorded. Optionally capture the session's GPS location — it is stored on this device, in the session record and its exports, and it is used to fetch a GBIF occurrence baseline (api.gbif.org) when you reach the review page.",
   },
   {
     title: "Choose one of the five official indicators",
